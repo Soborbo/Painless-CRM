@@ -1,0 +1,319 @@
+{
+  "$schema": "https://painlessremovals.com/schemas/pricing-scenarios.v1.json",
+  "version": "v4.2",
+  "tolerance_pct": 15,
+  "description": "Jay's 17 hand-validated pricing scenarios. Each represents a real-world job pricing case. Used for CI regression testing in both painless-crm and painlessremovals.com calculator. Any pricing engine change must keep all 17 within ±15% deviation. Average deviation v4.2 = 10.6%.",
+  "fixtures": [
+    {
+      "id": "jay-001-bristol-1bed-local",
+      "description": "1-bed flat, Bristol BS9 → BS5, no stairs, weekday, easy parking",
+      "input": {
+        "size_class": "1_bed",
+        "from_postcode": "BS9 4AB",
+        "to_postcode": "BS5 7XY",
+        "distance_miles": 4,
+        "date": "2026-04-15",
+        "day_of_week": "wednesday",
+        "complications": [],
+        "is_weekend": false,
+        "needs_packing": false,
+        "needs_storage": false,
+        "estimated_cubic_ft": 350
+      },
+      "expected_total_pence": 38000,
+      "notes": "Baseline 1-bed local move. Validates basic crew + van + distance pricing."
+    },
+    {
+      "id": "jay-002-bristol-2bed-local-stairs",
+      "description": "2-bed terrace, Bristol BS3 → BS6, narrow access at destination, no lift",
+      "input": {
+        "size_class": "2_bed",
+        "from_postcode": "BS3 4DD",
+        "to_postcode": "BS6 6XX",
+        "distance_miles": 3,
+        "date": "2026-04-22",
+        "day_of_week": "wednesday",
+        "complications": ["narrow_access_destination", "no_lift"],
+        "is_weekend": false,
+        "needs_packing": false,
+        "estimated_cubic_ft": 600
+      },
+      "expected_total_pence": 56000,
+      "notes": "2-bed with 2 complications = +1 multiplier per v4.2."
+    },
+    {
+      "id": "jay-003-3bed-bristol-bath",
+      "description": "3-bed family home, Bristol → Bath, weekday",
+      "input": {
+        "size_class": "3_bed",
+        "from_postcode": "BS9 1AA",
+        "to_postcode": "BA1 2AA",
+        "distance_miles": 14,
+        "date": "2026-04-29",
+        "day_of_week": "tuesday",
+        "complications": [],
+        "is_weekend": false,
+        "needs_packing": false,
+        "estimated_cubic_ft": 950
+      },
+      "expected_total_pence": 78000,
+      "notes": "Mid-distance, 3-bed standard."
+    },
+    {
+      "id": "jay-004-3bed-weekend-packing",
+      "description": "3-bed move with packing service, Saturday",
+      "input": {
+        "size_class": "3_bed",
+        "from_postcode": "BS6 5XY",
+        "to_postcode": "BS8 1AA",
+        "distance_miles": 6,
+        "date": "2026-05-03",
+        "day_of_week": "saturday",
+        "complications": [],
+        "is_weekend": true,
+        "needs_packing": true,
+        "estimated_cubic_ft": 950
+      },
+      "expected_total_pence": 92000,
+      "notes": "Weekend premium + packing add-on."
+    },
+    {
+      "id": "jay-005-4bed-london",
+      "description": "4-bed Bristol → London long-distance",
+      "input": {
+        "size_class": "4_bed",
+        "from_postcode": "BS9 1AA",
+        "to_postcode": "SW6 7XX",
+        "distance_miles": 120,
+        "date": "2026-05-10",
+        "day_of_week": "monday",
+        "complications": ["urban_destination"],
+        "is_weekend": false,
+        "needs_packing": false,
+        "estimated_cubic_ft": 1400
+      },
+      "expected_total_pence": 165000,
+      "notes": "Long-distance 4-bed, London urban surcharge via complication."
+    },
+    {
+      "id": "jay-006-1bed-storage",
+      "description": "1-bed flat going into storage (split day)",
+      "input": {
+        "size_class": "1_bed",
+        "from_postcode": "BS5 0AA",
+        "to_postcode": null,
+        "distance_miles": 0,
+        "date": "2026-05-15",
+        "day_of_week": "friday",
+        "complications": [],
+        "is_weekend": false,
+        "needs_storage": true,
+        "estimated_cubic_ft": 350
+      },
+      "expected_total_pence": 28000,
+      "notes": "Load-only (no unload at destination today). Validates 65/35 split logic — only the 65% load portion bills."
+    },
+    {
+      "id": "jay-007-storage-out-delivery",
+      "description": "Delivery from storage to new home",
+      "input": {
+        "size_class": "1_bed",
+        "from_postcode": "STORAGE",
+        "to_postcode": "BS6 5XY",
+        "distance_miles": 8,
+        "date": "2026-06-12",
+        "day_of_week": "wednesday",
+        "complications": [],
+        "is_weekend": false,
+        "is_storage_out": true,
+        "estimated_cubic_ft": 350
+      },
+      "expected_total_pence": 22000,
+      "notes": "Unload-only (35% of full job). Customer's belongings already at our depot."
+    },
+    {
+      "id": "jay-008-2bed-3-complications",
+      "description": "2-bed with 3 complications (narrow access, parking permit, no lift)",
+      "input": {
+        "size_class": "2_bed",
+        "from_postcode": "BS1 5XX",
+        "to_postcode": "BS7 8XX",
+        "distance_miles": 5,
+        "date": "2026-05-20",
+        "day_of_week": "thursday",
+        "complications": ["narrow_access_origin", "parking_permit_required", "no_lift"],
+        "is_weekend": false,
+        "estimated_cubic_ft": 600
+      },
+      "expected_total_pence": 64000,
+      "notes": "3 complications = +1 multiplier (tiered: 2-3 = +1, 4-5 = +2, 6+ = survey)."
+    },
+    {
+      "id": "jay-009-2bed-4-complications",
+      "description": "2-bed with 4 complications",
+      "input": {
+        "size_class": "2_bed",
+        "from_postcode": "BS3 3AA",
+        "to_postcode": "BS9 4XX",
+        "distance_miles": 8,
+        "date": "2026-05-25",
+        "day_of_week": "monday",
+        "complications": ["narrow_access_origin", "narrow_access_destination", "parking_permit_required", "no_lift"],
+        "is_weekend": false,
+        "estimated_cubic_ft": 600
+      },
+      "expected_total_pence": 71000,
+      "notes": "4 complications = +2 multiplier per v4.2 tiered logic."
+    },
+    {
+      "id": "jay-010-2bed-6-complications-survey",
+      "description": "2-bed with 6 complications — survey required, return null",
+      "input": {
+        "size_class": "2_bed",
+        "from_postcode": "BS1 1AA",
+        "to_postcode": "BS9 9AA",
+        "distance_miles": 10,
+        "date": "2026-06-01",
+        "day_of_week": "tuesday",
+        "complications": ["narrow_access_origin", "narrow_access_destination", "parking_permit_required", "no_lift", "fragile_items_excessive", "long_carry_distance"],
+        "is_weekend": false,
+        "estimated_cubic_ft": 600
+      },
+      "expected_total_pence": null,
+      "expected_requires_survey": true,
+      "notes": "Per v4.2: 6+ complications triggers mandatory survey. Calculator returns null, calls customer for in-person assessment."
+    },
+    {
+      "id": "jay-011-3bed-tuesday-quiet-week",
+      "description": "3-bed Tuesday in low-utilization week",
+      "input": {
+        "size_class": "3_bed",
+        "from_postcode": "BS6 6AA",
+        "to_postcode": "BS8 4XX",
+        "distance_miles": 5,
+        "date": "2026-06-09",
+        "day_of_week": "tuesday",
+        "complications": [],
+        "is_weekend": false,
+        "estimated_cubic_ft": 950,
+        "_capacity_color": "green"
+      },
+      "expected_total_pence": 72000,
+      "notes": "Capacity calendar shows green — full margin discount potential. v0.2 dynamic pricing applies."
+    },
+    {
+      "id": "jay-012-3bed-end-of-month",
+      "description": "3-bed end-of-month Friday — high demand",
+      "input": {
+        "size_class": "3_bed",
+        "from_postcode": "BS9 1AA",
+        "to_postcode": "BS6 6AA",
+        "distance_miles": 6,
+        "date": "2026-06-26",
+        "day_of_week": "friday",
+        "complications": [],
+        "is_weekend": false,
+        "estimated_cubic_ft": 950,
+        "_capacity_color": "red"
+      },
+      "expected_total_pence": 88000,
+      "notes": "Capacity red — premium pricing applied. v0.2."
+    },
+    {
+      "id": "jay-013-1bed-edinburgh-very-long",
+      "description": "1-bed Bristol → Edinburgh — very long distance",
+      "input": {
+        "size_class": "1_bed",
+        "from_postcode": "BS3 4AA",
+        "to_postcode": "EH1 1XX",
+        "distance_miles": 380,
+        "date": "2026-06-15",
+        "day_of_week": "monday",
+        "complications": [],
+        "is_weekend": false,
+        "estimated_cubic_ft": 350,
+        "is_overnight": true
+      },
+      "expected_total_pence": 165000,
+      "notes": "Long-distance with overnight crew accommodation. Distance band absorbs accommodation cost; margin only on crew + van."
+    },
+    {
+      "id": "jay-014-business-office-relocation",
+      "description": "B2B office relocation, weekday",
+      "input": {
+        "size_class": "office_small",
+        "from_postcode": "BS1 5AA",
+        "to_postcode": "BS2 0AA",
+        "distance_miles": 2,
+        "date": "2026-06-17",
+        "day_of_week": "wednesday",
+        "complications": ["weekday_business_hours", "fragile_equipment"],
+        "is_weekend": false,
+        "is_business": true,
+        "estimated_cubic_ft": 800
+      },
+      "expected_total_pence": 95000,
+      "notes": "B2B markup + fragile equipment complication."
+    },
+    {
+      "id": "jay-015-piano-specialist",
+      "description": "Specialist piano move, separate quote",
+      "input": {
+        "size_class": "specialist_piano",
+        "from_postcode": "BS9 1AA",
+        "to_postcode": "BS6 6AA",
+        "distance_miles": 5,
+        "date": "2026-06-22",
+        "day_of_week": "saturday",
+        "complications": ["upright_piano", "no_lift", "narrow_access_destination"],
+        "is_weekend": true,
+        "estimated_cubic_ft": 80
+      },
+      "expected_total_pence": 45000,
+      "notes": "Specialist add-on, weekend, complications. Validates piano-specific pricing path."
+    },
+    {
+      "id": "jay-016-2bed-hourly-rate-validate",
+      "description": "Validates hourly rate for 2-bed local job",
+      "input": {
+        "size_class": "2_bed",
+        "from_postcode": "BS6 6AA",
+        "to_postcode": "BS8 1AA",
+        "distance_miles": 2,
+        "date": "2026-06-29",
+        "day_of_week": "monday",
+        "complications": [],
+        "is_weekend": false,
+        "estimated_cubic_ft": 600,
+        "_force_hourly_breakdown": true
+      },
+      "expected_total_pence": 48000,
+      "expected_breakdown": {
+        "crew_hours": 5,
+        "crew_rate_pence_per_hour_with_margin": 7200,
+        "van_charge_pence": 8000,
+        "passthrough_costs_pence": 4000
+      },
+      "notes": "Validates the hourly breakdown specifically — useful for surveyor quotes that override estimated hours."
+    },
+    {
+      "id": "jay-017-multi-stop-via-storage",
+      "description": "Move via storage drop — pickup, store some, deliver rest",
+      "input": {
+        "size_class": "3_bed",
+        "from_postcode": "BS9 1AA",
+        "to_postcode": "BS6 6AA",
+        "via_postcodes": ["STORAGE"],
+        "distance_miles": 12,
+        "date": "2026-07-01",
+        "day_of_week": "wednesday",
+        "complications": ["multi_stop"],
+        "is_weekend": false,
+        "estimated_cubic_ft": 950,
+        "_split_storage_pct": 30
+      },
+      "expected_total_pence": 89000,
+      "notes": "30% goes to storage, 70% delivered. Single van, single crew. Multi-stop complication adds time."
+    }
+  ]
+}

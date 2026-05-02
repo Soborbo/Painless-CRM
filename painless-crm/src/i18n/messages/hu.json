@@ -1,0 +1,40 @@
+{
+  "common": {
+    "save": "",
+    "cancel": "",
+    "loading": "",
+    "error": "",
+    "retry": ""
+  },
+  "auth": {
+    "signIn": "",
+    "signOut": "",
+    "email": "",
+    "password": "",
+    "magicLink": ""
+  },
+  "nav": {
+    "dashboard": "",
+    "customers": "",
+    "jobs": "",
+    "quotes": "",
+    "settings": ""
+  },
+  "smoke": {
+    "title": "",
+    "subtitle": "",
+    "tests": {
+      "pdf": "",
+      "image": "",
+      "realtime": "",
+      "excel": ""
+    },
+    "status": {
+      "pending": "",
+      "running": "",
+      "pass": "",
+      "fail": "",
+      "partial": ""
+    }
+  }
+}

@@ -1,0 +1,36 @@
+name = "painless-crm"
+main = ".open-next/worker.js"
+compatibility_date = "2026-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+NEXT_PUBLIC_APP_URL = "https://crm.painlessremovals.com"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+# Provision via: wrangler kv namespace create PRICING_KV
+[[kv_namespaces]]
+binding = "PRICING_KV"
+id = "TBD"
+
+[[kv_namespaces]]
+binding = "AVAILABILITY_KV"
+id = "TBD"
+
+# Secrets — set via: wrangler secret put NAME
+# SUPABASE_SERVICE_ROLE_KEY
+# RESEND_API_KEY
+# SENTRY_AUTH_TOKEN
+# CRM_WEBHOOK_SECRET (HMAC for inbound from painlessremovals.com)
+# ANTHROPIC_API_KEY
+
+[env.preview]
+name = "painless-crm-preview"
+
+[env.production]
+name = "painless-crm"
+routes = [
+  { pattern = "crm.painlessremovals.com", custom_domain = true }
+]

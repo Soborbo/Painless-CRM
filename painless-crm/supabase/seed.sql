@@ -1,0 +1,21 @@
+-- Local-dev seed. Auth users are created via the Supabase Studio UI or
+-- supabase CLI (`supabase auth users create`); only profile rows go here.
+-- Replace the uuids below with the auth.users.id values produced by the CLI.
+
+-- Example (uncomment after creating the auth users):
+-- insert into public.users (auth_id, company_id, email, full_name, role) values
+--   ('00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000001',
+--    'laszlo@soborbo.com', 'Laszlo (Soborbo)', 'super_admin'),
+--   ('00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001',
+--    'jay@painlessremovals.com', 'Jay Newton', 'admin'),
+--   ('00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000001',
+--    'tom@painlessremovals.com', 'Tom', 'sales'),
+--   ('00000000-0000-0000-0000-000000000013', '00000000-0000-0000-0000-000000000001',
+--    'tamara@painlessremovals.com', 'Tamara', 'sales'),
+--   ('00000000-0000-0000-0000-000000000014', '00000000-0000-0000-0000-000000000001',
+--    'surveyor@painlessremovals.com', 'Surveyor', 'surveyor'),
+--   ('00000000-0000-0000-0000-000000000015', '00000000-0000-0000-0000-000000000001',
+--    'loader@painlessremovals.com', 'Loader', 'loader'),
+--   ('00000000-0000-0000-0000-000000000016', '00000000-0000-0000-0000-000000000001',
+--    'accounts@painlessremovals.com', 'Accountant', 'accounts')
+-- on conflict (auth_id) do nothing;

@@ -1,0 +1,40 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Retry"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "magicLink": "Send magic link"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "customers": "Customers",
+    "jobs": "Jobs",
+    "quotes": "Quotes",
+    "settings": "Settings"
+  },
+  "smoke": {
+    "title": "Smoke tests",
+    "subtitle": "Phase 00 gate — all 4 must pass on production Workers",
+    "tests": {
+      "pdf": "PDF generation",
+      "image": "Image processing",
+      "realtime": "Supabase Realtime",
+      "excel": "Excel export"
+    },
+    "status": {
+      "pending": "Pending",
+      "running": "Running…",
+      "pass": "Pass",
+      "fail": "Fail",
+      "partial": "Partial"
+    }
+  }
+}

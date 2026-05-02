@@ -72,12 +72,14 @@ The four deliverables that need a human (you):
 
 1. **Supabase Pro project** in `eu-west-2` (London). Add URL + anon key to `.env.local`,
    set `SUPABASE_SERVICE_ROLE_KEY` as a Wrangler secret in prod.
-2. **Cloudflare account** — `wrangler login`, then provision KV namespaces:
-   ```bash
-   wrangler kv namespace create PRICING_KV
-   wrangler kv namespace create AVAILABILITY_KV
-   ```
-   Paste the IDs into `wrangler.toml`. Bind Browser Rendering + Cloudflare Images.
+2. **Cloudflare account** — KV namespaces already provisioned (account
+   `075668606da58c5b96a45a075f1ca99c`, IDs wired in `wrangler.toml`):
+   - `painless-crm-PRICING_KV` + `-preview`
+   - `painless-crm-AVAILABILITY_KV` + `-preview`
+
+   Still TODO: `wrangler login`, bind Browser Rendering + Cloudflare Images,
+   set Worker secrets via `wrangler secret put NAME` for each entry under
+   `wrangler.toml` "Secrets" comment.
 3. **Sentry project** — paste DSN into `.env.local` (`SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN`).
 4. **DNS** — point `crm.painlessremovals.com` at Cloudflare Workers.
 

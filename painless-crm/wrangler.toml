@@ -13,11 +13,13 @@ binding = "ASSETS"
 # Provision via: wrangler kv namespace create PRICING_KV
 [[kv_namespaces]]
 binding = "PRICING_KV"
-id = "TBD"
+id = "c486a7082d2643ab8891c9500e4fbf18"
+preview_id = "b96030e095fc496e93958b6a7f0c95d0"
 
 [[kv_namespaces]]
 binding = "AVAILABILITY_KV"
-id = "TBD"
+id = "d41c64b23c394381b7717fe3fbe6b2b6"
+preview_id = "1d039bb1999c44e3a34f7f4acf6625a3"
 
 # Secrets — set via: wrangler secret put NAME
 # SUPABASE_SERVICE_ROLE_KEY

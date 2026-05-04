@@ -89,3 +89,22 @@ export const PublishPricingSchema = z.object({
 });
 
 export type PublishPricingInput = z.infer<typeof PublishPricingSchema>;
+
+// Scalar-only edit. The matrix + collection editors land in a follow-up slice;
+// for now operators can republish a tweaked copy of the active version with
+// adjusted labels, hourly rates, validity, dynamic flag, and notes. The non-
+// scalar fields are inherited verbatim from the active config.
+
+export const PricingScalarEditSchema = z.object({
+  version_label: z.string().min(1).max(80),
+  crew_hourly_rate_pence: z.number().int().nonnegative().max(100_000),
+  van_hourly_rate_pence: z.number().int().nonnegative().max(100_000),
+  fuel_per_mile_pence: z.number().int().nonnegative().max(10_000),
+  insurance_per_job_pence: z.number().int().nonnegative().max(1_000_000),
+  waste_disposal_fixed_pence: z.number().int().nonnegative().max(1_000_000).nullable(),
+  quote_validity_days: z.number().int().min(1).max(365),
+  dynamic_pricing_enabled: z.boolean(),
+  notes: z.string().max(2000).optional().nullable(),
+});
+
+export type PricingScalarEditInput = z.infer<typeof PricingScalarEditSchema>;

@@ -4,7 +4,7 @@ import { requireRole } from '@/lib/auth/require-role';
 import { writeBroadcastedPricing } from '@/lib/kv/pricing';
 import { PricingEngineError, calculateQuote } from '@/lib/pricing/engine';
 import { SMOKE_PRICING_CONFIG } from '@/lib/pricing/fixtures';
-import { parseSimulationForm } from '@/lib/pricing/form';
+import { applyScalarEdit, parseScalarEditForm, parseSimulationForm } from '@/lib/pricing/form';
 import {
   type PricingConfig,
   type PublishPricingInput,
@@ -13,6 +13,7 @@ import {
 } from '@/lib/schemas/pricing';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 const PRICING_ROLES = ['admin', 'manager', 'super_admin'] as const;
 
@@ -195,4 +196,27 @@ export async function simulateQuote(
     }
     return { status: 'error', message: 'Could not run simulation' };
   }
+}
+
+export async function editPricingScalars(
+  _prev: PricingActionState,
+  form: FormData,
+): Promise<PricingActionState> {
+  const me = await requireRole(PRICING_ROLES);
+
+  const parseResult = parseScalarEditForm(form);
+  if (!parseResult.ok) {
+    return { status: 'error', message: parseResult.message };
+  }
+
+  const active = await loadActiveConfig(me.company_id);
+  if (!active) {
+    return { status: 'error', message: 'No active pricing version. Seed one first.' };
+  }
+
+  const merged = applyScalarEdit(active.config, parseResult.input);
+  const result = await publishPricing({ config: merged, notes: parseResult.input.notes ?? null });
+  if (result.status !== 'ok') return result;
+
+  redirect('/dashboard/settings/pricing');
 }

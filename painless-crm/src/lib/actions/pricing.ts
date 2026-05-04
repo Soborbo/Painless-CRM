@@ -2,7 +2,15 @@
 
 import { requireRole } from '@/lib/auth/require-role';
 import { writeBroadcastedPricing } from '@/lib/kv/pricing';
-import { type PublishPricingInput, PublishPricingSchema } from '@/lib/schemas/pricing';
+import { PricingEngineError, calculateQuote } from '@/lib/pricing/engine';
+import { SMOKE_PRICING_CONFIG } from '@/lib/pricing/fixtures';
+import { parseSimulationForm } from '@/lib/pricing/form';
+import {
+  type PricingConfig,
+  type PublishPricingInput,
+  PublishPricingSchema,
+  type QuoteInput,
+} from '@/lib/schemas/pricing';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
@@ -82,4 +90,109 @@ export async function publishPricing(input: PublishPricingInput): Promise<Pricin
     version_id: row.id,
     broadcast: broadcast.ok ? 'sent' : 'deferred',
   };
+}
+
+export type BootstrapState =
+  | { status: 'idle' }
+  | { status: 'error'; message: string }
+  | { status: 'ok'; version_id: string; broadcast: 'sent' | 'deferred' }
+  | { status: 'noop'; reason: 'already_seeded' };
+
+export const INITIAL_BOOTSTRAP_STATE: BootstrapState = { status: 'idle' };
+
+export async function bootstrapSmokePricing(): Promise<BootstrapState> {
+  const me = await requireRole(PRICING_ROLES);
+  const supabase = await createClient();
+  const { data: existing } = await supabase
+    .from('pricing_versions')
+    .select('id')
+    .eq('company_id', me.company_id)
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+  if (existing) {
+    return { status: 'noop', reason: 'already_seeded' };
+  }
+  const result = await publishPricing({ config: SMOKE_PRICING_CONFIG, notes: 'Bootstrap seed' });
+  if (result.status !== 'ok') return result;
+  return { status: 'ok', version_id: result.version_id, broadcast: result.broadcast };
+}
+
+export type SimulationState =
+  | { status: 'idle' }
+  | { status: 'error'; message: string }
+  | {
+      status: 'ok';
+      input: QuoteInput;
+      result: ReturnType<typeof calculateQuote>;
+      version_label: string;
+    };
+
+export const INITIAL_SIMULATION_STATE: SimulationState = { status: 'idle' };
+
+const ACTIVE_CONFIG_COLUMNS = `
+  id, version_label, margin_matrix, crew_hourly_rate_pence, van_hourly_rate_pence,
+  pass_through_config, complications, size_categories, distance_bands,
+  dynamic_pricing_enabled, capacity_bands, modulation_sources, quote_validity_days,
+  notes
+`;
+
+async function loadActiveConfig(
+  companyId: string,
+): Promise<{ config: PricingConfig; label: string } | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('pricing_versions')
+    .select(ACTIVE_CONFIG_COLUMNS)
+    .eq('company_id', companyId)
+    .is('effective_to', null)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (!data) return null;
+  const row = data as Record<string, unknown>;
+  return {
+    label: row.version_label as string,
+    config: {
+      version_label: row.version_label as string,
+      margin_matrix: row.margin_matrix as number[][],
+      crew_hourly_rate_pence: row.crew_hourly_rate_pence as number,
+      van_hourly_rate_pence: row.van_hourly_rate_pence as number,
+      pass_through_config: row.pass_through_config as PricingConfig['pass_through_config'],
+      complications: row.complications as PricingConfig['complications'],
+      size_categories: row.size_categories as PricingConfig['size_categories'],
+      distance_bands: row.distance_bands as PricingConfig['distance_bands'],
+      dynamic_pricing_enabled: (row.dynamic_pricing_enabled as boolean | null) ?? false,
+      capacity_bands: (row.capacity_bands as PricingConfig['capacity_bands']) ?? undefined,
+      modulation_sources: (row.modulation_sources as string[] | null) ?? undefined,
+      quote_validity_days: (row.quote_validity_days as number | null) ?? 7,
+      notes: (row.notes as string | null) ?? null,
+    },
+  };
+}
+
+export async function simulateQuote(
+  _prev: SimulationState,
+  form: FormData,
+): Promise<SimulationState> {
+  const me = await requireRole(PRICING_ROLES);
+
+  const parseResult = parseSimulationForm(form);
+  if (!parseResult.ok) {
+    return { status: 'error', message: parseResult.message };
+  }
+
+  const active = await loadActiveConfig(me.company_id);
+  if (!active) {
+    return { status: 'error', message: 'No active pricing version. Seed one first.' };
+  }
+
+  try {
+    const result = calculateQuote(active.config, parseResult.input);
+    return { status: 'ok', input: parseResult.input, result, version_label: active.label };
+  } catch (err) {
+    if (err instanceof PricingEngineError) {
+      return { status: 'error', message: err.message };
+    }
+    return { status: 'error', message: 'Could not run simulation' };
+  }
 }

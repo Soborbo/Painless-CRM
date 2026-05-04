@@ -53,6 +53,12 @@ export default async function CustomerPage({ params }: Props) {
         </div>
         <div className="flex gap-2">
           <Link
+            href={`/dashboard/jobs/new?customer_id=${id}`}
+            className="rounded-md bg-[var(--color-primary)] px-3 py-1.5 text-sm font-medium text-[var(--color-primary-foreground)] transition-opacity hover:opacity-90"
+          >
+            {t('newJob')}
+          </Link>
+          <Link
             href={`/dashboard/customers/${id}/edit`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
           >

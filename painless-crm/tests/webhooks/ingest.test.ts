@@ -1,4 +1,4 @@
-import { IncomingQuoteSchema } from '@/lib/jobs/ingest';
+import { IncomingQuoteSchema } from '@/lib/webhooks/quote';
 import { describe, expect, it } from 'vitest';
 
 const PAINLESS_COMPANY_ID = '00000000-0000-0000-0000-000000000001';

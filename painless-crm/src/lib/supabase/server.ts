@@ -2,6 +2,9 @@ import { serverEnv } from '@/lib/env';
 import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
+// TODO(phase-01): wire `<Database>` generic once @supabase/ssr upgrade lands.
+// 0.5.2 imports GenericSchema from a stale subpath of supabase-js and clobbers
+// the schema inference. Generated types live in src/lib/database.types.ts.
 export async function createClient() {
   const env = serverEnv();
   const cookieStore = await cookies();

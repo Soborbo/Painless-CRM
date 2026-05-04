@@ -11,7 +11,19 @@
     "signOut": "Sign out",
     "email": "Email",
     "password": "Password",
-    "magicLink": "Send magic link"
+    "magicLink": "Send magic link",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordHelp": "Enter your email and we'll send a reset link.",
+    "sendResetLink": "Send reset link",
+    "setNewPassword": "Set a new password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "save": "Save",
+    "acceptInvite": "Accept invitation",
+    "acceptInviteHelp": "Set up your account for {email}.",
+    "fullName": "Full name",
+    "inviteInvalid": "Invitation invalid or expired",
+    "inviteInvalidHelp": "Ask the admin who invited you to send a fresh link."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -19,6 +31,42 @@
     "jobs": "Jobs",
     "quotes": "Quotes",
     "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "signedInAs": "Signed in as {name} · {role}",
+    "emptyTitle": "Empty state",
+    "emptyBody": "Domain UI lands in phases 03 and onwards."
+  },
+  "users": {
+    "navLabel": "Users",
+    "title": "Team & access",
+    "subtitle": "Invite teammates, manage roles, revoke access.",
+    "inviteTitle": "Invite a teammate",
+    "inviteEmail": "Email",
+    "inviteRole": "Role",
+    "sendInvite": "Send invite",
+    "pendingInvites": "Pending invitations",
+    "noPending": "No pending invitations.",
+    "expiresAt": "Expires",
+    "revoke": "Revoke",
+    "teamMembers": "Team members",
+    "noTeamMembers": "No teammates yet.",
+    "fullName": "Full name",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "you": "you",
+    "roles": {
+      "super_admin": "Super admin",
+      "admin": "Admin",
+      "manager": "Manager",
+      "sales": "Sales",
+      "surveyor": "Surveyor",
+      "loader": "Loader",
+      "accounts": "Accounts",
+      "viewer": "Viewer"
+    }
   },
   "smoke": {
     "title": "Smoke tests",

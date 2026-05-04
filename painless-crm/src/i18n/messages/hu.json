@@ -11,7 +11,19 @@
     "signOut": "",
     "email": "",
     "password": "",
-    "magicLink": ""
+    "magicLink": "",
+    "forgotPassword": "",
+    "forgotPasswordHelp": "",
+    "sendResetLink": "",
+    "setNewPassword": "",
+    "newPassword": "",
+    "confirmPassword": "",
+    "save": "",
+    "acceptInvite": "",
+    "acceptInviteHelp": "",
+    "fullName": "",
+    "inviteInvalid": "",
+    "inviteInvalidHelp": ""
   },
   "nav": {
     "dashboard": "",
@@ -19,6 +31,42 @@
     "jobs": "",
     "quotes": "",
     "settings": ""
+  },
+  "dashboard": {
+    "title": "",
+    "signedInAs": "",
+    "emptyTitle": "",
+    "emptyBody": ""
+  },
+  "users": {
+    "navLabel": "",
+    "title": "",
+    "subtitle": "",
+    "inviteTitle": "",
+    "inviteEmail": "",
+    "inviteRole": "",
+    "sendInvite": "",
+    "pendingInvites": "",
+    "noPending": "",
+    "expiresAt": "",
+    "revoke": "",
+    "teamMembers": "",
+    "noTeamMembers": "",
+    "fullName": "",
+    "status": "",
+    "statusActive": "",
+    "statusInactive": "",
+    "you": "",
+    "roles": {
+      "super_admin": "",
+      "admin": "",
+      "manager": "",
+      "sales": "",
+      "surveyor": "",
+      "loader": "",
+      "accounts": "",
+      "viewer": ""
+    }
   },
   "smoke": {
     "title": "",

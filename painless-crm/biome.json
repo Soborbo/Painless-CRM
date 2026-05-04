@@ -10,7 +10,8 @@
       "dist",
       "out",
       "supabase/.branches",
-      ".vercel"
+      ".vercel",
+      "src/lib/database.types.ts"
     ]
   },
   "formatter": {

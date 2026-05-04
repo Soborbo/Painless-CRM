@@ -12,6 +12,8 @@ export function createAdminClient() {
   if (!env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for admin client');
   }
+  // TODO(phase-01): wire `<Database>` generic once @supabase/ssr upgrade lands;
+  // generated types live in src/lib/database.types.ts.
   return createSupabaseClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

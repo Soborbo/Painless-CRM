@@ -68,6 +68,73 @@
       "viewer": "Viewer"
     }
   },
+  "customers": {
+    "title": "Customers",
+    "totalCount": "{count, plural, =0 {No customers yet} one {# customer} other {# customers}}",
+    "newCustomer": "New customer",
+    "newSubtitle": "Create an individual or business customer.",
+    "search": "Search",
+    "searchPlaceholder": "Name, email, phone, postcode…",
+    "typeAll": "All types",
+    "typeIndividual": "Individual",
+    "typeBusiness": "Business",
+    "emptyList": "No customers match your filters.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Soft-delete this customer? Their jobs stay; the customer is hidden from the list.",
+    "create": "Create customer",
+    "createdOn": "Created {date}",
+    "duplicateWarning": "Possible duplicates found:",
+    "createAnyway": "Create anyway",
+    "contactSection": "Contact",
+    "sourceSection": "Source",
+    "jobsTab": "Jobs",
+    "noJobs": "No jobs yet.",
+    "stats": {
+      "ltv": "Lifetime value",
+      "jobCount": "Jobs",
+      "lastJob": "Last job"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "email": "Email",
+      "phone": "Phone",
+      "created": "Created"
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "companyName": "Company name",
+      "vatNumber": "VAT number",
+      "paymentTermsDays": "Payment terms (days)",
+      "email": "Email",
+      "phone": "Phone",
+      "acquisitionSource": "Source",
+      "acquisitionCampaign": "Campaign",
+      "marketingConsent": "Marketing consent",
+      "notes": "Notes"
+    },
+    "sources": {
+      "website": "Website",
+      "google_ads": "Google Ads",
+      "meta_ads": "Meta Ads",
+      "referral": "Referral",
+      "b2b_outreach": "B2B outreach",
+      "affiliate": "Affiliate",
+      "walk_in": "Walk-in",
+      "phone": "Phone",
+      "other": "Other"
+    }
+  },
+  "jobs": {
+    "columns": {
+      "number": "Number",
+      "stage": "Stage",
+      "moveDate": "Move date",
+      "value": "Value"
+    }
+  },
   "smoke": {
     "title": "Smoke tests",
     "subtitle": "Phase 00 gate — all 4 must pass on production Workers",

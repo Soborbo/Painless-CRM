@@ -68,6 +68,73 @@
       "viewer": ""
     }
   },
+  "customers": {
+    "title": "",
+    "totalCount": "{count, plural, =0 {} one {} other {}}",
+    "newCustomer": "",
+    "newSubtitle": "",
+    "search": "",
+    "searchPlaceholder": "",
+    "typeAll": "",
+    "typeIndividual": "",
+    "typeBusiness": "",
+    "emptyList": "",
+    "edit": "",
+    "delete": "",
+    "confirmDelete": "",
+    "create": "",
+    "createdOn": "",
+    "duplicateWarning": "",
+    "createAnyway": "",
+    "contactSection": "",
+    "sourceSection": "",
+    "jobsTab": "",
+    "noJobs": "",
+    "stats": {
+      "ltv": "",
+      "jobCount": "",
+      "lastJob": ""
+    },
+    "columns": {
+      "name": "",
+      "type": "",
+      "email": "",
+      "phone": "",
+      "created": ""
+    },
+    "fields": {
+      "firstName": "",
+      "lastName": "",
+      "companyName": "",
+      "vatNumber": "",
+      "paymentTermsDays": "",
+      "email": "",
+      "phone": "",
+      "acquisitionSource": "",
+      "acquisitionCampaign": "",
+      "marketingConsent": "",
+      "notes": ""
+    },
+    "sources": {
+      "website": "",
+      "google_ads": "",
+      "meta_ads": "",
+      "referral": "",
+      "b2b_outreach": "",
+      "affiliate": "",
+      "walk_in": "",
+      "phone": "",
+      "other": ""
+    }
+  },
+  "jobs": {
+    "columns": {
+      "number": "",
+      "stage": "",
+      "moveDate": "",
+      "value": ""
+    }
+  },
   "smoke": {
     "title": "",
     "subtitle": "",

@@ -189,7 +189,16 @@
       "stage": "",
       "assigned": "",
       "moveDate": "",
-      "value": ""
+      "value": "",
+      "tags": ""
+    },
+    "viewList": "",
+    "viewKanban": "",
+    "quickMove": "",
+    "sla": {
+      "warn": "",
+      "breach": "",
+      "cleared": ""
     },
     "stages": {
       "lead": "",

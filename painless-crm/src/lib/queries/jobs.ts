@@ -22,6 +22,8 @@ export type JobRow = {
 };
 
 export type JobListRow = JobRow & {
+  first_response_due_at: string | null;
+  first_response_at: string | null;
   customer: {
     id: string;
     customer_type: string;
@@ -31,6 +33,7 @@ export type JobListRow = JobRow & {
     primary_email: string | null;
   } | null;
   assigned_to: { id: string; full_name: string } | null;
+  tags: string[];
 };
 
 export type JobListResult = {
@@ -43,17 +46,31 @@ export type JobListResult = {
 const LIST_COLUMNS = `
   id, job_number, customer_id, stage, sub_status, acquisition_source,
   assigned_to_id, surveyor_id, move_date, enquiry_at, quote_total_pence,
+  first_response_due_at, first_response_at,
   notes, created_at, updated_at, version,
   customer:customers (id, customer_type, first_name, last_name, company_name, primary_email),
-  assigned_to:users!jobs_assigned_to_id_fkey (id, full_name)
+  assigned_to:users!jobs_assigned_to_id_fkey (id, full_name),
+  job_tags (tag)
 `;
+
+type RawJobListRow = Omit<JobListRow, 'tags'> & {
+  job_tags: { tag: string }[] | null;
+};
+
+function flattenTags(rows: RawJobListRow[]): JobListRow[] {
+  return rows.map(({ job_tags, ...rest }) => ({
+    ...rest,
+    tags: (job_tags ?? []).map((t) => t.tag),
+  }));
+}
 
 const DETAIL_COLUMNS = `
   id, job_number, customer_id, stage, sub_status, acquisition_source,
   assigned_to_id, surveyor_id, move_date, enquiry_at, contacted_at, quoted_at,
   accepted_at, confirmed_at, in_progress_at, completed_at, invoiced_at, paid_at,
   declined_at, dead_at, cancelled_at, decline_reason, cancellation_reason,
-  deposit_refund_decision, quote_total_pence, notes,
+  deposit_refund_decision, quote_total_pence,
+  first_response_due_at, first_response_at, notes,
   created_at, updated_at, version,
   customer:customers (id, customer_type, first_name, last_name, company_name, primary_email, primary_phone),
   assigned_to:users!jobs_assigned_to_id_fkey (id, full_name),
@@ -82,14 +99,38 @@ export async function listJobs(filters: JobListFilters): Promise<JobListResult> 
 
   const { data, count } = await query;
   return {
-    rows: (data ?? []) as unknown as JobListRow[],
+    rows: flattenTags((data ?? []) as unknown as RawJobListRow[]),
     total: count ?? 0,
     page: filters.page,
     pageSize: JOB_PAGE_SIZE,
   };
 }
 
-export type JobDetail = Omit<JobListRow, 'customer'> & {
+export type KanbanFilters = Omit<JobListFilters, 'page' | 'stage'>;
+
+export const KANBAN_PER_STAGE_LIMIT = 200;
+
+export async function listJobsForKanban(filters: KanbanFilters): Promise<JobListRow[]> {
+  const supabase = await createClient();
+  let query = supabase
+    .from('jobs')
+    .select(LIST_COLUMNS)
+    .is('deleted_at', null)
+    .order('updated_at', { ascending: false })
+    .limit(KANBAN_PER_STAGE_LIMIT * 13);
+
+  if (filters.assigned_to_id) query = query.eq('assigned_to_id', filters.assigned_to_id);
+  if (filters.q) {
+    const safe = filters.q.replace(/[%_,]/g, ' ');
+    const pattern = `%${safe}%`;
+    query = query.or([`job_number.ilike.${pattern}`, `notes.ilike.${pattern}`].join(','));
+  }
+
+  const { data } = await query;
+  return flattenTags((data ?? []) as unknown as RawJobListRow[]);
+}
+
+export type JobDetail = Omit<JobListRow, 'customer' | 'tags'> & {
   contacted_at: string | null;
   quoted_at: string | null;
   accepted_at: string | null;

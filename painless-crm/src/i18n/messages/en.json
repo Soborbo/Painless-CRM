@@ -189,7 +189,16 @@
       "stage": "Stage",
       "assigned": "Assigned",
       "moveDate": "Move date",
-      "value": "Value"
+      "value": "Value",
+      "tags": "Tags"
+    },
+    "viewList": "List",
+    "viewKanban": "Kanban",
+    "quickMove": "Move",
+    "sla": {
+      "warn": "SLA soon",
+      "breach": "SLA breach",
+      "cleared": "Responded"
     },
     "stages": {
       "lead": "Lead",

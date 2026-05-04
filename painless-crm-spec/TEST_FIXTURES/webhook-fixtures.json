@@ -1,0 +1,375 @@
+{
+  "$schema": "https://painless-crm.dev/schemas/webhook-fixtures.v1.json",
+  "version": "1.0",
+  "description": "Test fixtures for the v2 hardened webhook handler (5 gates: signature, timestamp, schema_version, idempotency, rate_limit). Each fixture has the exact request shape (headers + body) and the expected response (status + error code). Used by tests/webhooks/handler.test.ts and the per-source process tests.",
+  "shared_test_secret": "test_secret_painlessremovals_DO_NOT_USE_IN_PROD",
+  "shared_test_clock_unix": 1730000000,
+  "scenarios": [
+    {
+      "id": "valid-quote-saved",
+      "category": "happy-path",
+      "description": "Valid painlessremovals.com quote-saved webhook. All gates pass.",
+      "source": "painlessremovals",
+      "endpoint": "/api/webhooks/painlessremovals/quote",
+      "request": {
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Signature": "hmac-sha256=COMPUTED_AT_TEST_TIME",
+          "X-Timestamp": "1730000000",
+          "X-Schema-Version": "1.0",
+          "X-Event-Id": "550e8400-e29b-41d4-a716-446655440000"
+        },
+        "body": {
+          "event_id": "550e8400-e29b-41d4-a716-446655440000",
+          "event_type": "quote_saved",
+          "occurred_at": "2026-04-15T10:30:00Z",
+          "source_url": "https://painlessremovals.com/quote-calculator",
+          "utm": {
+            "source": "google",
+            "medium": "cpc",
+            "campaign": "bristol-removals"
+          },
+          "fbp": "fb.1.1700000000.1234567890",
+          "gclid": "Cj0KCQiA1234567890",
+          "user_agent": "Mozilla/5.0",
+          "ip": "82.10.20.30",
+          "payload": {
+            "size_class": "2_bed",
+            "from_postcode": "BS9 4AB",
+            "to_postcode": "BS5 7XY",
+            "estimated_total_pence": 56000,
+            "customer_email": "test@example.com",
+            "customer_phone": "+447700900123",
+            "customer_name": "Test Customer",
+            "move_date": "2026-05-01"
+          }
+        }
+      },
+      "expected_response": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "event_id": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      }
+    },
+    {
+      "id": "duplicate-event-id-replay",
+      "category": "happy-path",
+      "description": "Same event_id sent twice. Second request returns 200 with duplicate:true. No double processing.",
+      "source": "painlessremovals",
+      "endpoint": "/api/webhooks/painlessremovals/quote",
+      "preconditions": "Event 550e8400-e29b-41d4-a716-446655440000 already in webhook_events.",
+      "request": "(same as valid-quote-saved)",
+      "expected_response": {
+        "status": 200,
+        "body": {
+          "ok": true,
+          "duplicate": true,
+          "event_id": "550e8400-e29b-41d4-a716-446655440000"
+        }
+      }
+    },
+    {
+      "id": "gate1-bad-signature",
+      "category": "gate1-signature",
+      "description": "Tampered signature. Body unchanged, signature recomputed with wrong secret.",
+      "source": "painlessremovals",
+      "endpoint": "/api/webhooks/painlessremovals/quote",
+      "request": {
+        "headers": {
+          "X-Signature": "hmac-sha256=0000000000000000000000000000000000000000000000000000000000000000",
+          "X-Timestamp": "1730000000",
+          "X-Schema-Version": "1.0",
+          "X-Event-Id": "11111111-1111-1111-1111-111111111111"
+        },
+        "body": "(valid quote_saved body)"
+      },
+      "expected_response": {
+        "status": 401,
+        "body": { "error": "invalid_signature" }
+      }
+    },
+    {
+      "id": "gate1-missing-signature-header",
+      "category": "gate1-signature",
+      "description": "X-Signature header absent entirely.",
+      "request": {
+        "headers": {
+          "X-Timestamp": "1730000000",
+          "X-Schema-Version": "1.0",
+          "X-Event-Id": "22222222-2222-2222-2222-222222222222"
+        },
+        "body": "(valid)"
+      },
+      "expected_response": {
+        "status": 400,
+        "body": { "error": "missing_required_headers" }
+      }
+    },
+    {
+      "id": "gate1-body-tampered",
+      "category": "gate1-signature",
+      "description": "Body modified after signature computed (replay-and-tamper attack). Signature won't match.",
+      "request": {
+        "headers": "(valid signature for ORIGINAL body)",
+        "body": "{ ...modified body... }"
+      },
+      "expected_response": {
+        "status": 401,
+        "body": { "error": "invalid_signature" }
+      }
+    },
+    {
+      "id": "gate2-stale-timestamp-old",
+      "category": "gate2-timestamp",
+      "description": "Timestamp 10 minutes in the past. Outside the 5-minute freshness window.",
+      "request": {
+        "headers": {
+          "X-Timestamp": "1729999400",
+          "X-Schema-Version": "1.0",
+          "X-Signature": "(valid for this canonical)",
+          "X-Event-Id": "33333333-3333-3333-3333-333333333333"
+        },
+        "body": "(valid)"
+      },
+      "expected_response": {
+        "status": 401,
+        "body": { "error": "stale_timestamp" }
+      }
+    },
+    {
+      "id": "gate2-stale-timestamp-future",
+      "category": "gate2-timestamp",
+      "description": "Timestamp 10 minutes in the future. Also outside window — defends against clock-fiddling attacks.",
+      "request": {
+        "headers": {
+          "X-Timestamp": "1730000600",
+          "X-Schema-Version": "1.0",
+          "X-Signature": "(valid for this canonical)",
+          "X-Event-Id": "44444444-4444-4444-4444-444444444444"
+        },
+        "body": "(valid)"
+      },
+      "expected_response": {
+        "status": 401,
+        "body": { "error": "stale_timestamp" }
+      }
+    },
+    {
+      "id": "gate2-edge-of-window-acceptable",
+      "category": "gate2-timestamp",
+      "description": "Timestamp 4 minutes 59 seconds old. INSIDE window. Should pass.",
+      "request": {
+        "headers": {
+          "X-Timestamp": "1729999701",
+          "X-Schema-Version": "1.0",
+          "X-Signature": "(valid)",
+          "X-Event-Id": "55555555-5555-5555-5555-555555555555"
+        },
+        "body": "(valid)"
+      },
+      "expected_response": {
+        "status": 200
+      }
+    },
+    {
+      "id": "gate2-non-numeric-timestamp",
+      "category": "gate2-timestamp",
+      "description": "X-Timestamp header is not parseable as int. Defensive parse rejects.",
+      "request": {
+        "headers": {
+          "X-Timestamp": "not-a-number",
+          "X-Schema-Version": "1.0",
+          "X-Signature": "any",
+          "X-Event-Id": "66666666-6666-6666-6666-666666666666"
+        },
+        "body": "(valid)"
+      },
+      "expected_response": {
+        "status": 401,
+        "body": { "error": "stale_timestamp" }
+      }
+    },
+    {
+      "id": "gate3-unsupported-version",
+      "category": "gate3-version",
+      "description": "Schema version 0.9 — not in allow-list ['1.0', '1.1'].",
+      "request": {
+        "headers": {
+          "X-Timestamp": "1730000000",
+          "X-Schema-Version": "0.9",
+          "X-Signature": "(valid for this canonical)",
+          "X-Event-Id": "77777777-7777-7777-7777-777777777777"
+        },
+        "body": "(valid)"
+      },
+      "expected_response": {
+        "status": 400,
+        "body": { "error": "unsupported_schema_version" }
+      }
+    },
+    {
+      "id": "gate3-version-1.1-accepted",
+      "category": "gate3-version",
+      "description": "Future schema version 1.1 — in allow-list, should pass.",
+      "request": {
+        "headers": {
+          "X-Timestamp": "1730000000",
+          "X-Schema-Version": "1.1",
+          "X-Signature": "(valid for this canonical)",
+          "X-Event-Id": "88888888-8888-8888-8888-888888888888"
+        },
+        "body": "(valid v1.1 payload — may have additional fields)"
+      },
+      "expected_response": {
+        "status": 200
+      }
+    },
+    {
+      "id": "gate4-malformed-json",
+      "category": "gate4-payload",
+      "description": "Body is not valid JSON.",
+      "request": {
+        "headers": "(all valid + signature for the malformed body)",
+        "body": "{ this is not json }"
+      },
+      "expected_response": {
+        "status": 400,
+        "body": { "error": "invalid_payload" }
+      }
+    },
+    {
+      "id": "gate4-zod-validation-fails",
+      "category": "gate4-payload",
+      "description": "Body is valid JSON but Zod schema rejects (e.g., missing required field).",
+      "request": {
+        "headers": "(all valid)",
+        "body": {
+          "event_id": "99999999-9999-9999-9999-999999999999",
+          "event_type": "quote_saved"
+        }
+      },
+      "expected_response": {
+        "status": 400,
+        "body": {
+          "error": "invalid_payload",
+          "details": "(Zod issues)"
+        }
+      }
+    },
+    {
+      "id": "gate4-missing-event-id",
+      "category": "gate4-payload",
+      "description": "extractEventId returns empty string.",
+      "request": {
+        "headers": "(all valid)",
+        "body": {
+          "event_id": "",
+          "event_type": "quote_saved",
+          "(rest valid)": "..."
+        }
+      },
+      "expected_response": {
+        "status": 400,
+        "body": { "error": "missing_event_id" }
+      }
+    },
+    {
+      "id": "gate5-rate-limit",
+      "category": "gate5-rate-limit",
+      "description": "121st request within 60s from same IP — exceeds default limit.",
+      "preconditions": "120 requests already submitted in the last 60s from IP 82.10.20.30.",
+      "request": "(any valid request from 82.10.20.30)",
+      "expected_response": {
+        "status": 429,
+        "body": { "error": "rate_limited" }
+      }
+    },
+    {
+      "id": "gate5-different-source-different-bucket",
+      "category": "gate5-rate-limit",
+      "description": "Rate limit is per-source per-IP. GoCardless and painlessremovals webhooks have separate buckets.",
+      "preconditions": "120 painlessremovals requests in last 60s from IP X. GoCardless bucket empty.",
+      "request": "(valid GoCardless request from same IP X)",
+      "expected_response": {
+        "status": 200
+      }
+    },
+    {
+      "id": "ip-allowlist-violation-gocardless",
+      "category": "ip-allowlist",
+      "description": "GoCardless has an IP allowlist. Request from non-listed IP rejected before signature check.",
+      "source": "gocardless",
+      "request": {
+        "headers": "(any)",
+        "body": "(any)",
+        "ip": "1.2.3.4"
+      },
+      "expected_response": {
+        "status": 403,
+        "body": { "error": "ip_not_allowlisted" }
+      }
+    },
+    {
+      "id": "process-fn-throws",
+      "category": "processing",
+      "description": "All gates pass but the per-source process function throws. Audit trail recorded.",
+      "request": "(valid that triggers a known internal error)",
+      "expected_response": {
+        "status": 500,
+        "body": { "error": "processing_failed" }
+      },
+      "side_effects": [
+        "webhook_events row inserted with result='failed' and error_message scrubbed of PII",
+        "Sentry exception captured with tags { source, event_id }",
+        "No customer/job rows created"
+      ]
+    },
+    {
+      "id": "process-fn-business-rejection",
+      "category": "processing",
+      "description": "Process function returns { ok: false, reason }. 422 with the reason.",
+      "request": "(valid quote_saved for already-completed job)",
+      "expected_response": {
+        "status": 422,
+        "body": { "error": "job_already_completed" }
+      }
+    },
+    {
+      "id": "secret-rotation-old-still-valid",
+      "category": "secret-rotation",
+      "description": "During rotation overlap window, signature computed with the OLD secret should still verify.",
+      "preconditions": "Both WEBHOOK_SECRET_PAINLESSREMOVALS and WEBHOOK_SECRET_PAINLESSREMOVALS_NEW are set.",
+      "request": "(signature computed with old secret)",
+      "expected_response": {
+        "status": 200
+      }
+    },
+    {
+      "id": "secret-rotation-new-also-valid",
+      "category": "secret-rotation",
+      "description": "Signature computed with the NEW secret also verifies.",
+      "preconditions": "Both env vars set.",
+      "request": "(signature computed with new secret)",
+      "expected_response": {
+        "status": 200
+      }
+    },
+    {
+      "id": "secret-rotation-arbitrary-rejected",
+      "category": "secret-rotation",
+      "description": "Signature with a third (unrelated) secret rejected.",
+      "request": "(signature computed with random secret)",
+      "expected_response": {
+        "status": 401,
+        "body": { "error": "invalid_signature" }
+      }
+    }
+  ],
+  "test_helpers": {
+    "compute_signature": "function (timestamp, schema_version, body, secret) { const canonical = `${timestamp}.${schema_version}.${body}`; return 'hmac-sha256=' + crypto.createHmac('sha256', secret).update(canonical).digest('hex'); }",
+    "freeze_clock": "Vitest's vi.setSystemTime(new Date(1730000000 * 1000))",
+    "reset_state": "Truncate webhook_events and rate_limit_buckets tables between tests."
+  }
+}

@@ -239,6 +239,22 @@
       "retain_per_terms": ""
     }
   },
+  "pricing": {
+    "navLabel": "",
+    "title": "",
+    "subtitle": "",
+    "activeVersion": "",
+    "label": "",
+    "effectiveFrom": "",
+    "effectiveTo": "",
+    "publishedBy": "",
+    "history": "",
+    "current": "",
+    "notes": "",
+    "noActive": "",
+    "emptyHistory": "",
+    "editorComingSoon": ""
+  },
   "smoke": {
     "title": "",
     "subtitle": "",

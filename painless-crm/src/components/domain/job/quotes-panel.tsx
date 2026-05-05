@@ -103,6 +103,16 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
                   {t('sentAtLine', { at: formatDateTime(row.sent_at) })}
                 </div>
               ) : null}
+              {row.first_opened_at ? (
+                <div className="text-xs text-[var(--color-muted-foreground)]">
+                  {t('openedLine', {
+                    first: formatDateTime(row.first_opened_at),
+                    count: row.open_count,
+                  })}
+                </div>
+              ) : row.status === 'sent' ? (
+                <div className="text-xs text-[var(--color-muted-foreground)]">{t('notOpened')}</div>
+              ) : null}
             </li>
           );
         })}

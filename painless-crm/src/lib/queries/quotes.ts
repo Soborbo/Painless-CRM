@@ -15,6 +15,9 @@ export interface QuoteRow {
   version: number;
   revised_from_id: string | null;
   revision_number: number;
+  first_opened_at: string | null;
+  last_opened_at: string | null;
+  open_count: number;
   pricing_version: { id: string; version_label: string } | null;
 }
 
@@ -22,6 +25,7 @@ const QUOTE_LIST_COLUMNS = `
   id, job_id, pricing_version_id, size_code, distance_miles, complications,
   total_pence, status, valid_until, sent_at, created_at, version,
   revised_from_id, revision_number,
+  first_opened_at, last_opened_at, open_count,
   pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)
 `;
 
@@ -45,6 +49,9 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
     version: (raw.version as number | null) ?? 1,
     revised_from_id: (raw.revised_from_id as string | null) ?? null,
     revision_number: (raw.revision_number as number | null) ?? 1,
+    first_opened_at: (raw.first_opened_at as string | null) ?? null,
+    last_opened_at: (raw.last_opened_at as string | null) ?? null,
+    open_count: (raw.open_count as number | null) ?? 0,
     pricing_version: version,
   };
 }

@@ -1,6 +1,7 @@
 import { serverEnv } from '@/lib/env';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { expireSingleQuote, shouldExpire } from '@/lib/quotes/expiry';
+import { recordQuoteOpen } from '@/lib/quotes/opens';
 import { classifyAcceptable } from '@/lib/quotes/public-acceptance';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
 import { formatDate, formatPence } from '@/lib/utils/format';
@@ -35,6 +36,8 @@ export default async function PublicQuotePage({ params }: Props) {
     const flipped = await expireSingleQuote(quote.id);
     if (flipped) quote = { ...quote, status: 'expired' };
   }
+
+  await recordQuoteOpen(quote.id);
 
   const verdict = classifyAcceptable(quote);
   return (

@@ -334,6 +334,8 @@
     "sentLinkLabel": "",
     "sentLinkHelp": "",
     "sentAtLine": "",
+    "openedLine": "",
+    "notOpened": "",
     "reviseAction": "",
     "revisionBadge": "",
     "status": {

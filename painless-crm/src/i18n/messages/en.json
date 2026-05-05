@@ -334,6 +334,8 @@
     "sentLinkLabel": "Acceptance link",
     "sentLinkHelp": "Copy this into the email to the customer. The link is valid until the quote expires.",
     "sentAtLine": "Sent {at}",
+    "openedLine": "First opened {first} · {count} opens",
+    "notOpened": "Not yet opened by customer",
     "reviseAction": "Revise",
     "revisionBadge": "Rev. {number}",
     "status": {

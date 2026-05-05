@@ -13,12 +13,15 @@ export interface QuoteRow {
   sent_at: string | null;
   created_at: string;
   version: number;
+  revised_from_id: string | null;
+  revision_number: number;
   pricing_version: { id: string; version_label: string } | null;
 }
 
 const QUOTE_LIST_COLUMNS = `
   id, job_id, pricing_version_id, size_code, distance_miles, complications,
   total_pence, status, valid_until, sent_at, created_at, version,
+  revised_from_id, revision_number,
   pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)
 `;
 
@@ -40,7 +43,41 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
     sent_at: (raw.sent_at as string | null) ?? null,
     created_at: raw.created_at as string,
     version: (raw.version as number | null) ?? 1,
+    revised_from_id: (raw.revised_from_id as string | null) ?? null,
+    revision_number: (raw.revision_number as number | null) ?? 1,
     pricing_version: version,
+  };
+}
+
+export interface QuoteRevisionSeed {
+  id: string;
+  job_id: string;
+  size_code: string | null;
+  distance_miles: number | null;
+  complications: string[] | null;
+  revision_number: number;
+}
+
+export async function getQuoteRevisionSeed(
+  jobId: string,
+  quoteId: string,
+): Promise<QuoteRevisionSeed | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('quotes')
+    .select('id, job_id, size_code, distance_miles, complications, revision_number')
+    .eq('id', quoteId)
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (!data) return null;
+  return {
+    id: data.id as string,
+    job_id: data.job_id as string,
+    size_code: (data.size_code as string | null) ?? null,
+    distance_miles: (data.distance_miles as number | null) ?? null,
+    complications: (data.complications as string[] | null) ?? null,
+    revision_number: (data.revision_number as number | null) ?? 1,
   };
 }
 

@@ -1,5 +1,6 @@
 import { serverEnv } from '@/lib/env';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
+import { expireSingleQuote, shouldExpire } from '@/lib/quotes/expiry';
 import { classifyAcceptable } from '@/lib/quotes/public-acceptance';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
 import { formatDate, formatPence } from '@/lib/utils/format';
@@ -27,8 +28,13 @@ export default async function PublicQuotePage({ params }: Props) {
     );
   }
 
-  const quote = await getPublicQuoteById(verified.payload.q);
+  let quote = await getPublicQuoteById(verified.payload.q);
   if (!quote) return <Message title={t('notFoundTitle')} body={t('notFoundBody')} />;
+
+  if (shouldExpire(quote.status, quote.valid_until)) {
+    const flipped = await expireSingleQuote(quote.id);
+    if (flipped) quote = { ...quote, status: 'expired' };
+  }
 
   const verdict = classifyAcceptable(quote);
   return (

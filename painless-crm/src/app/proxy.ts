@@ -2,7 +2,13 @@ import { serverEnv } from '@/lib/env';
 import { type CookieOptions, createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
-const PUBLIC_PREFIXES = ['/api/webhooks', '/availability', '/auth/callback', '/quote/'];
+const PUBLIC_PREFIXES = [
+  '/api/webhooks',
+  '/api/cron',
+  '/availability',
+  '/auth/callback',
+  '/quote/',
+];
 const AUTH_PREFIXES = ['/login', '/auth'];
 
 function isPublic(pathname: string) {

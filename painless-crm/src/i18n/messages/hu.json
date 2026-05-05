@@ -304,6 +304,24 @@
     "surveyRequired": "",
     "modulatedNote": ""
   },
+  "quotes": {
+    "panelTitle": "",
+    "empty": "",
+    "versionLine": "",
+    "complicationsLine": "",
+    "status": {
+      "draft": "",
+      "sent": "",
+      "accepted": "",
+      "declined": "",
+      "expired": ""
+    },
+    "validity": {
+      "fresh": "",
+      "expiring_soon": "",
+      "expired": ""
+    }
+  },
   "smoke": {
     "title": "",
     "subtitle": "",

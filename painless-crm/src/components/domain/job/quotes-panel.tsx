@@ -1,0 +1,90 @@
+import { type QuoteRow, classifyQuoteValidity } from '@/lib/queries/quotes';
+import { formatDateTime, formatPence } from '@/lib/utils/format';
+import { getTranslations } from 'next-intl/server';
+
+const VALIDITY_CLASS = {
+  fresh: 'bg-green-50 text-green-800',
+  expiring_soon: 'bg-yellow-50 text-yellow-900',
+  expired: 'bg-zinc-100 text-zinc-700',
+} as const;
+
+const STATUS_CLASS: Record<NonNullable<QuoteRow['status']>, string> = {
+  draft: 'bg-zinc-100 text-zinc-800',
+  sent: 'bg-sky-50 text-sky-800',
+  accepted: 'bg-green-50 text-green-800',
+  declined: 'bg-red-50 text-red-800',
+  expired: 'bg-zinc-100 text-zinc-700',
+};
+
+export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
+  const t = await getTranslations('quotes');
+
+  if (rows.length === 0) {
+    return (
+      <Section title={t('panelTitle')}>
+        <p className="text-sm text-[var(--color-muted-foreground)]">{t('empty')}</p>
+      </Section>
+    );
+  }
+
+  return (
+    <Section title={t('panelTitle')}>
+      <ul className="flex flex-col divide-y">
+        {rows.map((row) => {
+          const validity = classifyQuoteValidity(row.valid_until);
+          const sizeLabel = row.size_code ?? '—';
+          return (
+            <li key={row.id} className="flex flex-col gap-1 py-3 first:pt-0 last:pb-0">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <span className="text-base font-semibold">{formatPence(row.total_pence)}</span>
+                <span className="text-xs text-[var(--color-muted-foreground)]">
+                  {formatDateTime(row.created_at)}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                {row.status ? (
+                  <span
+                    className={`rounded-md px-1.5 py-0.5 font-medium ${STATUS_CLASS[row.status]}`}
+                  >
+                    {t(`status.${row.status}` as never)}
+                  </span>
+                ) : null}
+                <span
+                  className={`rounded-md px-1.5 py-0.5 font-medium ${VALIDITY_CLASS[validity]}`}
+                >
+                  {t(`validity.${validity}` as never)}
+                </span>
+                <span className="text-[var(--color-muted-foreground)]">
+                  · {sizeLabel}
+                  {row.distance_miles !== null ? ` · ${row.distance_miles}mi` : ''}
+                </span>
+              </div>
+              <div className="text-xs text-[var(--color-muted-foreground)]">
+                {t('versionLine', {
+                  label: row.pricing_version?.version_label ?? '—',
+                  validUntil: formatDateTime(row.valid_until),
+                })}
+              </div>
+              {row.complications && row.complications.length > 0 ? (
+                <div className="text-xs text-[var(--color-muted-foreground)]">
+                  {t('complicationsLine', { items: row.complications.join(', ') })}
+                </div>
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </Section>
+  );
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-md border p-4">
+      <h3 className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+        {title}
+      </h3>
+      <div className="mt-3 text-sm">{children}</div>
+    </div>
+  );
+}

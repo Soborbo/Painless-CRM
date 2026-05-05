@@ -9,6 +9,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const profile = await requireUser();
   const t = await getTranslations('nav');
   const tu = await getTranslations('users');
+  const tp = await getTranslations('pricing');
 
   return (
     <UserProvider
@@ -36,6 +37,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <Link href="/dashboard/jobs" className="hover:underline">
                 {t('jobs')}
               </Link>
+              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
+                <Link href="/dashboard/settings/pricing" className="hover:underline">
+                  {tp('navLabel')}
+                </Link>
+              </RequireRole>
               <RequireRole allowed={['admin', 'super_admin']}>
                 <Link href="/dashboard/settings/users" className="hover:underline">
                   {tu('navLabel')}

@@ -1,3 +1,4 @@
+import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { StageBadge } from '@/components/domain/job/stage-badge';
 import { requireUser } from '@/lib/auth/require-role';
 import {
@@ -7,6 +8,7 @@ import {
   listSalesReps,
   listSurveyors,
 } from '@/lib/queries/jobs';
+import { listQuotesForJob } from '@/lib/queries/quotes';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -27,11 +29,12 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, t] = await Promise.all([
+  const [history, tags, reps, surveyors, quotes, t] = await Promise.all([
     getJobStatusHistory(id),
     getJobTags(id),
     listSalesReps(),
     listSurveyors(),
+    listQuotesForJob(id),
     getTranslations('jobs'),
   ]);
 
@@ -59,6 +62,12 @@ export default async function JobPage({ params }: Props) {
           </p>
         </div>
         <div className="flex gap-2">
+          <Link
+            href={`/dashboard/jobs/${id}/quote/new`}
+            className="rounded-md border bg-[var(--color-primary)] px-3 py-1.5 text-sm font-medium text-[var(--color-primary-foreground)] hover:opacity-90"
+          >
+            {t('buildQuote')}
+          </Link>
           <Link
             href={`/dashboard/jobs/${id}/edit`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
@@ -137,6 +146,8 @@ export default async function JobPage({ params }: Props) {
             isManager={isManager}
           />
           <TagsPanel jobId={job.id} tags={tags} />
+
+          <QuotesPanel rows={quotes} />
 
           <ActivityPanel history={history} />
 

@@ -399,6 +399,18 @@
       "remaining": "Remaining"
     }
   },
+  "notes": {
+    "panelTitle": "Notes",
+    "empty": "No notes yet.",
+    "placeholder": "Add a note. Internal by default — tick the box to share with the customer.",
+    "visibilityToggle": "Customer can see this note",
+    "visibilityHelp": "Internal notes stay between staff. Customer-visible notes appear on the acceptance page.",
+    "submit": "Add note",
+    "delete": "Delete",
+    "deleteRetry": "Retry delete",
+    "badgeInternal": "Internal",
+    "badgeCustomerVisible": "Customer-visible"
+  },
   "phoneCalls": {
     "panelTitle": "Calls",
     "empty": "No calls logged yet for this job.",

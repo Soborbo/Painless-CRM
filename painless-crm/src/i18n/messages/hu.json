@@ -399,6 +399,18 @@
       "remaining": ""
     }
   },
+  "notes": {
+    "panelTitle": "",
+    "empty": "",
+    "placeholder": "",
+    "visibilityToggle": "",
+    "visibilityHelp": "",
+    "submit": "",
+    "delete": "",
+    "deleteRetry": "",
+    "badgeInternal": "",
+    "badgeCustomerVisible": ""
+  },
   "phoneCalls": {
     "panelTitle": "",
     "empty": "",

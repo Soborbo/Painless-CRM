@@ -1,5 +1,6 @@
 import { CallsPanel } from '@/components/domain/job/calls-panel';
 import { LogCallForm } from '@/components/domain/job/log-call-form';
+import { NotesPanel } from '@/components/domain/job/notes-panel';
 import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { StageBadge } from '@/components/domain/job/stage-badge';
 import { requireUser } from '@/lib/auth/require-role';
@@ -10,6 +11,7 @@ import {
   listSalesReps,
   listSurveyors,
 } from '@/lib/queries/jobs';
+import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { listQuotesForJob } from '@/lib/queries/quotes';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
@@ -32,13 +34,14 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, calls, t] = await Promise.all([
+  const [history, tags, reps, surveyors, quotes, calls, jobNotes, t] = await Promise.all([
     getJobStatusHistory(id),
     getJobTags(id),
     listSalesReps(),
     listSurveyors(),
     listQuotesForJob(id),
     listPhoneCallsForJob(id),
+    listNotesForJob(id),
     getTranslations('jobs'),
   ]);
 
@@ -153,6 +156,8 @@ export default async function JobPage({ params }: Props) {
           <TagsPanel jobId={job.id} tags={tags} />
 
           <QuotesPanel rows={quotes} />
+
+          <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
 
           <LogCallForm jobId={job.id} defaultOccurredAt={defaultOccurredAt} />
 

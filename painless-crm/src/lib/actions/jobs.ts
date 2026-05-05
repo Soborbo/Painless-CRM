@@ -2,6 +2,7 @@
 
 import { requireRole, requireUser } from '@/lib/auth/require-role';
 import { pickNextRep } from '@/lib/jobs/routing';
+import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { type JobStage, classifyTransition } from '@/lib/jobs/state-machine';
 import {
   getLastAssignedRepId,
@@ -56,6 +57,7 @@ export async function createJob(_prev: JobActionState, form: FormData): Promise<
   const supabase = await createClient();
   const jobNumber = await getNextJobNumber();
   const enquiryAt = new Date().toISOString();
+  const firstResponseDueAt = computeFirstResponseDueAt(enquiryAt, parsed.data.acquisition_source);
 
   const { data, error } = await supabase
     .from('jobs')
@@ -68,6 +70,7 @@ export async function createJob(_prev: JobActionState, form: FormData): Promise<
       move_date: parsed.data.move_date,
       notes: parsed.data.notes,
       enquiry_at: enquiryAt,
+      first_response_due_at: firstResponseDueAt,
       company_id: me.company_id,
       created_by_id: me.id,
       updated_by_id: me.id,

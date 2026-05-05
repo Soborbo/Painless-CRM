@@ -30,6 +30,7 @@
     "customers": "Customers",
     "jobs": "Jobs",
     "quotes": "Quotes",
+    "sla": "SLA",
     "settings": "Settings"
   },
   "dashboard": {
@@ -377,6 +378,26 @@
     "notFound": "Quote no longer available.",
     "tryAgain": "Could not accept right now. Please try again.",
     "footer": "Questions? Reply to the email this link came from."
+  },
+  "sla": {
+    "title": "SLA queue",
+    "subtitleAll": "Leads still waiting on a first response, sorted by deadline.",
+    "subtitleSelf": "Your leads still waiting on a first response.",
+    "overdue": "Overdue",
+    "dueSoon": "Due soon",
+    "onTrack": "On track",
+    "overdueGroup": "Overdue — needs response now",
+    "dueSoonGroup": "Due soon — within 25% of deadline",
+    "onTrackGroup": "On track",
+    "empty": "No leads waiting on a response. Nice.",
+    "columns": {
+      "lead": "Lead",
+      "customer": "Customer",
+      "source": "Source",
+      "assigned": "Assigned",
+      "dueAt": "Due",
+      "remaining": "Remaining"
+    }
   },
   "phoneCalls": {
     "panelTitle": "Calls",

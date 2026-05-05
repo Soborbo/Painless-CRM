@@ -30,6 +30,7 @@
     "customers": "",
     "jobs": "",
     "quotes": "",
+    "sla": "",
     "settings": ""
   },
   "dashboard": {
@@ -377,6 +378,26 @@
     "notFound": "",
     "tryAgain": "",
     "footer": ""
+  },
+  "sla": {
+    "title": "",
+    "subtitleAll": "",
+    "subtitleSelf": "",
+    "overdue": "",
+    "dueSoon": "",
+    "onTrack": "",
+    "overdueGroup": "",
+    "dueSoonGroup": "",
+    "onTrackGroup": "",
+    "empty": "",
+    "columns": {
+      "lead": "",
+      "customer": "",
+      "source": "",
+      "assigned": "",
+      "dueAt": "",
+      "remaining": ""
+    }
   },
   "phoneCalls": {
     "panelTitle": "",

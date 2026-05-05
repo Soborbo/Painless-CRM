@@ -12,12 +12,13 @@ export interface QuoteRow {
   valid_until: string;
   sent_at: string | null;
   created_at: string;
+  version: number;
   pricing_version: { id: string; version_label: string } | null;
 }
 
 const QUOTE_LIST_COLUMNS = `
   id, job_id, pricing_version_id, size_code, distance_miles, complications,
-  total_pence, status, valid_until, sent_at, created_at,
+  total_pence, status, valid_until, sent_at, created_at, version,
   pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)
 `;
 
@@ -38,6 +39,7 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
     valid_until: raw.valid_until as string,
     sent_at: (raw.sent_at as string | null) ?? null,
     created_at: raw.created_at as string,
+    version: (raw.version as number | null) ?? 1,
     pricing_version: version,
   };
 }

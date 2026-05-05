@@ -1,6 +1,7 @@
 import { type QuoteRow, classifyQuoteValidity } from '@/lib/queries/quotes';
 import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
+import { SendQuoteButton } from './send-quote-button';
 
 const VALIDITY_CLASS = {
   fresh: 'bg-green-50 text-green-800',
@@ -68,6 +69,16 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
               {row.complications && row.complications.length > 0 ? (
                 <div className="text-xs text-[var(--color-muted-foreground)]">
                   {t('complicationsLine', { items: row.complications.join(', ') })}
+                </div>
+              ) : null}
+              {row.status === 'draft' ? (
+                <div className="mt-1">
+                  <SendQuoteButton quoteId={row.id} version={row.version} />
+                </div>
+              ) : null}
+              {row.status === 'sent' && row.sent_at ? (
+                <div className="text-xs text-[var(--color-muted-foreground)]">
+                  {t('sentAtLine', { at: formatDateTime(row.sent_at) })}
                 </div>
               ) : null}
             </li>

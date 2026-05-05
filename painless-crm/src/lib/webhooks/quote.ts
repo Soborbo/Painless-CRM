@@ -1,5 +1,5 @@
 import { ContactDetailsSchema, createLeadJob, findOrCreateCustomer } from '@/lib/jobs/intake';
-import { createQuoteFromWebhook } from '@/lib/jobs/quote-writer';
+import { createQuoteForJob } from '@/lib/jobs/quote-writer';
 import { z } from 'zod';
 
 // Inbound quote webhook contract from painlessremovals calculator.
@@ -60,7 +60,7 @@ export async function ingestQuote(payload: IncomingQuote): Promise<IngestQuoteRe
   }
 
   try {
-    const snapshot = await createQuoteFromWebhook({
+    const snapshot = await createQuoteForJob({
       companyId: payload.company_id,
       jobId,
       pricingVersionId: payload.quote.pricing_version_id,

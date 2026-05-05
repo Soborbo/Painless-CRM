@@ -63,6 +63,12 @@ export default async function JobPage({ params }: Props) {
         </div>
         <div className="flex gap-2">
           <Link
+            href={`/dashboard/jobs/${id}/quote/new`}
+            className="rounded-md border bg-[var(--color-primary)] px-3 py-1.5 text-sm font-medium text-[var(--color-primary-foreground)] hover:opacity-90"
+          >
+            {t('buildQuote')}
+          </Link>
+          <Link
             href={`/dashboard/jobs/${id}/edit`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
           >

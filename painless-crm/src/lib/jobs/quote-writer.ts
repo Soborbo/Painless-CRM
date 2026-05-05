@@ -8,7 +8,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 // (Phase 06+); the boundary is intentionally narrow so the audit + drift logic
 // stays in one place.
 
-export interface CreateQuoteFromWebhookArgs {
+export interface CreateQuoteForJobArgs {
   companyId: string;
   jobId: string;
   pricingVersionId: string;
@@ -56,9 +56,7 @@ async function loadPricingVersion(companyId: string, versionId: string) {
   return { id: row.id as string, config };
 }
 
-export async function createQuoteFromWebhook(
-  args: CreateQuoteFromWebhookArgs,
-): Promise<CreateQuoteResult> {
+export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<CreateQuoteResult> {
   const supabase = createAdminClient();
   const version = await loadPricingVersion(args.companyId, args.pricingVersionId);
   if (!version) {

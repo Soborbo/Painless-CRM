@@ -378,6 +378,29 @@
     "tryAgain": "",
     "footer": ""
   },
+  "phoneCalls": {
+    "panelTitle": "",
+    "empty": "",
+    "formTitle": "",
+    "direction": "",
+    "duration": "",
+    "occurredAt": "",
+    "callerNumber": "",
+    "calledNumber": "",
+    "notes": "",
+    "submit": "",
+    "logged": "",
+    "from": "",
+    "to": "",
+    "directions": {
+      "inbound": "",
+      "outbound": ""
+    },
+    "sources": {
+      "tamar_email": "",
+      "tamar_api": ""
+    }
+  },
   "smoke": {
     "title": "",
     "subtitle": "",

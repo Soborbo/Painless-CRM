@@ -430,8 +430,10 @@
     "callOutbound": "",
     "quoteCreated": "",
     "quoteSent": "",
+    "quoteOpened": "",
     "quoteAccepted": "",
-    "quoteAcceptedHelp": ""
+    "quoteAcceptedHelp": "",
+    "quoteDeclined": ""
   },
   "notes": {
     "panelTitle": "",

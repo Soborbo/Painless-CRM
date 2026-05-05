@@ -430,8 +430,10 @@
     "callOutbound": "Outbound call",
     "quoteCreated": "Quote drafted · {total}",
     "quoteSent": "Quote sent to customer",
+    "quoteOpened": "Quote opened by customer · {count} opens",
     "quoteAccepted": "Quote accepted by customer",
-    "quoteAcceptedHelp": "Job auto-transitioned to accepted."
+    "quoteAcceptedHelp": "Job auto-transitioned to accepted.",
+    "quoteDeclined": "Quote declined by customer"
   },
   "notes": {
     "panelTitle": "Notes",

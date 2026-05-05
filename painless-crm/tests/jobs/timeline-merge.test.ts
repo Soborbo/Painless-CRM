@@ -53,6 +53,10 @@ describe('mergeJobTimeline', () => {
           sent_at: '2026-05-04T09:30:00Z',
           total_pence: 12000,
           status: 'sent',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
         },
       ],
       acceptances: [],
@@ -75,11 +79,128 @@ describe('mergeJobTimeline', () => {
           sent_at: null,
           total_pence: 9000,
           status: 'draft',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
         },
       ],
       acceptances: [],
     });
     expect(out.map((e) => e.kind)).toEqual(['quote_created']);
+  });
+
+  it('emits quote_opened with the recorded open_count', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q3',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: '2026-05-04T09:30:00Z',
+          total_pence: 15000,
+          status: 'sent',
+          first_opened_at: '2026-05-04T10:00:00Z',
+          open_count: 3,
+          declined_at: null,
+          decline_reason: null,
+        },
+      ],
+      acceptances: [],
+    });
+    expect(out.map((e) => e.kind)).toEqual(['quote_opened', 'quote_sent', 'quote_created']);
+    const opened = out.find((e) => e.kind === 'quote_opened');
+    expect(opened).toEqual({
+      kind: 'quote_opened',
+      at: '2026-05-04T10:00:00Z',
+      quote_id: 'q3',
+      open_count: 3,
+    });
+  });
+
+  it('falls back to open_count=1 when the column is null but first_opened_at is set', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q4',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: null,
+          total_pence: 9000,
+          status: 'sent',
+          first_opened_at: '2026-05-04T10:00:00Z',
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
+        },
+      ],
+      acceptances: [],
+    });
+    const opened = out.find((e) => e.kind === 'quote_opened');
+    expect(opened).toMatchObject({ open_count: 1 });
+  });
+
+  it('emits quote_declined with the reason text', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q5',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: '2026-05-04T09:30:00Z',
+          total_pence: 11000,
+          status: 'declined',
+          first_opened_at: '2026-05-04T10:00:00Z',
+          open_count: 1,
+          declined_at: '2026-05-04T11:00:00Z',
+          decline_reason: 'wrong dates',
+        },
+      ],
+      acceptances: [],
+    });
+    expect(out.map((e) => e.kind)).toEqual([
+      'quote_declined',
+      'quote_opened',
+      'quote_sent',
+      'quote_created',
+    ]);
+    const declined = out.find((e) => e.kind === 'quote_declined');
+    expect(declined).toEqual({
+      kind: 'quote_declined',
+      at: '2026-05-04T11:00:00Z',
+      quote_id: 'q5',
+      reason: 'wrong dates',
+    });
+  });
+
+  it('preserves null reason on quote_declined', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q6',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: null,
+          total_pence: 1000,
+          status: 'declined',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: '2026-05-04T11:00:00Z',
+          decline_reason: null,
+        },
+      ],
+      acceptances: [],
+    });
+    const declined = out.find((e) => e.kind === 'quote_declined');
+    expect(declined).toMatchObject({ reason: null });
   });
 
   it('extracts the acceptor name from the consents JSON', () => {

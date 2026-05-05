@@ -46,6 +46,18 @@ export type TimelineEvent =
       at: string;
       quote_id: string;
       acceptor_name: string | null;
+    }
+  | {
+      kind: 'quote_opened';
+      at: string;
+      quote_id: string;
+      open_count: number;
+    }
+  | {
+      kind: 'quote_declined';
+      at: string;
+      quote_id: string;
+      reason: string | null;
     };
 
 export interface StageHistoryRow {
@@ -76,6 +88,10 @@ export interface QuoteHistoryRow {
   sent_at: string | null;
   total_pence: number;
   status: 'draft' | 'sent' | 'accepted' | 'declined' | 'expired' | null;
+  first_opened_at: string | null;
+  open_count: number | null;
+  declined_at: string | null;
+  decline_reason: string | null;
 }
 
 export interface QuoteAcceptanceHistoryRow {
@@ -136,6 +152,22 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
     if (quote.sent_at) {
       events.push({ kind: 'quote_sent', at: quote.sent_at, quote_id: quote.id });
     }
+    if (quote.first_opened_at) {
+      events.push({
+        kind: 'quote_opened',
+        at: quote.first_opened_at,
+        quote_id: quote.id,
+        open_count: quote.open_count ?? 1,
+      });
+    }
+    if (quote.declined_at) {
+      events.push({
+        kind: 'quote_declined',
+        at: quote.declined_at,
+        quote_id: quote.id,
+        reason: quote.decline_reason,
+      });
+    }
   }
 
   for (const acceptance of sources.acceptances) {
@@ -161,8 +193,12 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
 function rankKind(kind: TimelineEvent['kind']): number {
   switch (kind) {
     case 'stage':
-      return 5;
+      return 7;
     case 'quote_accepted':
+      return 6;
+    case 'quote_declined':
+      return 5;
+    case 'quote_opened':
       return 4;
     case 'quote_sent':
       return 3;

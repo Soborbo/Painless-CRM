@@ -144,6 +144,10 @@ function Header({
           ) : null}
         </p>
       );
+    case 'quote_opened':
+      return <p className="font-medium">{t('quoteOpened', { count: event.open_count })}</p>;
+    case 'quote_declined':
+      return <p className="font-medium text-red-700">{t('quoteDeclined')}</p>;
   }
 }
 
@@ -162,6 +166,9 @@ function Body({
   }
   if (event.kind === 'quote_accepted') {
     return <p className="text-[var(--color-muted-foreground)]">{t('quoteAcceptedHelp')}</p>;
+  }
+  if (event.kind === 'quote_declined' && event.reason) {
+    return <p className="text-[var(--color-muted-foreground)]">"{event.reason}"</p>;
   }
   return null;
 }

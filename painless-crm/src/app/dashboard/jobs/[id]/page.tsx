@@ -1,3 +1,6 @@
+import { CallsPanel } from '@/components/domain/job/calls-panel';
+import { LogCallForm } from '@/components/domain/job/log-call-form';
+import { NotesPanel } from '@/components/domain/job/notes-panel';
 import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { StageBadge } from '@/components/domain/job/stage-badge';
 import { requireUser } from '@/lib/auth/require-role';
@@ -8,6 +11,8 @@ import {
   listSalesReps,
   listSurveyors,
 } from '@/lib/queries/jobs';
+import { listNotesForJob } from '@/lib/queries/notes';
+import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { listQuotesForJob } from '@/lib/queries/quotes';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
@@ -29,17 +34,20 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, t] = await Promise.all([
+  const [history, tags, reps, surveyors, quotes, calls, jobNotes, t] = await Promise.all([
     getJobStatusHistory(id),
     getJobTags(id),
     listSalesReps(),
     listSurveyors(),
     listQuotesForJob(id),
+    listPhoneCallsForJob(id),
+    listNotesForJob(id),
     getTranslations('jobs'),
   ]);
 
   const isAdmin = (ADMIN_ROLES as readonly string[]).includes(me.role);
   const isManager = (MANAGER_ROLES as readonly string[]).includes(me.role);
+  const defaultOccurredAt = new Date().toISOString().slice(0, 16);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
@@ -67,6 +75,12 @@ export default async function JobPage({ params }: Props) {
             className="rounded-md border bg-[var(--color-primary)] px-3 py-1.5 text-sm font-medium text-[var(--color-primary-foreground)] hover:opacity-90"
           >
             {t('buildQuote')}
+          </Link>
+          <Link
+            href={`/dashboard/jobs/${id}/timeline`}
+            className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('viewTimeline')}
           </Link>
           <Link
             href={`/dashboard/jobs/${id}/edit`}
@@ -148,6 +162,12 @@ export default async function JobPage({ params }: Props) {
           <TagsPanel jobId={job.id} tags={tags} />
 
           <QuotesPanel rows={quotes} />
+
+          <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
+
+          <LogCallForm jobId={job.id} defaultOccurredAt={defaultOccurredAt} />
+
+          <CallsPanel rows={calls} />
 
           <ActivityPanel history={history} />
 

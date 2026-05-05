@@ -1,3 +1,4 @@
+import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { ACQUISITION_SOURCES } from '@/lib/schemas/job';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { z } from 'zod';
@@ -104,6 +105,8 @@ export async function createLeadJob(input: CreateLeadInput): Promise<string> {
   const supabase = createAdminClient();
   const jobNumber = await nextJobNumber(input.companyId);
   const enquiryAt = new Date().toISOString();
+  const source = normaliseSource(input.source);
+  const firstResponseDueAt = computeFirstResponseDueAt(enquiryAt, source);
   const { data, error } = await supabase
     .from('jobs')
     .insert({
@@ -111,8 +114,9 @@ export async function createLeadJob(input: CreateLeadInput): Promise<string> {
       job_number: jobNumber,
       customer_id: input.customerId,
       stage: 'lead',
-      acquisition_source: normaliseSource(input.source),
+      acquisition_source: source,
       enquiry_at: enquiryAt,
+      first_response_due_at: firstResponseDueAt,
       quote_total_pence: input.quoteTotalPence ?? null,
       notes: input.notes ?? null,
     })

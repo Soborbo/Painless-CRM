@@ -1,8 +1,10 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { serverEnv } from '@/lib/env';
 import { createQuoteForJob } from '@/lib/jobs/quote-writer';
 import { parseSimulationForm } from '@/lib/pricing/form';
+import { signQuoteToken } from '@/lib/quotes/share-tokens';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -17,7 +19,16 @@ export type QuoteBuilderState =
 
 export const INITIAL_QUOTE_BUILDER_STATE: QuoteBuilderState = { status: 'idle' };
 
+export type SendQuoteState =
+  | { status: 'idle' }
+  | { status: 'error'; message: string }
+  | { status: 'ok'; quote_id: string; share_url: string };
+
+export const INITIAL_SEND_QUOTE_STATE: SendQuoteState = { status: 'idle' };
+
 const JobIdSchema = z.string().uuid();
+const QuoteIdSchema = z.string().uuid();
+const VersionSchema = z.coerce.number().int().min(1);
 
 export async function buildManualQuote(
   _prev: QuoteBuilderState,
@@ -74,4 +85,64 @@ export async function buildManualQuote(
       message: err instanceof Error ? err.message : 'Could not create quote',
     };
   }
+}
+
+export async function sendQuote(_prev: SendQuoteState, form: FormData): Promise<SendQuoteState> {
+  await requireRole(QUOTE_BUILDER_ROLES);
+
+  const idParse = QuoteIdSchema.safeParse(form.get('quote_id'));
+  const versionParse = VersionSchema.safeParse(form.get('version'));
+  if (!idParse.success || !versionParse.success) {
+    return { status: 'error', message: 'Invalid quote id or version' };
+  }
+  const env = serverEnv();
+  if (!env.QUOTE_LINK_SECRET) {
+    return { status: 'error', message: 'Quote link signing is not configured' };
+  }
+
+  const supabase = await createClient();
+  const { data: existing } = await supabase
+    .from('quotes')
+    .select('id, status, version, valid_until')
+    .eq('id', idParse.data)
+    .is('deleted_at', null)
+    .maybeSingle();
+
+  if (!existing) return { status: 'error', message: 'Quote not found' };
+  if (existing.status !== 'draft') {
+    return { status: 'error', message: 'Only draft quotes can be sent' };
+  }
+  if (existing.version !== versionParse.data) {
+    return { status: 'error', message: 'Quote was edited elsewhere — reload and retry' };
+  }
+
+  const { data: updated, error } = await supabase
+    .from('quotes')
+    .update({
+      status: 'sent',
+      sent_at: new Date().toISOString(),
+      version: versionParse.data + 1,
+    })
+    .eq('id', idParse.data)
+    .eq('version', versionParse.data)
+    .is('deleted_at', null)
+    .select('id, job_id')
+    .maybeSingle();
+  if (error || !updated) {
+    return { status: 'error', message: 'Could not mark quote as sent' };
+  }
+
+  const validUntilMs = new Date(existing.valid_until as string).getTime();
+  const ttlSeconds = Math.max(
+    60 * 60,
+    Math.floor((validUntilMs - Date.now()) / 1000) + 24 * 60 * 60,
+  );
+  const token = await signQuoteToken(
+    { quoteId: updated.id as string, purpose: 'accept', ttlSeconds },
+    env.QUOTE_LINK_SECRET,
+  );
+  const shareUrl = `${env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')}/quote/${token}`;
+
+  revalidatePath(`/dashboard/jobs/${updated.job_id as string}`);
+  return { status: 'ok', quote_id: updated.id as string, share_url: shareUrl };
 }

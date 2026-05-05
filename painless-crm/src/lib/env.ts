@@ -10,6 +10,7 @@ const ServerEnv = z.object({
   SENTRY_DSN: z.string().url().optional(),
   SENTRY_AUTH_TOKEN: z.string().min(1).optional(),
   CRM_WEBHOOK_SECRET: z.string().min(32).optional(),
+  QUOTE_LINK_SECRET: z.string().min(32).optional(),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
 });
 

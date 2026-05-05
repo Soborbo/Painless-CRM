@@ -68,6 +68,7 @@ export interface QuoteRevisionSeed {
   distance_miles: number | null;
   complications: string[] | null;
   revision_number: number;
+  total_pence: number;
 }
 
 export async function getQuoteRevisionSeed(
@@ -77,7 +78,7 @@ export async function getQuoteRevisionSeed(
   const supabase = await createClient();
   const { data } = await supabase
     .from('quotes')
-    .select('id, job_id, size_code, distance_miles, complications, revision_number')
+    .select('id, job_id, size_code, distance_miles, complications, revision_number, total_pence')
     .eq('id', quoteId)
     .eq('job_id', jobId)
     .is('deleted_at', null)
@@ -90,6 +91,7 @@ export async function getQuoteRevisionSeed(
     distance_miles: (data.distance_miles as number | null) ?? null,
     complications: (data.complications as string[] | null) ?? null,
     revision_number: (data.revision_number as number | null) ?? 1,
+    total_pence: (data.total_pence as number | null) ?? 0,
   };
 }
 

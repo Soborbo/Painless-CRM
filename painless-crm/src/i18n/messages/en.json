@@ -321,6 +321,7 @@
     "builderTitleRevise": "Revise quote",
     "builderSubtitle": "Snapshots the active pricing version. Save creates a draft quote on this job.",
     "builderRevisingFrom": "Revising from Rev. {number}. Tweak inputs and save — the original is preserved as history.",
+    "builderPreviousTotal": "Previous total: {total}",
     "builderAgainst": "Active:",
     "builderSize": "Size",
     "builderDistance": "Distance (miles)",
@@ -339,6 +340,8 @@
     "declinedLine": "Declined {at}",
     "reviseAction": "Revise",
     "revisionBadge": "Rev. {number}",
+    "deltaTooltip": "Change vs. the previous revision",
+    "deltaSame": "Same price",
     "status": {
       "draft": "Draft",
       "sent": "Sent",

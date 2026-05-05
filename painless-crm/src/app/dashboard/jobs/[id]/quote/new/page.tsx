@@ -3,6 +3,7 @@ import { requireRole } from '@/lib/auth/require-role';
 import { getJobById } from '@/lib/queries/jobs';
 import { getActivePricingVersion } from '@/lib/queries/pricing';
 import { getQuoteRevisionSeed } from '@/lib/queries/quotes';
+import { formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -47,6 +48,11 @@ export default async function NewQuotePage({ params, searchParams }: Props) {
         <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">
           {seed ? t('builderRevisingFrom', { number: seed.revision_number }) : t('builderSubtitle')}
         </p>
+        {seed ? (
+          <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">
+            {t('builderPreviousTotal', { total: formatPence(seed.total_pence) })}
+          </p>
+        ) : null}
       </header>
 
       {active ? (

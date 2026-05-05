@@ -1,4 +1,5 @@
 import { type QuoteRow, classifyQuoteValidity } from '@/lib/queries/quotes';
+import { computeRevisionDeltas } from '@/lib/quotes/revision-delta';
 import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -36,10 +37,12 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
     );
   }
 
+  const annotated = computeRevisionDeltas(rows);
+
   return (
     <Section title={t('panelTitle')}>
       <ul className="flex flex-col divide-y">
-        {rows.map((row) => {
+        {annotated.map(({ row, delta_pence }) => {
           const validity = classifyQuoteValidity(row.valid_until);
           const sizeLabel = row.size_code ?? '—';
           const canRevise = row.status ? REVISABLE_STATUSES.has(row.status) : false;
@@ -62,6 +65,23 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
                 {row.revision_number > 1 ? (
                   <span className="rounded-md bg-purple-50 px-1.5 py-0.5 font-medium text-purple-800">
                     {t('revisionBadge', { number: row.revision_number })}
+                  </span>
+                ) : null}
+                {delta_pence !== null && delta_pence !== 0 ? (
+                  <span
+                    className={`rounded-md px-1.5 py-0.5 font-medium ${
+                      delta_pence > 0
+                        ? 'bg-amber-50 text-amber-900'
+                        : 'bg-emerald-50 text-emerald-900'
+                    }`}
+                    title={t('deltaTooltip')}
+                  >
+                    {delta_pence > 0 ? '+' : '−'}
+                    {formatPence(Math.abs(delta_pence))}
+                  </span>
+                ) : delta_pence === 0 ? (
+                  <span className="rounded-md bg-zinc-100 px-1.5 py-0.5 font-medium text-zinc-700">
+                    {t('deltaSame')}
                   </span>
                 ) : null}
                 <span

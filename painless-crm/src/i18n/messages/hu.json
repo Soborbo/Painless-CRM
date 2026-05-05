@@ -321,6 +321,7 @@
     "builderTitleRevise": "",
     "builderSubtitle": "",
     "builderRevisingFrom": "",
+    "builderPreviousTotal": "",
     "builderAgainst": "",
     "builderSize": "",
     "builderDistance": "",
@@ -339,6 +340,8 @@
     "declinedLine": "",
     "reviseAction": "",
     "revisionBadge": "",
+    "deltaTooltip": "",
+    "deltaSame": "",
     "status": {
       "draft": "",
       "sent": "",

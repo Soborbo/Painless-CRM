@@ -336,6 +336,7 @@
     "sentAtLine": "Sent {at}",
     "openedLine": "First opened {first} · {count} opens",
     "notOpened": "Not yet opened by customer",
+    "declinedLine": "Declined {at}",
     "reviseAction": "Revise",
     "revisionBadge": "Rev. {number}",
     "status": {
@@ -385,6 +386,16 @@
     "expiredLink": "Link expired — please request a new quote.",
     "notFound": "Quote no longer available.",
     "tryAgain": "Could not accept right now. Please try again.",
+    "declineToggle": "Not for you? Let us know.",
+    "declineFormTitle": "Decline this quote",
+    "declineFormIntro": "If you've decided this isn't for you, we'd love to know why. Optional — leave blank if you'd rather not say.",
+    "declineReasonLabel": "Reason (optional)",
+    "declineReasonPlaceholder": "e.g. went with another mover, dates changed, price",
+    "declineButton": "Decline quote",
+    "declining": "Declining…",
+    "declineCancel": "Cancel",
+    "declineThanksTitle": "Thanks for letting us know",
+    "declineThanksBody": "Appreciate the heads-up. If anything changes, just reply to the email and we'll send a fresh quote.",
     "footer": "Questions? Reply to the email this link came from."
   },
   "sla": {

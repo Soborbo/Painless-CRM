@@ -113,6 +113,12 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
               ) : row.status === 'sent' ? (
                 <div className="text-xs text-[var(--color-muted-foreground)]">{t('notOpened')}</div>
               ) : null}
+              {row.status === 'declined' && row.declined_at ? (
+                <div className="text-xs text-red-700">
+                  {t('declinedLine', { at: formatDateTime(row.declined_at) })}
+                  {row.decline_reason ? ` — "${row.decline_reason}"` : ''}
+                </div>
+              ) : null}
             </li>
           );
         })}

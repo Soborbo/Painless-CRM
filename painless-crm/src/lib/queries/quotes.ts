@@ -18,6 +18,8 @@ export interface QuoteRow {
   first_opened_at: string | null;
   last_opened_at: string | null;
   open_count: number;
+  declined_at: string | null;
+  decline_reason: string | null;
   pricing_version: { id: string; version_label: string } | null;
 }
 
@@ -26,6 +28,7 @@ const QUOTE_LIST_COLUMNS = `
   total_pence, status, valid_until, sent_at, created_at, version,
   revised_from_id, revision_number,
   first_opened_at, last_opened_at, open_count,
+  declined_at, decline_reason,
   pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)
 `;
 
@@ -52,6 +55,8 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
     first_opened_at: (raw.first_opened_at as string | null) ?? null,
     last_opened_at: (raw.last_opened_at as string | null) ?? null,
     open_count: (raw.open_count as number | null) ?? 0,
+    declined_at: (raw.declined_at as string | null) ?? null,
+    decline_reason: (raw.decline_reason as string | null) ?? null,
     pricing_version: version,
   };
 }

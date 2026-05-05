@@ -7,6 +7,7 @@ import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
 import { formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import { AcceptQuoteForm } from './accept-form';
+import { DeclineQuoteForm } from './decline-form';
 
 type Props = { params: Promise<{ token: string }> };
 
@@ -92,7 +93,10 @@ export default async function PublicQuotePage({ params }: Props) {
       </section>
 
       {verdict.ok ? (
-        <AcceptQuoteForm token={token} customerName={quote.customer.display_name} />
+        <>
+          <AcceptQuoteForm token={token} customerName={quote.customer.display_name} />
+          <DeclineQuoteForm token={token} />
+        </>
       ) : (
         <Message
           title={

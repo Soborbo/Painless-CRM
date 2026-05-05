@@ -336,6 +336,7 @@
     "sentAtLine": "",
     "openedLine": "",
     "notOpened": "",
+    "declinedLine": "",
     "reviseAction": "",
     "revisionBadge": "",
     "status": {
@@ -385,6 +386,16 @@
     "expiredLink": "",
     "notFound": "",
     "tryAgain": "",
+    "declineToggle": "",
+    "declineFormTitle": "",
+    "declineFormIntro": "",
+    "declineReasonLabel": "",
+    "declineReasonPlaceholder": "",
+    "declineButton": "",
+    "declining": "",
+    "declineCancel": "",
+    "declineThanksTitle": "",
+    "declineThanksBody": "",
     "footer": ""
   },
   "sla": {

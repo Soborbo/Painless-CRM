@@ -108,3 +108,15 @@ export const PricingScalarEditSchema = z.object({
 });
 
 export type PricingScalarEditInput = z.infer<typeof PricingScalarEditSchema>;
+
+// Matrix-only edit. Locks the 5×3 dimensions for now — size_categories and
+// distance_bands stay read-only until the structural editor lands. Each entry
+// is a gross-margin fraction in [0, 1].
+
+export const PricingMatrixEditSchema = z.object({
+  version_label: z.string().min(1).max(80),
+  margin_matrix: z.array(z.array(z.number().min(0).max(1)).length(3)).length(5),
+  notes: z.string().max(2000).optional().nullable(),
+});
+
+export type PricingMatrixEditInput = z.infer<typeof PricingMatrixEditSchema>;

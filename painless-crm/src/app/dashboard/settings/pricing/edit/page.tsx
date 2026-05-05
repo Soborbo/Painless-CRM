@@ -11,9 +11,19 @@ export default async function PricingEditPage() {
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('editTitle')}</h1>
-        <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{t('editSubtitle')}</p>
+      <header className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">{t('editTitle')}</h1>
+          <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{t('editSubtitle')}</p>
+        </div>
+        {active && (
+          <Link
+            href="/dashboard/settings/pricing/edit/matrix"
+            className="rounded-md border px-4 py-2 text-sm font-medium hover:bg-[var(--color-muted)]"
+          >
+            {t('editMatrixButton')}
+          </Link>
+        )}
       </header>
 
       {active ? (

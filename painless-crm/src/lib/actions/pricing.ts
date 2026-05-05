@@ -4,7 +4,13 @@ import { requireRole } from '@/lib/auth/require-role';
 import { writeBroadcastedPricing } from '@/lib/kv/pricing';
 import { PricingEngineError, calculateQuote } from '@/lib/pricing/engine';
 import { SMOKE_PRICING_CONFIG } from '@/lib/pricing/fixtures';
-import { applyScalarEdit, parseScalarEditForm, parseSimulationForm } from '@/lib/pricing/form';
+import {
+  applyMatrixEdit,
+  applyScalarEdit,
+  parseMatrixEditForm,
+  parseScalarEditForm,
+  parseSimulationForm,
+} from '@/lib/pricing/form';
 import {
   type PricingConfig,
   type PublishPricingInput,
@@ -215,6 +221,29 @@ export async function editPricingScalars(
   }
 
   const merged = applyScalarEdit(active.config, parseResult.input);
+  const result = await publishPricing({ config: merged, notes: parseResult.input.notes ?? null });
+  if (result.status !== 'ok') return result;
+
+  redirect('/dashboard/settings/pricing');
+}
+
+export async function editPricingMatrix(
+  _prev: PricingActionState,
+  form: FormData,
+): Promise<PricingActionState> {
+  const me = await requireRole(PRICING_ROLES);
+
+  const parseResult = parseMatrixEditForm(form);
+  if (!parseResult.ok) {
+    return { status: 'error', message: parseResult.message };
+  }
+
+  const active = await loadActiveConfig(me.company_id);
+  if (!active) {
+    return { status: 'error', message: 'No active pricing version. Seed one first.' };
+  }
+
+  const merged = applyMatrixEdit(active.config, parseResult.input);
   const result = await publishPricing({ config: merged, notes: parseResult.input.notes ?? null });
   if (result.status !== 'ok') return result;
 

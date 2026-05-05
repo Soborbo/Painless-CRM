@@ -1,10 +1,15 @@
 import {
   type PricingConfig,
+  type PricingMatrixEditInput,
+  PricingMatrixEditSchema,
   type PricingScalarEditInput,
   PricingScalarEditSchema,
   type QuoteInput,
   QuoteInputSchema,
 } from '@/lib/schemas/pricing';
+
+export const MATRIX_ROWS = 5;
+export const MATRIX_COLS = 3;
 
 // Pure FormData → QuoteInput coercion. Lives outside the 'use server' module
 // so it can be unit-tested without spinning up an action server.
@@ -79,6 +84,53 @@ export function applyScalarEdit(base: PricingConfig, edit: PricingScalarEditInpu
     },
     quote_validity_days: edit.quote_validity_days,
     dynamic_pricing_enabled: edit.dynamic_pricing_enabled,
+    notes: edit.notes ?? base.notes ?? null,
+  };
+}
+
+// Matrix form encoding: each cell uses field name `margin_${row}_${col}`.
+// Operators enter percentages (e.g. 22 → 0.22) — friendlier than decimals.
+
+export function marginFieldName(row: number, col: number): string {
+  return `margin_${row}_${col}`;
+}
+
+function readPercentCell(form: FormData, row: number, col: number): number {
+  const raw = form.get(marginFieldName(row, col));
+  if (typeof raw !== 'string' || raw.trim().length === 0) return Number.NaN;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) return Number.NaN;
+  return parsed / 100;
+}
+
+export function parseMatrixEditForm(
+  form: FormData,
+): { ok: true; input: PricingMatrixEditInput } | { ok: false; message: string } {
+  const matrix: number[][] = [];
+  for (let row = 0; row < MATRIX_ROWS; row++) {
+    const cells: number[] = [];
+    for (let col = 0; col < MATRIX_COLS; col++) {
+      cells.push(readPercentCell(form, row, col));
+    }
+    matrix.push(cells);
+  }
+  const notes = form.get('notes');
+  const parsed = PricingMatrixEditSchema.safeParse({
+    version_label: form.get('version_label'),
+    margin_matrix: matrix,
+    notes: typeof notes === 'string' && notes.length > 0 ? notes : null,
+  });
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message ?? 'Invalid input' };
+  }
+  return { ok: true, input: parsed.data };
+}
+
+export function applyMatrixEdit(base: PricingConfig, edit: PricingMatrixEditInput): PricingConfig {
+  return {
+    ...base,
+    version_label: edit.version_label,
+    margin_matrix: edit.margin_matrix.map((row) => [...row]) as PricingConfig['margin_matrix'],
     notes: edit.notes ?? base.notes ?? null,
   };
 }

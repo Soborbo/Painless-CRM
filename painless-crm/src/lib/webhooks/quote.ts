@@ -1,9 +1,12 @@
 import { ContactDetailsSchema, createLeadJob, findOrCreateCustomer } from '@/lib/jobs/intake';
+import { createQuoteFromWebhook } from '@/lib/jobs/quote-writer';
 import { z } from 'zod';
 
 // Inbound quote webhook contract from painlessremovals calculator.
-// First-slice scope: customer dedup + lead job creation. Quote snapshot
-// creation lands when the manual quote builder ships in Phase 06.
+// On payloads that carry a `quote`, we also snapshot the quote row using the
+// active pricing version (per ADR-005). Snapshot creation is best-effort —
+// failure does not roll back the lead, but the drift status is returned for
+// downstream alerting once Phase 13 lands.
 
 const AddressSchema = z.object({
   line1: z.string().min(1).max(160),
@@ -34,6 +37,8 @@ export type IncomingQuote = z.infer<typeof IncomingQuoteSchema>;
 export interface IngestQuoteResult {
   customer_id: string;
   job_id: string;
+  quote_id: string | null;
+  drift: 'match' | 'minor_drift' | 'major_drift' | 'unobserved' | 'snapshot_failed' | null;
 }
 
 export async function ingestQuote(payload: IncomingQuote): Promise<IngestQuoteResult> {
@@ -49,5 +54,37 @@ export async function ingestQuote(payload: IncomingQuote): Promise<IngestQuoteRe
     quoteTotalPence: payload.quote?.total_pence ?? null,
     reason: `Webhook intake: quote (${payload.source})`,
   });
-  return { customer_id: customerId, job_id: jobId };
+
+  if (!payload.quote) {
+    return { customer_id: customerId, job_id: jobId, quote_id: null, drift: null };
+  }
+
+  try {
+    const snapshot = await createQuoteFromWebhook({
+      companyId: payload.company_id,
+      jobId,
+      pricingVersionId: payload.quote.pricing_version_id,
+      input: {
+        size_code: payload.quote.size_code,
+        distance_miles: payload.quote.distance_miles,
+        complications: payload.quote.complications,
+        source: payload.source,
+      },
+      observedTotalPence: payload.quote.total_pence,
+    });
+    return {
+      customer_id: customerId,
+      job_id: jobId,
+      quote_id: snapshot.quote_id,
+      drift: snapshot.drift,
+    };
+  } catch (err) {
+    console.warn('quote snapshot failed', err instanceof Error ? err.message : err);
+    return {
+      customer_id: customerId,
+      job_id: jobId,
+      quote_id: null,
+      drift: 'snapshot_failed',
+    };
+  }
 }

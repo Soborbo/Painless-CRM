@@ -138,6 +138,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "buildQuote": "Build quote",
+    "viewTimeline": "Timeline",
     "confirmDelete": "Soft-delete this job? It is hidden from the list but the audit trail stays.",
     "createdOn": "Created {date}",
     "filter": "Filter",
@@ -398,6 +399,21 @@
       "dueAt": "Due",
       "remaining": "Remaining"
     }
+  },
+  "timeline": {
+    "title": "Timeline",
+    "subtitle": "Every stage change, note, call, and quote event for this job, newest first.",
+    "empty": "Nothing has happened on this job yet.",
+    "initial": "(none)",
+    "stageHeader": "{from} → {to}",
+    "noteInternal": "Internal note",
+    "noteCustomerVisible": "Customer-visible note",
+    "callInbound": "Inbound call",
+    "callOutbound": "Outbound call",
+    "quoteCreated": "Quote drafted · {total}",
+    "quoteSent": "Quote sent to customer",
+    "quoteAccepted": "Quote accepted by customer",
+    "quoteAcceptedHelp": "Job auto-transitioned to accepted."
   },
   "notes": {
     "panelTitle": "Notes",

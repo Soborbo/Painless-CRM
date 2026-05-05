@@ -138,6 +138,7 @@
     "edit": "",
     "delete": "",
     "buildQuote": "",
+    "viewTimeline": "",
     "confirmDelete": "",
     "createdOn": "",
     "filter": "",
@@ -398,6 +399,21 @@
       "dueAt": "",
       "remaining": ""
     }
+  },
+  "timeline": {
+    "title": "",
+    "subtitle": "",
+    "empty": "",
+    "initial": "",
+    "stageHeader": "",
+    "noteInternal": "",
+    "noteCustomerVisible": "",
+    "callInbound": "",
+    "callOutbound": "",
+    "quoteCreated": "",
+    "quoteSent": "",
+    "quoteAccepted": "",
+    "quoteAcceptedHelp": ""
   },
   "notes": {
     "panelTitle": "",

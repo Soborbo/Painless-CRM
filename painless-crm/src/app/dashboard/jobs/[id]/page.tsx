@@ -77,6 +77,12 @@ export default async function JobPage({ params }: Props) {
             {t('buildQuote')}
           </Link>
           <Link
+            href={`/dashboard/jobs/${id}/timeline`}
+            className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('viewTimeline')}
+          </Link>
+          <Link
             href={`/dashboard/jobs/${id}/edit`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
           >

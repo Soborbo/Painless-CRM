@@ -342,6 +342,9 @@
     "revisionBadge": "Rev. {number}",
     "deltaTooltip": "Change vs. the previous revision",
     "deltaSame": "Same price",
+    "acceptedByLine": "Accepted by {name} · {at}",
+    "acceptedAnonymous": "the customer",
+    "acceptedFromDevice": "Signed from {device}",
     "status": {
       "draft": "Draft",
       "sent": "Sent",

@@ -342,6 +342,9 @@
     "revisionBadge": "",
     "deltaTooltip": "",
     "deltaSame": "",
+    "acceptedByLine": "",
+    "acceptedAnonymous": "",
+    "acceptedFromDevice": "",
     "status": {
       "draft": "",
       "sent": "",

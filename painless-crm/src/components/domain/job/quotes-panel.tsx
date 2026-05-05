@@ -1,4 +1,9 @@
-import { type QuoteRow, classifyQuoteValidity } from '@/lib/queries/quotes';
+import {
+  type QuoteAcceptanceAudit,
+  type QuoteRow,
+  classifyQuoteValidity,
+} from '@/lib/queries/quotes';
+import { summariseUserAgent } from '@/lib/quotes/acceptance-ua';
 import { computeRevisionDeltas } from '@/lib/quotes/revision-delta';
 import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
@@ -26,7 +31,13 @@ const STATUS_CLASS: Record<NonNullable<QuoteRow['status']>, string> = {
   expired: 'bg-zinc-100 text-zinc-700',
 };
 
-export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
+export async function QuotesPanel({
+  rows,
+  audits = [],
+}: {
+  rows: QuoteRow[];
+  audits?: QuoteAcceptanceAudit[];
+}) {
   const t = await getTranslations('quotes');
 
   if (rows.length === 0) {
@@ -37,6 +48,7 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
     );
   }
 
+  const auditByQuote = new Map(audits.map((a) => [a.quote_id, a] as const));
   const annotated = computeRevisionDeltas(rows);
 
   return (
@@ -139,11 +151,40 @@ export async function QuotesPanel({ rows }: { rows: QuoteRow[] }) {
                   {row.decline_reason ? ` — "${row.decline_reason}"` : ''}
                 </div>
               ) : null}
+              {(() => {
+                const audit = row.status === 'accepted' ? auditByQuote.get(row.id) : undefined;
+                return audit ? <AcceptanceAudit audit={audit} t={t} /> : null;
+              })()}
             </li>
           );
         })}
       </ul>
     </Section>
+  );
+}
+
+function AcceptanceAudit({
+  audit,
+  t,
+}: {
+  audit: QuoteAcceptanceAudit;
+  t: Awaited<ReturnType<typeof getTranslations<'quotes'>>>;
+}) {
+  const ua = summariseUserAgent(audit.user_agent);
+  return (
+    <div className="mt-1 rounded-md bg-green-50 px-2 py-1.5 text-xs text-green-900">
+      <p className="font-medium">
+        {t('acceptedByLine', {
+          name: audit.acceptor_name ?? t('acceptedAnonymous'),
+          at: formatDateTime(audit.accepted_at),
+        })}
+      </p>
+      {ua ? (
+        <p className="text-[11px] text-green-800" title={ua.full}>
+          {t('acceptedFromDevice', { device: ua.short })}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

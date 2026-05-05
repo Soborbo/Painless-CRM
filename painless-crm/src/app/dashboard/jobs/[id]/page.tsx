@@ -13,7 +13,7 @@ import {
 } from '@/lib/queries/jobs';
 import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
-import { listQuotesForJob } from '@/lib/queries/quotes';
+import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -34,12 +34,13 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, calls, jobNotes, t] = await Promise.all([
+  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, t] = await Promise.all([
     getJobStatusHistory(id),
     getJobTags(id),
     listSalesReps(),
     listSurveyors(),
     listQuotesForJob(id),
+    getJobAcceptanceAudits(id),
     listPhoneCallsForJob(id),
     listNotesForJob(id),
     getTranslations('jobs'),
@@ -161,7 +162,7 @@ export default async function JobPage({ params }: Props) {
           />
           <TagsPanel jobId={job.id} tags={tags} />
 
-          <QuotesPanel rows={quotes} />
+          <QuotesPanel rows={quotes} audits={audits} />
 
           <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
 

@@ -116,11 +116,28 @@ export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<Cr
     throw new Error(`Could not create quote: ${error?.message ?? 'unknown'}`);
   }
 
-  await supabase
-    .from('jobs')
-    .update({ quote_total_pence: snapshot.total_pence })
-    .eq('id', args.jobId)
-    .eq('company_id', args.companyId);
+  // Don't overwrite the job's headline value when a contract already exists.
+  // jobs.quote_total_pence is the cheap-to-read summary used by listing views
+  // — once a customer has accepted, that figure is the contract and a draft
+  // revision must not silently rewrite it. Same-job acceptances are checked
+  // against the column directly so the write stays a single round trip.
+  const { data: accepted } = await supabase
+    .from('quotes')
+    .select('id')
+    .eq('company_id', args.companyId)
+    .eq('job_id', args.jobId)
+    .eq('status', 'accepted')
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+
+  if (!accepted) {
+    await supabase
+      .from('jobs')
+      .update({ quote_total_pence: snapshot.total_pence })
+      .eq('id', args.jobId)
+      .eq('company_id', args.companyId);
+  }
 
   const drift =
     typeof args.observedTotalPence === 'number'

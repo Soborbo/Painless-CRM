@@ -416,6 +416,26 @@
       "expired": "Expired"
     }
   },
+  "variants": {
+    "panelTitle": "Variants",
+    "empty": "No variants yet — the customer will see only the headline price.",
+    "addTitle": "Add a variant",
+    "label": "Label",
+    "labelPlaceholder": "e.g. Pickup only, Full service, Premium",
+    "totalPence": "Total (pence)",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "What's included or excluded vs. the standard option",
+    "add": "Add variant",
+    "adding": "Adding…",
+    "remove": "Remove",
+    "removing": "Removing…",
+    "error": {
+      "invalid_input": "Check the inputs and try again.",
+      "parent_not_found": "Parent quote not found.",
+      "wrong_status": "Variants can only be added to draft or sent quotes.",
+      "unknown": "Something went wrong — please retry."
+    }
+  },
   "publicQuote": {
     "headline": "Hi {name}, here is your moving quote",
     "subhead": "Job {jobNumber} · valid until {validUntil}",

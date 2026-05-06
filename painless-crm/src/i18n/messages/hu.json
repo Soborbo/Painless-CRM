@@ -416,6 +416,26 @@
       "expired": ""
     }
   },
+  "variants": {
+    "panelTitle": "",
+    "empty": "",
+    "addTitle": "",
+    "label": "",
+    "labelPlaceholder": "",
+    "totalPence": "",
+    "description": "",
+    "descriptionPlaceholder": "",
+    "add": "",
+    "adding": "",
+    "remove": "",
+    "removing": "",
+    "error": {
+      "invalid_input": "",
+      "parent_not_found": "",
+      "wrong_status": "",
+      "unknown": ""
+    }
+  },
   "publicQuote": {
     "headline": "",
     "subhead": "",

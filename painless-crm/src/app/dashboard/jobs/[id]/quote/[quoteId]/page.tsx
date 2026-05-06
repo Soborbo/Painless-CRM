@@ -1,11 +1,15 @@
+import { VariantsEditor } from '@/components/domain/job/variants-editor';
 import { requireUser } from '@/lib/auth/require-role';
 import { getJobById } from '@/lib/queries/jobs';
 import { getQuoteDetail } from '@/lib/queries/quote-detail';
+import { listVariantsForQuote } from '@/lib/queries/quote-variants';
 import { summariseInternalCost } from '@/lib/quotes/internal-breakdown';
 import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+const VARIANT_ROLES = new Set(['sales', 'manager', 'admin', 'super_admin']);
 
 type Props = { params: Promise<{ id: string; quoteId: string }> };
 
@@ -13,13 +17,17 @@ export const dynamic = 'force-dynamic';
 
 export default async function QuoteDetailPage({ params }: Props) {
   const { id, quoteId } = await params;
-  await requireUser();
-  const [job, quote, t] = await Promise.all([
+  const me = await requireUser();
+  const [job, quote, variants, t, tv] = await Promise.all([
     getJobById(id),
     getQuoteDetail(id, quoteId),
+    listVariantsForQuote(quoteId),
     getTranslations('quotes'),
+    getTranslations('variants'),
   ]);
   if (!job || !quote) notFound();
+  const canEditVariants =
+    VARIANT_ROLES.has(me.role) && (quote.status === 'draft' || quote.status === 'sent');
 
   const internal = summariseInternalCost(quote.pricing_snapshot);
   const breakdown = quote.breakdown ?? {};
@@ -105,6 +113,10 @@ export default async function QuoteDetailPage({ params }: Props) {
               : ''}
           </p>
         ) : null}
+      </Section>
+
+      <Section title={tv('panelTitle')}>
+        <VariantsEditor quoteId={quote.id} variants={variants} canEdit={canEditVariants} />
       </Section>
 
       <Section title={t('detailLifecycle')}>

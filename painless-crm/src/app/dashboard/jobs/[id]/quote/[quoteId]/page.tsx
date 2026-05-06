@@ -161,7 +161,13 @@ export default async function QuoteDetailPage({ params }: Props) {
           label={t('detailWithdrawn')}
           value={
             quote.withdrawn_at
-              ? `${formatDateTime(quote.withdrawn_at)}${quote.withdrawal_reason ? ` — "${quote.withdrawal_reason}"` : ''}`
+              ? [
+                  formatDateTime(quote.withdrawn_at),
+                  quote.withdrawn_by_name,
+                  quote.withdrawal_reason ? `"${quote.withdrawal_reason}"` : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')
               : '—'
           }
         />

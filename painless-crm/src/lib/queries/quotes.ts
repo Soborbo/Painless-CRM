@@ -22,6 +22,7 @@ export interface QuoteRow {
   decline_reason: string | null;
   withdrawn_at: string | null;
   withdrawal_reason: string | null;
+  withdrawn_by_name: string | null;
   pricing_version: { id: string; version_label: string } | null;
 }
 
@@ -32,6 +33,7 @@ const QUOTE_LIST_COLUMNS = `
   first_opened_at, last_opened_at, open_count,
   declined_at, decline_reason,
   withdrawn_at, withdrawal_reason,
+  withdrawn_by:users!quotes_withdrawn_by_user_id_fkey (full_name),
   pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)
 `;
 
@@ -40,6 +42,10 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
   const version = Array.isArray(versionRaw)
     ? ((versionRaw[0] as { id: string; version_label: string } | undefined) ?? null)
     : ((versionRaw as { id: string; version_label: string } | null) ?? null);
+  const withdrawnByRaw = raw.withdrawn_by as unknown;
+  const withdrawnBy = Array.isArray(withdrawnByRaw)
+    ? ((withdrawnByRaw[0] as { full_name: string } | undefined) ?? null)
+    : ((withdrawnByRaw as { full_name: string } | null) ?? null);
   return {
     id: raw.id as string,
     job_id: raw.job_id as string,
@@ -62,6 +68,7 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
     decline_reason: (raw.decline_reason as string | null) ?? null,
     withdrawn_at: (raw.withdrawn_at as string | null) ?? null,
     withdrawal_reason: (raw.withdrawal_reason as string | null) ?? null,
+    withdrawn_by_name: withdrawnBy?.full_name ?? null,
     pricing_version: version,
   };
 }

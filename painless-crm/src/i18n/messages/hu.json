@@ -358,6 +358,7 @@
     "notOpened": "",
     "declinedLine": "",
     "withdrawnLine": "",
+    "withdrawnByLine": "",
     "reviseAction": "",
     "detailsAction": "",
     "withdrawAction": "",

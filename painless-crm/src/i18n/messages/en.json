@@ -358,6 +358,7 @@
     "notOpened": "Not yet opened by customer",
     "declinedLine": "Declined {at}",
     "withdrawnLine": "Withdrawn by sales {at}",
+    "withdrawnByLine": "Withdrawn by {actor} {at}",
     "reviseAction": "Revise",
     "detailsAction": "Details",
     "withdrawAction": "Withdraw",

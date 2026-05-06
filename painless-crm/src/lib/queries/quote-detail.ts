@@ -21,6 +21,7 @@ export interface QuoteDetailRow {
   decline_reason: string | null;
   withdrawn_at: string | null;
   withdrawal_reason: string | null;
+  withdrawn_by_name: string | null;
   first_opened_at: string | null;
   last_opened_at: string | null;
   open_count: number;
@@ -53,6 +54,7 @@ export async function getQuoteDetail(
          first_opened_at, last_opened_at, open_count,
          revision_number, revised_from_id, created_at,
          pricing_snapshot, breakdown,
+         withdrawn_by:users!quotes_withdrawn_by_user_id_fkey (full_name),
          pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)`,
       )
       .eq('id', quoteId)
@@ -73,6 +75,10 @@ export async function getQuoteDetail(
   const version = Array.isArray(versionRaw)
     ? ((versionRaw[0] as { id: string; version_label: string } | undefined) ?? null)
     : ((versionRaw as { id: string; version_label: string } | null) ?? null);
+  const withdrawnByRaw = row.withdrawn_by as unknown;
+  const withdrawnBy = Array.isArray(withdrawnByRaw)
+    ? ((withdrawnByRaw[0] as { full_name: string } | undefined) ?? null)
+    : ((withdrawnByRaw as { full_name: string } | null) ?? null);
   return {
     id: row.id as string,
     job_id: row.job_id as string,
@@ -87,6 +93,7 @@ export async function getQuoteDetail(
     decline_reason: (row.decline_reason as string | null) ?? null,
     withdrawn_at: (row.withdrawn_at as string | null) ?? null,
     withdrawal_reason: (row.withdrawal_reason as string | null) ?? null,
+    withdrawn_by_name: withdrawnBy?.full_name ?? null,
     first_opened_at: (row.first_opened_at as string | null) ?? null,
     last_opened_at: (row.last_opened_at as string | null) ?? null,
     open_count: (row.open_count as number | null) ?? 0,

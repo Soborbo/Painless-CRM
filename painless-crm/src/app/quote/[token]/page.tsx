@@ -1,5 +1,6 @@
 import { serverEnv } from '@/lib/env';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
+import { listPublicVariantsForQuote } from '@/lib/queries/quote-variants';
 import { expireSingleQuote, shouldExpire } from '@/lib/quotes/expiry';
 import { recordQuoteOpen } from '@/lib/quotes/opens';
 import { classifyAcceptable } from '@/lib/quotes/public-acceptance';
@@ -41,7 +42,10 @@ export default async function PublicQuotePage({ params }: Props) {
 
   await recordQuoteOpen(quote.id);
 
-  const details = extractPublicBreakdown(quote.breakdown);
+  const [details, variants] = [
+    extractPublicBreakdown(quote.breakdown),
+    await listPublicVariantsForQuote(quote.id),
+  ];
   const verdict = classifyAcceptable(quote);
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-6 py-10">
@@ -109,9 +113,40 @@ export default async function PublicQuotePage({ params }: Props) {
         ) : null}
       </section>
 
+      {variants.length > 0 ? (
+        <section className="rounded-md border p-6">
+          <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+            {t('variantsHeader')}
+          </p>
+          <ul className="mt-3 flex flex-col divide-y">
+            {variants.map((v) => (
+              <li key={v.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
+                <div className="flex flex-col">
+                  <span className="font-medium">{v.variant_label}</span>
+                  {v.description ? (
+                    <span className="text-xs text-[var(--color-muted-foreground)]">
+                      {v.description}
+                    </span>
+                  ) : null}
+                </div>
+                <span className="font-mono text-sm">{formatPence(v.total_pence)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {verdict.ok ? (
         <>
-          <AcceptQuoteForm token={token} customerName={quote.customer.display_name} />
+          <AcceptQuoteForm
+            token={token}
+            customerName={quote.customer.display_name}
+            variants={variants.map((v) => ({
+              id: v.id,
+              label: v.variant_label,
+              total_pence: v.total_pence,
+            }))}
+          />
           <DeclineQuoteForm token={token} />
         </>
       ) : (

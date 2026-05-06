@@ -8,9 +8,16 @@ import {
 import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
 
+interface VariantOption {
+  id: string;
+  label: string;
+  total_pence: number;
+}
+
 interface Props {
   token: string;
   customerName: string;
+  variants?: VariantOption[];
 }
 
 const REASON_KEYS: Record<string, string> = {
@@ -24,7 +31,11 @@ const REASON_KEYS: Record<string, string> = {
   unknown: 'tryAgain',
 };
 
-export function AcceptQuoteForm({ token, customerName }: Props) {
+function formatPence(pence: number): string {
+  return `£${(pence / 100).toLocaleString('en-GB', { maximumFractionDigits: 0 })}`;
+}
+
+export function AcceptQuoteForm({ token, customerName, variants = [] }: Props) {
   const t = useTranslations('publicQuote');
   const [state, formAction, pending] = useActionState<AcceptQuoteState, FormData>(
     acceptQuote,
@@ -45,6 +56,28 @@ export function AcceptQuoteForm({ token, customerName }: Props) {
       <input type="hidden" name="token" value={token} />
       <h2 className="text-lg font-semibold">{t('formTitle')}</h2>
       <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{t('formIntro')}</p>
+
+      {variants.length > 0 ? (
+        <fieldset className="mt-4 flex flex-col gap-2">
+          <legend className="text-sm">{t('chooseVariant')}</legend>
+          {variants.map((v, idx) => (
+            <label
+              key={v.id}
+              className="flex cursor-pointer items-baseline gap-2 rounded-md border px-3 py-2 text-sm"
+            >
+              <input
+                type="radio"
+                name="variant_id"
+                value={v.id}
+                defaultChecked={idx === 0}
+                required
+              />
+              <span className="flex-1 font-medium">{v.label}</span>
+              <span className="font-mono">{formatPence(v.total_pence)}</span>
+            </label>
+          ))}
+        </fieldset>
+      ) : null}
 
       <label className="mt-4 flex flex-col gap-1 text-sm">
         {t('fullName')}

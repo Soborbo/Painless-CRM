@@ -451,6 +451,8 @@
     "pricingVersion": "Pricing version",
     "complications": "Includes: {items}",
     "surveyHint": "We'd like to do a quick survey before move day to make sure the price holds. We'll be in touch.",
+    "variantsHeader": "Choose your option",
+    "chooseVariant": "Pick the option that suits you:",
     "formTitle": "Accept this quote",
     "formIntro": "Confirm your name and tick the box to e-sign. We'll lock the price in and reach out to confirm details.",
     "fullName": "Your full name",

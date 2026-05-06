@@ -31,6 +31,12 @@ const FormSchema = z.object({
   token: z.string().min(10),
   full_name: z.string().min(1).max(200),
   consent_terms: z.literal('on').or(z.literal('true')),
+  variant_id: z
+    .string()
+    .uuid()
+    .or(z.literal(''))
+    .optional()
+    .transform((v) => (v ? v : null)),
 });
 
 export async function acceptQuote(
@@ -44,6 +50,7 @@ export async function acceptQuote(
     token: form.get('token'),
     full_name: form.get('full_name'),
     consent_terms: form.get('consent_terms'),
+    variant_id: form.get('variant_id') ?? undefined,
   });
   if (!parsed.success) return { status: 'error', reason: 'invalid_token' };
 
@@ -79,11 +86,32 @@ export async function acceptQuote(
   const userAgent = reqHeaders.get('user-agent')?.slice(0, 500) ?? null;
 
   const supabase = createAdminClient();
+
+  // If variants exist on this quote, the customer MUST pick one — drop a token
+  // missing variant_id so we never silently accept the headline price when
+  // there are options. We compare to the live list rather than trusting the
+  // submitted id alone.
+  let variantId: string | null = null;
+  const { data: variantRows } = await supabase
+    .from('quote_variants')
+    .select('id, total_pence')
+    .eq('quote_id', quote.id);
+  const variants = (variantRows ?? []) as Array<{ id: string; total_pence: number }>;
+  let acceptedTotalPence: number | null = null;
+  if (variants.length > 0) {
+    if (!parsed.data.variant_id) return { status: 'error', reason: 'invalid_token' };
+    const match = variants.find((v) => v.id === parsed.data.variant_id);
+    if (!match) return { status: 'error', reason: 'invalid_token' };
+    variantId = match.id;
+    acceptedTotalPence = match.total_pence;
+  }
+
   const { data: insertedAcceptance, error: acceptanceError } = await supabase
     .from('quote_acceptances')
     .insert({
       company_id: quote.company_id,
       quote_id: quote.id,
+      variant_id: variantId,
       customer_id: quote.customer.id,
       acceptance_token: parsed.data.token,
       ip_address: ipAddress,
@@ -98,9 +126,11 @@ export async function acceptQuote(
   if (acceptanceError || !insertedAcceptance) return { status: 'error', reason: 'unknown' };
 
   const acceptedAt = new Date().toISOString();
+  const quoteUpdate: Record<string, unknown> = { status: 'accepted' };
+  if (acceptedTotalPence !== null) quoteUpdate.total_pence = acceptedTotalPence;
   const { error: quoteError } = await supabase
     .from('quotes')
-    .update({ status: 'accepted' })
+    .update(quoteUpdate)
     .eq('id', quote.id)
     .in('status', ['draft', 'sent']);
   if (quoteError) return { status: 'error', reason: 'unknown' };

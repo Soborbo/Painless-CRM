@@ -465,6 +465,17 @@
     "declineCancel": "",
     "declineThanksTitle": "",
     "declineThanksBody": "",
+    "printLink": "",
+    "footer": ""
+  },
+  "printQuote": {
+    "title": "",
+    "subhead": "",
+    "printedOn": "",
+    "validUntil": "",
+    "whatsIncluded": "",
+    "howToAccept": "",
+    "howToAcceptBody": "",
     "footer": ""
   },
   "sla": {

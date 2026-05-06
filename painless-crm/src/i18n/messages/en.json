@@ -465,7 +465,18 @@
     "declineCancel": "Cancel",
     "declineThanksTitle": "Thanks for letting us know",
     "declineThanksBody": "Appreciate the heads-up. If anything changes, just reply to the email and we'll send a fresh quote.",
+    "printLink": "Print / save as PDF",
     "footer": "Questions? Reply to the email this link came from."
+  },
+  "printQuote": {
+    "title": "Quote summary",
+    "subhead": "Job {jobNumber} · prepared for {customer}",
+    "printedOn": "Printed {at}",
+    "validUntil": "Valid until {at}",
+    "whatsIncluded": "What's included",
+    "howToAccept": "How to accept",
+    "howToAcceptBody": "Open the link from your email and click Accept. We'll confirm details by phone before move day.",
+    "footer": "Painless Removals · Bristol, UK"
   },
   "sla": {
     "title": "SLA queue",

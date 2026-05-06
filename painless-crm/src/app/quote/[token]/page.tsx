@@ -134,7 +134,17 @@ export default async function PublicQuotePage({ params }: Props) {
         />
       )}
 
-      <footer className="text-xs text-[var(--color-muted-foreground)]">{t('footer')}</footer>
+      <footer className="flex items-center justify-between text-xs text-[var(--color-muted-foreground)]">
+        <span>{t('footer')}</span>
+        <a
+          href={`/quote/${token}/print`}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="underline"
+        >
+          {t('printLink')}
+        </a>
+      </footer>
     </main>
   );
 }

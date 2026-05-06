@@ -161,6 +161,13 @@
     "source": "Source",
     "acquisitionSource": "Source",
     "value": "Value",
+    "headlineStatus": {
+      "draft": "draft",
+      "sent": "sent",
+      "accepted": "accepted",
+      "declined": "declined",
+      "expired": "expired"
+    },
     "assigned": "Assigned to",
     "unassigned": "Unassigned",
     "selectRep": "Select a teammate",

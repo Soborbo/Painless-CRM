@@ -8,6 +8,7 @@ import { computeRevisionDeltas } from '@/lib/quotes/revision-delta';
 import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import { ReshareQuoteButton } from './reshare-quote-button';
 import { SendQuoteButton } from './send-quote-button';
 import { WithdrawQuoteButton } from './withdraw-quote-button';
 
@@ -122,6 +123,7 @@ export async function QuotesPanel({
                 {row.status === 'draft' ? (
                   <SendQuoteButton quoteId={row.id} version={row.version} />
                 ) : null}
+                {row.status === 'sent' ? <ReshareQuoteButton quoteId={row.id} /> : null}
                 {canRevise ? (
                   <Link
                     href={`/dashboard/jobs/${row.job_id}/quote/new?from=${row.id}`}

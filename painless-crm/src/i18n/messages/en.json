@@ -344,6 +344,16 @@
     "sentLinkLabel": "Acceptance link",
     "sentLinkHelp": "Copy this into the email to the customer. The link is valid until the quote expires.",
     "sentAtLine": "Sent {at}",
+    "reshareAction": "Copy share link",
+    "reshareWorking": "Generating…",
+    "reshareHelp": "Fresh acceptance link — copy and paste into your reply.",
+    "reshareError": {
+      "invalid_input": "Invalid input — try again.",
+      "not_found": "Quote not found.",
+      "wrong_status": "Only sent quotes can be re-shared.",
+      "no_secret": "Share-link signing is not configured.",
+      "unknown": "Could not generate a fresh link — please retry."
+    },
     "openedLine": "First opened {first} · {count} opens",
     "notOpened": "Not yet opened by customer",
     "declinedLine": "Declined {at}",

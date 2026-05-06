@@ -344,6 +344,16 @@
     "sentLinkLabel": "",
     "sentLinkHelp": "",
     "sentAtLine": "",
+    "reshareAction": "",
+    "reshareWorking": "",
+    "reshareHelp": "",
+    "reshareError": {
+      "invalid_input": "",
+      "not_found": "",
+      "wrong_status": "",
+      "no_secret": "",
+      "unknown": ""
+    },
     "openedLine": "",
     "notOpened": "",
     "declinedLine": "",

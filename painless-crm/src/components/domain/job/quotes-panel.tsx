@@ -129,6 +129,12 @@ export async function QuotesPanel({
                     {t('reviseAction')}
                   </Link>
                 ) : null}
+                <Link
+                  href={`/dashboard/jobs/${row.job_id}/quote/${row.id}`}
+                  className="rounded-md border px-2 py-1 text-xs hover:bg-[var(--color-muted)]"
+                >
+                  {t('detailsAction')}
+                </Link>
               </div>
               {row.status === 'sent' && row.sent_at ? (
                 <div className="text-xs text-[var(--color-muted-foreground)]">

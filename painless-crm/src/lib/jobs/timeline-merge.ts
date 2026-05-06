@@ -46,6 +46,7 @@ export type TimelineEvent =
       at: string;
       quote_id: string;
       acceptor_name: string | null;
+      variant_label: string | null;
     }
   | {
       kind: 'quote_opened';
@@ -98,6 +99,7 @@ export interface QuoteAcceptanceHistoryRow {
   quote_id: string;
   accepted_at: string;
   consents: { accepted_full_name?: string | null } | null;
+  variant: { variant_label: string } | null;
 }
 
 export interface TimelineSources {
@@ -176,6 +178,7 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
       at: acceptance.accepted_at,
       quote_id: acceptance.quote_id,
       acceptor_name: acceptance.consents?.accepted_full_name ?? null,
+      variant_label: acceptance.variant?.variant_label ?? null,
     });
   }
 

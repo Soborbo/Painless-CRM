@@ -54,7 +54,9 @@ export async function getJobTimeline(jobId: string): Promise<TimelineEvent[]> {
       .limit(50),
     supabase
       .from('quote_acceptances')
-      .select('quote_id, accepted_at, consents, quote:quotes!inner(job_id)')
+      .select(
+        'quote_id, accepted_at, consents, variant:quote_variants(variant_label), quote:quotes!inner(job_id)',
+      )
       .eq('quote.job_id', jobId)
       .order('accepted_at', { ascending: false })
       .limit(50),
@@ -65,6 +67,24 @@ export async function getJobTimeline(jobId: string): Promise<TimelineEvent[]> {
     notes: (notes.data ?? []) as unknown as NoteHistoryRow[],
     calls: (calls.data ?? []) as unknown as CallHistoryRow[],
     quotes: (quotes.data ?? []) as unknown as QuoteHistoryRow[],
-    acceptances: (acceptances.data ?? []) as unknown as QuoteAcceptanceHistoryRow[],
+    acceptances: ((acceptances.data ?? []) as Array<Record<string, unknown>>).map(
+      flattenAcceptance,
+    ),
   });
+}
+
+// Supabase returns single-row FK joins as either an object or a one-element
+// array depending on schema introspection — normalise so the merger sees a
+// stable `{ variant_label } | null` shape.
+function flattenAcceptance(raw: Record<string, unknown>): QuoteAcceptanceHistoryRow {
+  const variantRaw = raw.variant as unknown;
+  const variant = Array.isArray(variantRaw)
+    ? ((variantRaw[0] as { variant_label: string } | undefined) ?? null)
+    : ((variantRaw as { variant_label: string } | null) ?? null);
+  return {
+    quote_id: raw.quote_id as string,
+    accepted_at: raw.accepted_at as string,
+    consents: (raw.consents as { accepted_full_name?: string | null } | null) ?? null,
+    variant,
+  };
 }

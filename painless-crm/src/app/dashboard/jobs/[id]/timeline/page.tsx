@@ -137,6 +137,11 @@ function Header({
       return (
         <p className="font-medium">
           {t('quoteAccepted')}
+          {event.variant_label ? (
+            <span className="ml-1 text-xs font-normal text-[var(--color-muted-foreground)]">
+              · {t('quoteAcceptedVariant', { label: event.variant_label })}
+            </span>
+          ) : null}
           {event.acceptor_name ? (
             <span className="ml-1 text-xs font-normal text-[var(--color-muted-foreground)]">
               · {event.acceptor_name}

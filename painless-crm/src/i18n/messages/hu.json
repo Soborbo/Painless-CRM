@@ -395,6 +395,8 @@
     "detailCreated": "",
     "sentLabel": "",
     "detailFirstOpened": "",
+    "detailAccepted": "",
+    "detailAcceptedVariant": "",
     "detailDeclined": "",
     "detailValidUntil": "",
     "revisionBadge": "",
@@ -535,6 +537,7 @@
     "quoteOpened": "",
     "quoteAccepted": "",
     "quoteAcceptedHelp": "",
+    "quoteAcceptedVariant": "",
     "quoteDeclined": ""
   },
   "notes": {

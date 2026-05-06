@@ -214,6 +214,7 @@ describe('mergeJobTimeline', () => {
           quote_id: 'q1',
           accepted_at: '2026-05-04T12:00:00Z',
           consents: { accepted_full_name: 'Alice Brown' },
+          variant: null,
         },
       ],
     });
@@ -223,8 +224,31 @@ describe('mergeJobTimeline', () => {
         at: '2026-05-04T12:00:00Z',
         quote_id: 'q1',
         acceptor_name: 'Alice Brown',
+        variant_label: null,
       },
     ]);
+  });
+
+  it('passes through the chosen variant label on quote_accepted', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [],
+      acceptances: [
+        {
+          quote_id: 'q9',
+          accepted_at: '2026-05-04T12:00:00Z',
+          consents: { accepted_full_name: 'Bob' },
+          variant: { variant_label: 'Premium' },
+        },
+      ],
+    });
+    expect(out[0]).toMatchObject({
+      kind: 'quote_accepted',
+      variant_label: 'Premium',
+      acceptor_name: 'Bob',
+    });
   });
 
   it('breaks ties between same-timestamp events with a stable kind ranking', () => {
@@ -242,7 +266,7 @@ describe('mergeJobTimeline', () => {
       notes: [],
       calls: [],
       quotes: [],
-      acceptances: [{ quote_id: 'q1', accepted_at: ts, consents: null }],
+      acceptances: [{ quote_id: 'q1', accepted_at: ts, consents: null, variant: null }],
     });
     expect(out.map((e) => e.kind)).toEqual(['stage', 'quote_accepted']);
   });

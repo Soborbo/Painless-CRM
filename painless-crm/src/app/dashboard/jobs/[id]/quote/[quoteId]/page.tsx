@@ -134,6 +134,22 @@ export default async function QuoteDetailPage({ params }: Props) {
           }
         />
         <DetailRow
+          label={t('detailAccepted')}
+          value={
+            quote.acceptance
+              ? [
+                  formatDateTime(quote.acceptance.accepted_at),
+                  quote.acceptance.acceptor_name,
+                  quote.acceptance.variant_label
+                    ? t('detailAcceptedVariant', { label: quote.acceptance.variant_label })
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')
+              : '—'
+          }
+        />
+        <DetailRow
           label={t('detailDeclined')}
           value={
             quote.declined_at

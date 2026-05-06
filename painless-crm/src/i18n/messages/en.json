@@ -395,6 +395,8 @@
     "detailCreated": "Created",
     "sentLabel": "Sent",
     "detailFirstOpened": "First opened",
+    "detailAccepted": "Accepted",
+    "detailAcceptedVariant": "Chose {label}",
     "detailDeclined": "Declined",
     "detailValidUntil": "Valid until",
     "revisionBadge": "Rev. {number}",
@@ -535,6 +537,7 @@
     "quoteOpened": "Quote opened by customer · {count} opens",
     "quoteAccepted": "Quote accepted by customer",
     "quoteAcceptedHelp": "Job auto-transitioned to accepted.",
+    "quoteAcceptedVariant": "Chose: {label}",
     "quoteDeclined": "Quote declined by customer"
   },
   "notes": {

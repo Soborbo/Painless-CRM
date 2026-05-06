@@ -28,6 +28,13 @@ export interface QuoteDetailRow {
   created_at: string;
   pricing_snapshot: Record<string, unknown> | null;
   breakdown: Record<string, unknown> | null;
+  acceptance: QuoteAcceptanceSummary | null;
+}
+
+export interface QuoteAcceptanceSummary {
+  accepted_at: string;
+  acceptor_name: string | null;
+  variant_label: string | null;
 }
 
 export async function getQuoteDetail(
@@ -35,20 +42,29 @@ export async function getQuoteDetail(
   quoteId: string,
 ): Promise<QuoteDetailRow | null> {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('quotes')
-    .select(
-      `id, job_id, status, total_pence, size_code, distance_miles, complications,
-       valid_until, sent_at, declined_at, decline_reason,
-       first_opened_at, last_opened_at, open_count,
-       revision_number, revised_from_id, created_at,
-       pricing_snapshot, breakdown,
-       pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)`,
-    )
-    .eq('id', quoteId)
-    .eq('job_id', jobId)
-    .is('deleted_at', null)
-    .maybeSingle();
+  const [{ data }, acceptanceResult] = await Promise.all([
+    supabase
+      .from('quotes')
+      .select(
+        `id, job_id, status, total_pence, size_code, distance_miles, complications,
+         valid_until, sent_at, declined_at, decline_reason,
+         first_opened_at, last_opened_at, open_count,
+         revision_number, revised_from_id, created_at,
+         pricing_snapshot, breakdown,
+         pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)`,
+      )
+      .eq('id', quoteId)
+      .eq('job_id', jobId)
+      .is('deleted_at', null)
+      .maybeSingle(),
+    supabase
+      .from('quote_acceptances')
+      .select('accepted_at, consents, variant:quote_variants(variant_label)')
+      .eq('quote_id', quoteId)
+      .order('accepted_at', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+  ]);
   if (!data) return null;
   const row = data as Record<string, unknown>;
   const versionRaw = row.pricing_version as unknown;
@@ -76,5 +92,21 @@ export async function getQuoteDetail(
     created_at: row.created_at as string,
     pricing_snapshot: (row.pricing_snapshot as Record<string, unknown> | null) ?? null,
     breakdown: (row.breakdown as Record<string, unknown> | null) ?? null,
+    acceptance: flattenAcceptance(acceptanceResult.data),
+  };
+}
+
+function flattenAcceptance(raw: unknown): QuoteAcceptanceSummary | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const row = raw as Record<string, unknown>;
+  const consents = (row.consents as { accepted_full_name?: string | null } | null) ?? null;
+  const variantRaw = row.variant as unknown;
+  const variant = Array.isArray(variantRaw)
+    ? ((variantRaw[0] as { variant_label: string } | undefined) ?? null)
+    : ((variantRaw as { variant_label: string } | null) ?? null);
+  return {
+    accepted_at: row.accepted_at as string,
+    acceptor_name: consents?.accepted_full_name ?? null,
+    variant_label: variant?.variant_label ?? null,
   };
 }

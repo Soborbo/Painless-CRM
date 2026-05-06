@@ -161,6 +161,8 @@
     "source": "Source",
     "acquisitionSource": "Source",
     "value": "Value",
+    "contract": "Contract",
+    "contractTooltip": "Customer accepted this quote — figure is the contract value.",
     "headlineStatus": {
       "draft": "draft",
       "sent": "sent",

@@ -153,6 +153,8 @@ function Header({
       return <p className="font-medium">{t('quoteOpened', { count: event.open_count })}</p>;
     case 'quote_declined':
       return <p className="font-medium text-red-700">{t('quoteDeclined')}</p>;
+    case 'quote_withdrawn':
+      return <p className="font-medium text-zinc-700">{t('quoteWithdrawn')}</p>;
   }
 }
 
@@ -173,6 +175,9 @@ function Body({
     return <p className="text-[var(--color-muted-foreground)]">{t('quoteAcceptedHelp')}</p>;
   }
   if (event.kind === 'quote_declined' && event.reason) {
+    return <p className="text-[var(--color-muted-foreground)]">"{event.reason}"</p>;
+  }
+  if (event.kind === 'quote_withdrawn' && event.reason) {
     return <p className="text-[var(--color-muted-foreground)]">"{event.reason}"</p>;
   }
   return null;

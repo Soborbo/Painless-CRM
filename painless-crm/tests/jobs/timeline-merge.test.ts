@@ -57,6 +57,8 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
         },
       ],
       acceptances: [],
@@ -83,6 +85,8 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
         },
       ],
       acceptances: [],
@@ -106,6 +110,8 @@ describe('mergeJobTimeline', () => {
           open_count: 3,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
         },
       ],
       acceptances: [],
@@ -136,6 +142,8 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
         },
       ],
       acceptances: [],
@@ -160,6 +168,8 @@ describe('mergeJobTimeline', () => {
           open_count: 1,
           declined_at: '2026-05-04T11:00:00Z',
           decline_reason: 'wrong dates',
+          withdrawn_at: null,
+          withdrawal_reason: null,
         },
       ],
       acceptances: [],
@@ -195,12 +205,45 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: '2026-05-04T11:00:00Z',
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
         },
       ],
       acceptances: [],
     });
     const declined = out.find((e) => e.kind === 'quote_declined');
     expect(declined).toMatchObject({ reason: null });
+  });
+
+  it('emits quote_withdrawn with the recorded reason', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q7',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: '2026-05-04T09:30:00Z',
+          total_pence: 13000,
+          status: 'expired',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
+          withdrawn_at: '2026-05-04T11:30:00Z',
+          withdrawal_reason: 'Out of capacity',
+        },
+      ],
+      acceptances: [],
+    });
+    const withdrawn = out.find((e) => e.kind === 'quote_withdrawn');
+    expect(withdrawn).toEqual({
+      kind: 'quote_withdrawn',
+      at: '2026-05-04T11:30:00Z',
+      quote_id: 'q7',
+      reason: 'Out of capacity',
+    });
   });
 
   it('extracts the acceptor name from the consents JSON', () => {

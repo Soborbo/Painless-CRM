@@ -59,6 +59,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: null,
           withdrawn_at: null,
           withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -87,6 +88,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: null,
           withdrawn_at: null,
           withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -112,6 +114,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: null,
           withdrawn_at: null,
           withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -144,6 +147,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: null,
           withdrawn_at: null,
           withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -170,6 +174,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: 'wrong dates',
           withdrawn_at: null,
           withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -207,6 +212,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: null,
           withdrawn_at: null,
           withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -233,6 +239,7 @@ describe('mergeJobTimeline', () => {
           decline_reason: null,
           withdrawn_at: '2026-05-04T11:30:00Z',
           withdrawal_reason: 'Out of capacity',
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -243,7 +250,35 @@ describe('mergeJobTimeline', () => {
       at: '2026-05-04T11:30:00Z',
       quote_id: 'q7',
       reason: 'Out of capacity',
+      actor: null,
     });
+  });
+
+  it('passes through the withdrawing rep on quote_withdrawn', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q8',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: '2026-05-04T09:30:00Z',
+          total_pence: 14000,
+          status: 'expired',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
+          withdrawn_at: '2026-05-04T12:00:00Z',
+          withdrawal_reason: null,
+          withdrawn_by: { full_name: 'Carol' },
+        },
+      ],
+      acceptances: [],
+    });
+    const withdrawn = out.find((e) => e.kind === 'quote_withdrawn');
+    expect(withdrawn).toMatchObject({ kind: 'quote_withdrawn', actor: 'Carol' });
   });
 
   it('extracts the acceptor name from the consents JSON', () => {

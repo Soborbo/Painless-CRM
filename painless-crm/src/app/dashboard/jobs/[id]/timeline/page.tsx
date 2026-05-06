@@ -154,7 +154,16 @@ function Header({
     case 'quote_declined':
       return <p className="font-medium text-red-700">{t('quoteDeclined')}</p>;
     case 'quote_withdrawn':
-      return <p className="font-medium text-zinc-700">{t('quoteWithdrawn')}</p>;
+      return (
+        <p className="font-medium text-zinc-700">
+          {t('quoteWithdrawn')}
+          {event.actor ? (
+            <span className="ml-1 text-xs font-normal text-[var(--color-muted-foreground)]">
+              · {event.actor}
+            </span>
+          ) : null}
+        </p>
+      );
   }
 }
 

@@ -46,7 +46,7 @@ export async function getJobTimeline(jobId: string): Promise<TimelineEvent[]> {
     supabase
       .from('quotes')
       .select(
-        'id, created_at, sent_at, total_pence, status, first_opened_at, open_count, declined_at, decline_reason, withdrawn_at, withdrawal_reason',
+        'id, created_at, sent_at, total_pence, status, first_opened_at, open_count, declined_at, decline_reason, withdrawn_at, withdrawal_reason, withdrawn_by:users!quotes_withdrawn_by_user_id_fkey(full_name)',
       )
       .eq('job_id', jobId)
       .is('deleted_at', null)

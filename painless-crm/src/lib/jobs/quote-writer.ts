@@ -14,6 +14,7 @@ export interface CreateQuoteForJobArgs {
   pricingVersionId: string;
   input: QuoteInput;
   observedTotalPence?: number | null;
+  revisedFromId?: string | null;
 }
 
 export interface CreateQuoteResult {
@@ -21,6 +22,7 @@ export interface CreateQuoteResult {
   total_pence: number;
   drift: 'match' | 'minor_drift' | 'major_drift' | 'unobserved';
   valid_until: string;
+  revision_number: number;
 }
 
 async function loadPricingVersion(companyId: string, versionId: string) {
@@ -56,11 +58,33 @@ async function loadPricingVersion(companyId: string, versionId: string) {
   return { id: row.id as string, config };
 }
 
+async function loadRevisionParent(companyId: string, jobId: string, parentId: string) {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from('quotes')
+    .select('id, job_id, company_id, revision_number')
+    .eq('id', parentId)
+    .eq('company_id', companyId)
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  return data as { id: string; revision_number: number | null } | null;
+}
+
 export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<CreateQuoteResult> {
   const supabase = createAdminClient();
   const version = await loadPricingVersion(args.companyId, args.pricingVersionId);
   if (!version) {
     throw new Error(`Pricing version not found: ${args.pricingVersionId}`);
+  }
+
+  let revisedFromId: string | null = null;
+  let revisionNumber = 1;
+  if (args.revisedFromId) {
+    const parent = await loadRevisionParent(args.companyId, args.jobId, args.revisedFromId);
+    if (!parent) throw new Error('Source quote not found for revision');
+    revisedFromId = parent.id;
+    revisionNumber = (parent.revision_number ?? 1) + 1;
   }
 
   const snapshot = buildQuoteSnapshot({
@@ -83,6 +107,8 @@ export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<Cr
       breakdown: snapshot.breakdown,
       status: 'draft',
       valid_until: snapshot.valid_until,
+      revised_from_id: revisedFromId,
+      revision_number: revisionNumber,
     })
     .select('id')
     .single();
@@ -90,11 +116,28 @@ export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<Cr
     throw new Error(`Could not create quote: ${error?.message ?? 'unknown'}`);
   }
 
-  await supabase
-    .from('jobs')
-    .update({ quote_total_pence: snapshot.total_pence })
-    .eq('id', args.jobId)
-    .eq('company_id', args.companyId);
+  // Don't overwrite the job's headline value when a contract already exists.
+  // jobs.quote_total_pence is the cheap-to-read summary used by listing views
+  // — once a customer has accepted, that figure is the contract and a draft
+  // revision must not silently rewrite it. Same-job acceptances are checked
+  // against the column directly so the write stays a single round trip.
+  const { data: accepted } = await supabase
+    .from('quotes')
+    .select('id')
+    .eq('company_id', args.companyId)
+    .eq('job_id', args.jobId)
+    .eq('status', 'accepted')
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+
+  if (!accepted) {
+    await supabase
+      .from('jobs')
+      .update({ quote_total_pence: snapshot.total_pence })
+      .eq('id', args.jobId)
+      .eq('company_id', args.companyId);
+  }
 
   const drift =
     typeof args.observedTotalPence === 'number'
@@ -106,5 +149,6 @@ export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<Cr
     total_pence: snapshot.total_pence,
     drift,
     valid_until: snapshot.valid_until,
+    revision_number: revisionNumber,
   };
 }

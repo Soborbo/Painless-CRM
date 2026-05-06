@@ -35,8 +35,16 @@ export async function KanbanCard({ row }: { row: JobListRow }) {
           </span>
         ) : null}
         {row.quote_total_pence !== null ? (
-          <span className="text-xs text-[var(--color-muted-foreground)]">
+          <span className="flex items-center gap-1.5 text-xs text-[var(--color-muted-foreground)]">
             {formatPence(row.quote_total_pence)}
+            {row.accepted_at ? (
+              <span
+                className="rounded-md bg-green-50 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-green-800"
+                title={t('contractTooltip')}
+              >
+                {t('contract')}
+              </span>
+            ) : null}
           </span>
         ) : null}
       </div>

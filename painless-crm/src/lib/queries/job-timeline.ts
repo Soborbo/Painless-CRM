@@ -45,7 +45,9 @@ export async function getJobTimeline(jobId: string): Promise<TimelineEvent[]> {
       .limit(200),
     supabase
       .from('quotes')
-      .select('id, created_at, sent_at, total_pence, status')
+      .select(
+        'id, created_at, sent_at, total_pence, status, first_opened_at, open_count, declined_at, decline_reason',
+      )
       .eq('job_id', jobId)
       .is('deleted_at', null)
       .order('created_at', { ascending: false })

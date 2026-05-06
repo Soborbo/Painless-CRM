@@ -16,9 +16,15 @@ interface ManualQuoteFormProps {
     complications: PricingConfig['complications'];
     version_label: string;
   };
+  seed?: {
+    source_quote_id: string;
+    size_code: string | null;
+    distance_miles: number | null;
+    complications: string[] | null;
+  } | null;
 }
 
-export function ManualQuoteForm({ jobId, options }: ManualQuoteFormProps) {
+export function ManualQuoteForm({ jobId, options, seed }: ManualQuoteFormProps) {
   const t = useTranslations('quotes');
   const tc = useTranslations('common');
   const [state, formAction, pending] = useActionState<QuoteBuilderState, FormData>(
@@ -26,9 +32,18 @@ export function ManualQuoteForm({ jobId, options }: ManualQuoteFormProps) {
     INITIAL_QUOTE_BUILDER_STATE,
   );
 
+  const seedSizes = new Set(options.size_categories.map((s) => s.code));
+  const defaultSize =
+    seed?.size_code && seedSizes.has(seed.size_code)
+      ? seed.size_code
+      : (options.size_categories[0]?.code ?? '');
+  const defaultDistance = seed?.distance_miles ?? 10;
+  const seedComplications = new Set(seed?.complications ?? []);
+
   return (
     <form action={formAction} className="flex flex-col gap-4 rounded-md border p-6">
       <input type="hidden" name="job_id" value={jobId} />
+      {seed ? <input type="hidden" name="revised_from_id" value={seed.source_quote_id} /> : null}
       <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
         {t('builderAgainst')} {options.version_label}
       </p>
@@ -37,7 +52,7 @@ export function ManualQuoteForm({ jobId, options }: ManualQuoteFormProps) {
         {t('builderSize')}
         <select
           name="size_code"
-          defaultValue={options.size_categories[0]?.code ?? ''}
+          defaultValue={defaultSize}
           className="rounded-md border px-3 py-2"
           required
         >
@@ -56,7 +71,7 @@ export function ManualQuoteForm({ jobId, options }: ManualQuoteFormProps) {
           name="distance_miles"
           min={0}
           max={2000}
-          defaultValue={10}
+          defaultValue={defaultDistance}
           className="rounded-md border px-3 py-2"
           required
         />
@@ -67,6 +82,9 @@ export function ManualQuoteForm({ jobId, options }: ManualQuoteFormProps) {
         <select
           name="complications"
           multiple
+          defaultValue={options.complications
+            .filter((c) => seedComplications.has(c.code))
+            .map((c) => c.code)}
           className="h-32 rounded-md border px-3 py-2"
           aria-label={t('builderComplicationsHelp')}
         >
@@ -86,7 +104,7 @@ export function ManualQuoteForm({ jobId, options }: ManualQuoteFormProps) {
         disabled={pending}
         className="self-start rounded-md border bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] disabled:opacity-50"
       >
-        {pending ? tc('loading') : t('builderSubmit')}
+        {pending ? tc('loading') : seed ? t('builderSubmitRevise') : t('builderSubmit')}
       </button>
 
       {state.status === 'error' && <p className="text-sm text-red-600">{state.message}</p>}

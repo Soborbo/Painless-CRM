@@ -13,12 +13,25 @@ export interface QuoteRow {
   sent_at: string | null;
   created_at: string;
   version: number;
+  revised_from_id: string | null;
+  revision_number: number;
+  first_opened_at: string | null;
+  last_opened_at: string | null;
+  open_count: number;
+  declined_at: string | null;
+  decline_reason: string | null;
+  withdrawn_at: string | null;
+  withdrawal_reason: string | null;
   pricing_version: { id: string; version_label: string } | null;
 }
 
 const QUOTE_LIST_COLUMNS = `
   id, job_id, pricing_version_id, size_code, distance_miles, complications,
   total_pence, status, valid_until, sent_at, created_at, version,
+  revised_from_id, revision_number,
+  first_opened_at, last_opened_at, open_count,
+  declined_at, decline_reason,
+  withdrawn_at, withdrawal_reason,
   pricing_version:pricing_versions!quotes_pricing_version_id_fkey (id, version_label)
 `;
 
@@ -40,7 +53,76 @@ function flattenQuoteRow(raw: Record<string, unknown>): QuoteRow {
     sent_at: (raw.sent_at as string | null) ?? null,
     created_at: raw.created_at as string,
     version: (raw.version as number | null) ?? 1,
+    revised_from_id: (raw.revised_from_id as string | null) ?? null,
+    revision_number: (raw.revision_number as number | null) ?? 1,
+    first_opened_at: (raw.first_opened_at as string | null) ?? null,
+    last_opened_at: (raw.last_opened_at as string | null) ?? null,
+    open_count: (raw.open_count as number | null) ?? 0,
+    declined_at: (raw.declined_at as string | null) ?? null,
+    decline_reason: (raw.decline_reason as string | null) ?? null,
+    withdrawn_at: (raw.withdrawn_at as string | null) ?? null,
+    withdrawal_reason: (raw.withdrawal_reason as string | null) ?? null,
     pricing_version: version,
+  };
+}
+
+export interface QuoteRevisionSeed {
+  id: string;
+  job_id: string;
+  size_code: string | null;
+  distance_miles: number | null;
+  complications: string[] | null;
+  revision_number: number;
+  total_pence: number;
+}
+
+export interface QuoteAcceptanceAudit {
+  quote_id: string;
+  accepted_at: string;
+  acceptor_name: string | null;
+  user_agent: string | null;
+}
+
+export async function getJobAcceptanceAudits(jobId: string): Promise<QuoteAcceptanceAudit[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('quote_acceptances')
+    .select('quote_id, accepted_at, consents, user_agent, quote:quotes!inner(job_id)')
+    .eq('quote.job_id', jobId)
+    .order('accepted_at', { ascending: false })
+    .limit(50);
+  return ((data ?? []) as Array<Record<string, unknown>>).map((row) => {
+    const consents = (row.consents as { accepted_full_name?: string | null } | null) ?? null;
+    return {
+      quote_id: row.quote_id as string,
+      accepted_at: row.accepted_at as string,
+      acceptor_name: consents?.accepted_full_name ?? null,
+      user_agent: (row.user_agent as string | null) ?? null,
+    };
+  });
+}
+
+export async function getQuoteRevisionSeed(
+  jobId: string,
+  quoteId: string,
+): Promise<QuoteRevisionSeed | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('quotes')
+    .select('id, job_id, size_code, distance_miles, complications, revision_number, total_pence')
+    .eq('id', quoteId)
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (!data) return null;
+  return {
+    id: data.id as string,
+    job_id: data.job_id as string,
+    size_code: (data.size_code as string | null) ?? null,
+    distance_miles: (data.distance_miles as number | null) ?? null,
+    complications: (data.complications as string[] | null) ?? null,
+    revision_number: (data.revision_number as number | null) ?? 1,
+    total_pence: (data.total_pence as number | null) ?? 0,
   };
 }
 

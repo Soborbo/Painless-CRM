@@ -13,7 +13,8 @@ import {
 } from '@/lib/queries/jobs';
 import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
-import { listQuotesForJob } from '@/lib/queries/quotes';
+import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
+import { pickHeadlineQuote } from '@/lib/quotes/headline';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -34,12 +35,13 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, calls, jobNotes, t] = await Promise.all([
+  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, t] = await Promise.all([
     getJobStatusHistory(id),
     getJobTags(id),
     listSalesReps(),
     listSurveyors(),
     listQuotesForJob(id),
+    getJobAcceptanceAudits(id),
     listPhoneCallsForJob(id),
     listNotesForJob(id),
     getTranslations('jobs'),
@@ -48,6 +50,7 @@ export default async function JobPage({ params }: Props) {
   const isAdmin = (ADMIN_ROLES as readonly string[]).includes(me.role);
   const isManager = (MANAGER_ROLES as readonly string[]).includes(me.role);
   const defaultOccurredAt = new Date().toISOString().slice(0, 16);
+  const headline = pickHeadlineQuote(quotes);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
@@ -134,7 +137,23 @@ export default async function JobPage({ params }: Props) {
               label={t('acquisitionSource')}
               value={job.acquisition_source ? t(`sources.${job.acquisition_source}` as never) : '—'}
             />
-            <DetailRow label={t('value')} value={formatPence(job.quote_total_pence)} />
+            <DetailRow
+              label={t('value')}
+              value={
+                headline ? (
+                  <span>
+                    {formatPence(headline.total_pence)}
+                    {headline.status ? (
+                      <span className="ml-1.5 text-xs text-[var(--color-muted-foreground)]">
+                        ({t(`headlineStatus.${headline.status}` as never)})
+                      </span>
+                    ) : null}
+                  </span>
+                ) : (
+                  '—'
+                )
+              }
+            />
           </Section>
 
           <AssignmentControl
@@ -161,7 +180,7 @@ export default async function JobPage({ params }: Props) {
           />
           <TagsPanel jobId={job.id} tags={tags} />
 
-          <QuotesPanel rows={quotes} />
+          <QuotesPanel rows={quotes} audits={audits} />
 
           <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
 

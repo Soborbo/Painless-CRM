@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth/require-role';
 import { serverEnv } from '@/lib/env';
 import { createQuoteForJob } from '@/lib/jobs/quote-writer';
 import { parseSimulationForm } from '@/lib/pricing/form';
+import { supersedePredecessor } from '@/lib/quotes/revisions';
 import { signQuoteToken } from '@/lib/quotes/share-tokens';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -29,6 +30,12 @@ export const INITIAL_SEND_QUOTE_STATE: SendQuoteState = { status: 'idle' };
 const JobIdSchema = z.string().uuid();
 const QuoteIdSchema = z.string().uuid();
 const VersionSchema = z.coerce.number().int().min(1);
+const OptionalQuoteIdSchema = z
+  .string()
+  .uuid()
+  .or(z.literal(''))
+  .optional()
+  .transform((v) => (v ? v : null));
 
 export async function buildManualQuote(
   _prev: QuoteBuilderState,
@@ -41,6 +48,15 @@ export async function buildManualQuote(
     return { status: 'error', message: 'Invalid job id' };
   }
   const jobId = jobIdParse.data;
+
+  const revisedFromRaw = form.get('revised_from_id');
+  const revisedFromParse = OptionalQuoteIdSchema.safeParse(
+    typeof revisedFromRaw === 'string' ? revisedFromRaw : undefined,
+  );
+  if (!revisedFromParse.success) {
+    return { status: 'error', message: 'Invalid source quote id' };
+  }
+  const revisedFromId = revisedFromParse.data;
 
   const inputResult = parseSimulationForm(form);
   if (!inputResult.ok) {
@@ -76,6 +92,7 @@ export async function buildManualQuote(
       jobId: job.id,
       pricingVersionId: version.id as string,
       input: { ...inputResult.input, source: inputResult.input.source ?? 'manual' },
+      revisedFromId,
     });
     revalidatePath(`/dashboard/jobs/${jobId}`);
     redirect(`/dashboard/jobs/${jobId}?quote=${result.quote_id}`);
@@ -131,6 +148,8 @@ export async function sendQuote(_prev: SendQuoteState, form: FormData): Promise<
   if (error || !updated) {
     return { status: 'error', message: 'Could not mark quote as sent' };
   }
+
+  await supersedePredecessor(updated.id as string);
 
   const validUntilMs = new Date(existing.valid_until as string).getTime();
   const ttlSeconds = Math.max(

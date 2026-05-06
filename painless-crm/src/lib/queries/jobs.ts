@@ -14,6 +14,7 @@ export type JobRow = {
   surveyor_id: string | null;
   move_date: string | null;
   enquiry_at: string | null;
+  accepted_at: string | null;
   quote_total_pence: number | null;
   notes: string | null;
   created_at: string;
@@ -45,7 +46,7 @@ export type JobListResult = {
 
 const LIST_COLUMNS = `
   id, job_number, customer_id, stage, sub_status, acquisition_source,
-  assigned_to_id, surveyor_id, move_date, enquiry_at, quote_total_pence,
+  assigned_to_id, surveyor_id, move_date, enquiry_at, accepted_at, quote_total_pence,
   first_response_due_at, first_response_at,
   notes, created_at, updated_at, version,
   customer:customers (id, customer_type, first_name, last_name, company_name, primary_email),

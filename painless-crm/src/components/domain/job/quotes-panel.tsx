@@ -9,6 +9,7 @@ import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { SendQuoteButton } from './send-quote-button';
+import { WithdrawQuoteButton } from './withdraw-quote-button';
 
 const REVISABLE_STATUSES: ReadonlySet<NonNullable<QuoteRow['status']>> = new Set([
   'draft',
@@ -135,6 +136,9 @@ export async function QuotesPanel({
                 >
                   {t('detailsAction')}
                 </Link>
+                {row.status === 'draft' || row.status === 'sent' ? (
+                  <WithdrawQuoteButton quoteId={row.id} />
+                ) : null}
               </div>
               {row.status === 'sent' && row.sent_at ? (
                 <div className="text-xs text-[var(--color-muted-foreground)]">
@@ -155,6 +159,12 @@ export async function QuotesPanel({
                 <div className="text-xs text-red-700">
                   {t('declinedLine', { at: formatDateTime(row.declined_at) })}
                   {row.decline_reason ? ` — "${row.decline_reason}"` : ''}
+                </div>
+              ) : null}
+              {row.withdrawn_at ? (
+                <div className="text-xs text-amber-800">
+                  {t('withdrawnLine', { at: formatDateTime(row.withdrawn_at) })}
+                  {row.withdrawal_reason ? ` — "${row.withdrawal_reason}"` : ''}
                 </div>
               ) : null}
               {(() => {

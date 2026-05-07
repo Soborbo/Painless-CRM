@@ -499,6 +499,8 @@
     "printedOn": "Printed {at}",
     "validUntil": "Valid until {at}",
     "whatsIncluded": "What's included",
+    "options": "Your options",
+    "optionsHint": "Compare on paper, then accept your preferred option from the link in your email.",
     "howToAccept": "How to accept",
     "howToAcceptBody": "Open the link from your email and click Accept. We'll confirm details by phone before move day.",
     "footer": "Painless Removals · Bristol, UK"

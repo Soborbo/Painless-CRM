@@ -3,6 +3,7 @@ import { requireUser } from '@/lib/auth/require-role';
 import { getJobById } from '@/lib/queries/jobs';
 import { getQuoteDetail } from '@/lib/queries/quote-detail';
 import { listVariantsForQuote } from '@/lib/queries/quote-variants';
+import { getQuoteAcceptance } from '@/lib/queries/quotes';
 import { summariseInternalCost } from '@/lib/quotes/internal-breakdown';
 import { formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
@@ -18,10 +19,11 @@ export const dynamic = 'force-dynamic';
 export default async function QuoteDetailPage({ params }: Props) {
   const { id, quoteId } = await params;
   const me = await requireUser();
-  const [job, quote, variants, t, tv] = await Promise.all([
+  const [job, quote, variants, acceptance, t, tv] = await Promise.all([
     getJobById(id),
     getQuoteDetail(id, quoteId),
     listVariantsForQuote(quoteId),
+    getQuoteAcceptance(id, quoteId),
     getTranslations('quotes'),
     getTranslations('variants'),
   ]);
@@ -133,6 +135,29 @@ export default async function QuoteDetailPage({ params }: Props) {
               : '—'
           }
         />
+        <DetailRow
+          label={t('detailAccepted')}
+          value={
+            acceptance
+              ? acceptance.acceptor_name
+                ? t('detailAcceptedBy', {
+                    name: acceptance.acceptor_name,
+                    at: formatDateTime(acceptance.accepted_at),
+                  })
+                : formatDateTime(acceptance.accepted_at)
+              : '—'
+          }
+        />
+        {acceptance?.variant_label ? (
+          <DetailRow
+            label={t('detailAcceptedVariant')}
+            value={
+              acceptance.variant_total_pence !== null
+                ? `${acceptance.variant_label} · ${formatPence(acceptance.variant_total_pence)}`
+                : acceptance.variant_label
+            }
+          />
+        ) : null}
         <DetailRow
           label={t('detailDeclined')}
           value={

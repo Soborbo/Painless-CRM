@@ -399,6 +399,7 @@
     "detailAcceptedBy": "{name} · {at}",
     "detailAcceptedVariant": "Variant chosen",
     "detailDeclined": "Declined",
+    "detailWithdrawn": "Withdrawn",
     "detailValidUntil": "Valid until",
     "revisionBadge": "Rev. {number}",
     "deltaTooltip": "Change vs. the previous revision",

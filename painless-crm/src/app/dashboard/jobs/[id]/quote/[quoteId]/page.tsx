@@ -166,6 +166,14 @@ export default async function QuoteDetailPage({ params }: Props) {
               : '—'
           }
         />
+        <DetailRow
+          label={t('detailWithdrawn')}
+          value={
+            quote.withdrawn_at
+              ? `${formatDateTime(quote.withdrawn_at)}${quote.withdrawal_reason ? ` — "${quote.withdrawal_reason}"` : ''}`
+              : '—'
+          }
+        />
         <DetailRow label={t('detailValidUntil')} value={formatDateTime(quote.valid_until)} />
       </Section>
     </main>

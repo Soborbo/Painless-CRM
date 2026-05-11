@@ -405,6 +405,7 @@
     "deltaSame": "Same price",
     "acceptedByLine": "Accepted by {name} · {at}",
     "acceptedAnonymous": "the customer",
+    "acceptedVariantLine": "Chose {label} · {total}",
     "acceptedFromDevice": "Signed from {device}",
     "status": {
       "draft": "Draft",

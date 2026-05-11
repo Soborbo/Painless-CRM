@@ -197,6 +197,15 @@ function AcceptanceAudit({
           at: formatDateTime(audit.accepted_at),
         })}
       </p>
+      {audit.variant_label ? (
+        <p className="text-[11px] text-green-800">
+          {t('acceptedVariantLine', {
+            label: audit.variant_label,
+            total:
+              audit.variant_total_pence !== null ? formatPence(audit.variant_total_pence) : '—',
+          })}
+        </p>
+      ) : null}
       {ua ? (
         <p className="text-[11px] text-green-800" title={ua.full}>
           {t('acceptedFromDevice', { device: ua.short })}

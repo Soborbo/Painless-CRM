@@ -373,6 +373,8 @@
       "unknown": "Could not withdraw — please retry."
     },
     "detailTitle": "Quote details",
+    "detailFor": "For",
+    "detailMoveDate": "Move {at}",
     "detailInputs": "Inputs",
     "detailCrew": "Crew size",
     "detailHours": "Estimated hours",

@@ -5,7 +5,7 @@ import { getQuoteDetail } from '@/lib/queries/quote-detail';
 import { listVariantsForQuote } from '@/lib/queries/quote-variants';
 import { getQuoteAcceptance } from '@/lib/queries/quotes';
 import { summariseInternalCost } from '@/lib/quotes/internal-breakdown';
-import { formatDateTime, formatPence } from '@/lib/utils/format';
+import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -62,6 +62,15 @@ export default async function QuoteDetailPage({ params }: Props) {
               ? ` · ${t('builderAgainst')} ${quote.pricing_version.version_label}`
               : ''}
           </p>
+          {job.customer ? (
+            <p className="mt-1 text-sm">
+              <span className="text-[var(--color-muted-foreground)]">{t('detailFor')} </span>
+              <Link href={`/dashboard/customers/${job.customer.id}`} className="hover:underline">
+                {customerDisplayName(job.customer)}
+              </Link>
+              {job.move_date ? ` · ${t('detailMoveDate', { at: formatDate(job.move_date) })}` : ''}
+            </p>
+          ) : null}
         </div>
       </header>
 

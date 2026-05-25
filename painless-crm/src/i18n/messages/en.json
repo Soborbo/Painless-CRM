@@ -33,6 +33,20 @@
     "sla": "SLA",
     "settings": "Settings"
   },
+  "search": {
+    "label": "Search",
+    "placeholder": "Search customers, jobs, quotes…",
+    "searching": "Searching…",
+    "noResults": "No matches.",
+    "customers": "Customers",
+    "jobs": "Jobs",
+    "quotes": "Quotes",
+    "groupLabel": {
+      "customer": "Customer",
+      "job": "Job",
+      "quote": "Quote"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "today": "Today, {date}",

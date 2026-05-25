@@ -33,6 +33,20 @@
     "sla": "",
     "settings": ""
   },
+  "search": {
+    "label": "",
+    "placeholder": "",
+    "searching": "",
+    "noResults": "",
+    "customers": "",
+    "jobs": "",
+    "quotes": "",
+    "groupLabel": {
+      "customer": "",
+      "job": "",
+      "quote": ""
+    }
+  },
   "dashboard": {
     "title": "",
     "today": "",

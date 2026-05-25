@@ -31,6 +31,7 @@
     "jobs": "",
     "quotes": "",
     "sla": "",
+    "profit": "",
     "settings": ""
   },
   "search": {
@@ -341,6 +342,36 @@
       "save": "",
       "mark_reviewed": "",
       "finalize": ""
+    }
+  },
+  "profitDashboard": {
+    "title": "",
+    "rangeWindow": "",
+    "range": {
+      "month": "",
+      "quarter": ""
+    },
+    "revenue": "",
+    "cost": "",
+    "profit": "",
+    "margin": "",
+    "pendingReview": "{count, plural, one {} other {}}",
+    "jobsHeading": "{count, plural, =0 {} one {} other {}}",
+    "empty": "",
+    "cols": {
+      "job": "",
+      "customer": "",
+      "completed": "",
+      "revenue": "",
+      "cost": "",
+      "profit": "",
+      "margin": "",
+      "status": ""
+    },
+    "status": {
+      "pending": "",
+      "reviewed": "",
+      "finalized": ""
     }
   },
   "pricing": {

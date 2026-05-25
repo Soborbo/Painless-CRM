@@ -31,6 +31,7 @@
     "jobs": "Jobs",
     "quotes": "Quotes",
     "sla": "SLA",
+    "profit": "Profit",
     "settings": "Settings"
   },
   "search": {
@@ -341,6 +342,36 @@
       "save": "Saved.",
       "mark_reviewed": "Marked as reviewed.",
       "finalize": "Finalised."
+    }
+  },
+  "profitDashboard": {
+    "title": "Profit",
+    "rangeWindow": "{start} → {end}",
+    "range": {
+      "month": "This month",
+      "quarter": "This quarter"
+    },
+    "revenue": "Revenue",
+    "cost": "Cost",
+    "profit": "Profit",
+    "margin": "Margin",
+    "pendingReview": "{count, plural, one {# job awaiting profit review} other {# jobs awaiting profit review}}",
+    "jobsHeading": "{count, plural, =0 {No jobs in this window} one {# job} other {# jobs}}",
+    "empty": "No completed jobs in this window yet.",
+    "cols": {
+      "job": "Job",
+      "customer": "Customer",
+      "completed": "Completed",
+      "revenue": "Revenue",
+      "cost": "Cost",
+      "profit": "Profit",
+      "margin": "Margin",
+      "status": "Review"
+    },
+    "status": {
+      "pending": "Pending",
+      "reviewed": "Reviewed",
+      "finalized": "Finalised"
     }
   },
   "pricing": {

@@ -42,6 +42,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 {t('sla')}
               </Link>
               <RequireRole allowed={['manager', 'admin', 'super_admin']}>
+                <Link href="/dashboard/profit" className="hover:underline">
+                  {t('profit')}
+                </Link>
+              </RequireRole>
+              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
                 <Link href="/dashboard/settings/pricing" className="hover:underline">
                   {tp('navLabel')}
                 </Link>

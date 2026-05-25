@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         <Banner
           tone="muted"
           message={t('profitReviewPending', { count: snapshot.profitReviewPending })}
-          ctaHref="/dashboard/jobs?stage=completed"
+          ctaHref="/dashboard/profit"
           ctaLabel={t('view')}
         />
       ) : null}

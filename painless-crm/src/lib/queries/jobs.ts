@@ -70,12 +70,13 @@ const DETAIL_COLUMNS = `
   assigned_to_id, surveyor_id, move_date, enquiry_at, contacted_at, quoted_at,
   accepted_at, confirmed_at, in_progress_at, completed_at, invoiced_at, paid_at,
   declined_at, dead_at, cancelled_at, decline_reason, cancellation_reason,
-  deposit_refund_decision, quote_total_pence,
+  deposit_refund_decision, quote_total_pence, parent_job_id,
   first_response_due_at, first_response_at, notes,
   created_at, updated_at, version,
   customer:customers (id, customer_type, first_name, last_name, company_name, primary_email, primary_phone),
   assigned_to:users!jobs_assigned_to_id_fkey (id, full_name),
-  surveyor:users!jobs_surveyor_id_fkey (id, full_name)
+  surveyor:users!jobs_surveyor_id_fkey (id, full_name),
+  parent:jobs!jobs_parent_job_id_fkey (id, job_number, stage)
 `;
 
 export async function listJobs(filters: JobListFilters): Promise<JobListResult> {
@@ -146,9 +147,30 @@ export type JobDetail = Omit<JobListRow, 'customer' | 'tags'> & {
   decline_reason: string | null;
   cancellation_reason: string | null;
   deposit_refund_decision: string | null;
+  parent_job_id: string | null;
   customer: (NonNullable<JobListRow['customer']> & { primary_phone: string | null }) | null;
   surveyor: { id: string; full_name: string } | null;
+  parent: { id: string; job_number: string; stage: string } | null;
 };
+
+export type ChildJobSummary = {
+  id: string;
+  job_number: string;
+  stage: string;
+  created_at: string;
+};
+
+export async function listChildJobs(parentJobId: string): Promise<ChildJobSummary[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('jobs')
+    .select('id, job_number, stage, created_at')
+    .eq('parent_job_id', parentJobId)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(20);
+  return (data ?? []) as ChildJobSummary[];
+}
 
 export async function getJobById(id: string): Promise<JobDetail | null> {
   const supabase = await createClient();

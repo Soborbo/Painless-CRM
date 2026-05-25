@@ -249,6 +249,27 @@
       "refund_full": "Refund in full",
       "refund_partial": "Refund partial",
       "retain_per_terms": "Retain per terms"
+    },
+    "requote": {
+      "title": "Quote again",
+      "lineage": "Lineage",
+      "requotedFrom": "Requoted from",
+      "requotedTo": "Requoted to",
+      "action": "Quote this customer again",
+      "help": "Spins up a fresh lead linked to this job. Estimating quantities are carried over so the new quote opens half-prefilled.",
+      "moveDateLabel": "New move date (optional)",
+      "notesLabel": "Notes for the new lead (optional)",
+      "notesPlaceholder": "Anything the rep should know before they re-engage…",
+      "confirm": "Create new lead",
+      "working": "Creating…",
+      "cancel": "Cancel",
+      "error": {
+        "invalid_input": "Check the form fields and try again.",
+        "not_found": "Source job not found.",
+        "wrong_stage": "Only finished jobs can be requoted.",
+        "no_capacity": "No sales rep with capacity right now.",
+        "unknown": "Couldn't create the new lead. Try again."
+      }
     }
   },
   "pricing": {

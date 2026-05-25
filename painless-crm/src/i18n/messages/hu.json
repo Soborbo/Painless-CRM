@@ -249,6 +249,27 @@
       "refund_full": "",
       "refund_partial": "",
       "retain_per_terms": ""
+    },
+    "requote": {
+      "title": "",
+      "lineage": "",
+      "requotedFrom": "",
+      "requotedTo": "",
+      "action": "",
+      "help": "",
+      "moveDateLabel": "",
+      "notesLabel": "",
+      "notesPlaceholder": "",
+      "confirm": "",
+      "working": "",
+      "cancel": "",
+      "error": {
+        "invalid_input": "",
+        "not_found": "",
+        "wrong_stage": "",
+        "no_capacity": "",
+        "unknown": ""
+      }
     }
   },
   "pricing": {

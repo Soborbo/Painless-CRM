@@ -2,12 +2,15 @@ import { CallsPanel } from '@/components/domain/job/calls-panel';
 import { LogCallForm } from '@/components/domain/job/log-call-form';
 import { NotesPanel } from '@/components/domain/job/notes-panel';
 import { QuotesPanel } from '@/components/domain/job/quotes-panel';
+import { RequoteButton } from '@/components/domain/job/requote-button';
 import { StageBadge } from '@/components/domain/job/stage-badge';
 import { requireUser } from '@/lib/auth/require-role';
+import { isRequoteEligibleStage } from '@/lib/jobs/requote';
 import {
   getJobById,
   getJobStatusHistory,
   getJobTags,
+  listChildJobs,
   listSalesReps,
   listSurveyors,
 } from '@/lib/queries/jobs';
@@ -35,22 +38,25 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, t] = await Promise.all([
-    getJobStatusHistory(id),
-    getJobTags(id),
-    listSalesReps(),
-    listSurveyors(),
-    listQuotesForJob(id),
-    getJobAcceptanceAudits(id),
-    listPhoneCallsForJob(id),
-    listNotesForJob(id),
-    getTranslations('jobs'),
-  ]);
+  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, children, t] =
+    await Promise.all([
+      getJobStatusHistory(id),
+      getJobTags(id),
+      listSalesReps(),
+      listSurveyors(),
+      listQuotesForJob(id),
+      getJobAcceptanceAudits(id),
+      listPhoneCallsForJob(id),
+      listNotesForJob(id),
+      listChildJobs(id),
+      getTranslations('jobs'),
+    ]);
 
   const isAdmin = (ADMIN_ROLES as readonly string[]).includes(me.role);
   const isManager = (MANAGER_ROLES as readonly string[]).includes(me.role);
   const defaultOccurredAt = new Date().toISOString().slice(0, 16);
   const headline = pickHeadlineQuote(quotes);
+  const canRequote = isRequoteEligibleStage(job.stage);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
@@ -164,6 +170,38 @@ export default async function JobPage({ params }: Props) {
             canChange={isManager}
           />
 
+          {job.parent || children.length > 0 ? (
+            <Section title={t('requote.lineage')}>
+              {job.parent ? (
+                <DetailRow
+                  label={t('requote.requotedFrom')}
+                  value={
+                    <Link
+                      href={`/dashboard/jobs/${job.parent.id}`}
+                      className="font-mono hover:underline"
+                    >
+                      {job.parent.job_number}
+                    </Link>
+                  }
+                />
+              ) : null}
+              {children.map((child) => (
+                <DetailRow
+                  key={child.id}
+                  label={t('requote.requotedTo')}
+                  value={
+                    <Link
+                      href={`/dashboard/jobs/${child.id}`}
+                      className="font-mono hover:underline"
+                    >
+                      {child.job_number}
+                    </Link>
+                  }
+                />
+              ))}
+            </Section>
+          ) : null}
+
           {job.notes ? (
             <Section title={t('notes')}>
               <p className="whitespace-pre-wrap text-sm">{job.notes}</p>
@@ -181,6 +219,12 @@ export default async function JobPage({ params }: Props) {
           <TagsPanel jobId={job.id} tags={tags} />
 
           <QuotesPanel rows={quotes} audits={audits} />
+
+          {canRequote ? (
+            <Section title={t('requote.title')}>
+              <RequoteButton jobId={job.id} />
+            </Section>
+          ) : null}
 
           <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
 

@@ -30,6 +30,12 @@ export default async function JobsPage({ searchParams }: Props) {
 
   const [reps, t] = await Promise.all([listSalesReps(), getTranslations('jobs')]);
 
+  const exportParams = new URLSearchParams();
+  if (filters.q) exportParams.set('q', filters.q);
+  if (filters.stage) exportParams.set('stage', filters.stage);
+  if (filters.assigned_to_id) exportParams.set('assigned_to_id', filters.assigned_to_id);
+  const exportHref = `/dashboard/jobs/export${exportParams.size ? `?${exportParams}` : ''}`;
+
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
       <header className="flex flex-wrap items-center justify-between gap-4">
@@ -38,6 +44,12 @@ export default async function JobsPage({ searchParams }: Props) {
         </div>
         <div className="flex items-center gap-3">
           <JobsViewToggle view={view} />
+          <a
+            href={exportHref}
+            className="rounded-md border px-3 py-2 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('exportCsv')}
+          </a>
           <Link
             href="/dashboard/jobs/new"
             className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] transition-opacity hover:opacity-90"

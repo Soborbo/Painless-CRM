@@ -112,6 +112,31 @@ export type KanbanFilters = Omit<JobListFilters, 'page' | 'stage'>;
 
 export const KANBAN_PER_STAGE_LIMIT = 200;
 
+export const JOBS_EXPORT_MAX = 10_000;
+
+export async function listJobsForExport(
+  filters: Omit<JobListFilters, 'page'>,
+): Promise<JobListRow[]> {
+  const supabase = await createClient();
+  let query = supabase
+    .from('jobs')
+    .select(LIST_COLUMNS)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(JOBS_EXPORT_MAX);
+
+  if (filters.stage) query = query.eq('stage', filters.stage);
+  if (filters.assigned_to_id) query = query.eq('assigned_to_id', filters.assigned_to_id);
+  if (filters.q) {
+    const safe = filters.q.replace(/[%_,]/g, ' ');
+    const pattern = `%${safe}%`;
+    query = query.or([`job_number.ilike.${pattern}`, `notes.ilike.${pattern}`].join(','));
+  }
+
+  const { data } = await query;
+  return flattenTags((data ?? []) as unknown as RawJobListRow[]);
+}
+
 export async function listJobsForKanban(filters: KanbanFilters): Promise<JobListRow[]> {
   const supabase = await createClient();
   let query = supabase

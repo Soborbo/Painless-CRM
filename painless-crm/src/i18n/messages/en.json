@@ -153,6 +153,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "buildQuote": "Build quote",
+    "exportCsv": "Export CSV",
     "viewTimeline": "Timeline",
     "confirmDelete": "Soft-delete this job? It is hidden from the list but the audit trail stays.",
     "createdOn": "Created {date}",

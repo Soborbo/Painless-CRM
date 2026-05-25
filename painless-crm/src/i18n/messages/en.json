@@ -154,6 +154,7 @@
     "delete": "Delete",
     "buildQuote": "Build quote",
     "exportCsv": "Export CSV",
+    "profitReview": "Profit review",
     "viewTimeline": "Timeline",
     "confirmDelete": "Soft-delete this job? It is hidden from the list but the audit trail stays.",
     "createdOn": "Created {date}",
@@ -286,6 +287,46 @@
         "no_capacity": "No sales rep with capacity right now.",
         "unknown": "Couldn't create the new lead. Try again."
       }
+    }
+  },
+  "profitReview": {
+    "title": "Profit review",
+    "heading": "Profit review",
+    "summary": "Summary",
+    "revenue": "Revenue",
+    "cost": "Cost",
+    "profit": "Profit",
+    "margin": "Margin",
+    "invoices": "{count, plural, =0 {no invoices} one {# paid invoice} other {# paid invoices}}",
+    "costsHeading": "Actual costs",
+    "crew": "Crew",
+    "van": "Van + fuel",
+    "passthrough": "Pass-through (tolls, materials)",
+    "wrongStage": "Profit review opens once a job reaches the completed stage.",
+    "save": "Save draft",
+    "markReviewed": "Mark reviewed",
+    "updateReviewed": "Update review",
+    "finalize": "Finalise (lock)",
+    "lockedHelp": "This review is finalised. Costs are locked.",
+    "completedBy": "Reviewed by {who} · {when}",
+    "statusLabel": {
+      "pending": "Pending review",
+      "reviewed": "Reviewed",
+      "finalized": "Finalised"
+    },
+    "error": {
+      "invalid_input": "Check the cost fields and try again.",
+      "not_found": "Job not found.",
+      "wrong_stage": "Profit review opens once the job is completed.",
+      "locked": "This review is finalised and can't be edited.",
+      "forbidden": "Only admins can finalise a review.",
+      "version_conflict": "Someone else updated this job. Reload the page and try again.",
+      "unknown": "Couldn't save. Try again."
+    },
+    "ok": {
+      "save": "Saved.",
+      "mark_reviewed": "Marked as reviewed.",
+      "finalize": "Finalised."
     }
   },
   "pricing": {

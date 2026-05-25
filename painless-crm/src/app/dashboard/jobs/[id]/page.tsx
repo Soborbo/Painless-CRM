@@ -5,6 +5,7 @@ import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { RequoteButton } from '@/components/domain/job/requote-button';
 import { StageBadge } from '@/components/domain/job/stage-badge';
 import { requireUser } from '@/lib/auth/require-role';
+import { isProfitReviewStage } from '@/lib/jobs/profit';
 import { isRequoteEligibleStage } from '@/lib/jobs/requote';
 import {
   getJobById,
@@ -57,6 +58,7 @@ export default async function JobPage({ params }: Props) {
   const defaultOccurredAt = new Date().toISOString().slice(0, 16);
   const headline = pickHeadlineQuote(quotes);
   const canRequote = isRequoteEligibleStage(job.stage);
+  const showProfitReview = isProfitReviewStage(job.stage) && isManager;
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
@@ -91,6 +93,14 @@ export default async function JobPage({ params }: Props) {
           >
             {t('viewTimeline')}
           </Link>
+          {showProfitReview ? (
+            <Link
+              href={`/dashboard/jobs/${id}/profit-review`}
+              className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+            >
+              {t('profitReview')}
+            </Link>
+          ) : null}
           <Link
             href={`/dashboard/jobs/${id}/edit`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"

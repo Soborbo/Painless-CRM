@@ -154,6 +154,7 @@
     "delete": "",
     "buildQuote": "",
     "exportCsv": "",
+    "profitReview": "",
     "viewTimeline": "",
     "confirmDelete": "",
     "createdOn": "",
@@ -286,6 +287,46 @@
         "no_capacity": "",
         "unknown": ""
       }
+    }
+  },
+  "profitReview": {
+    "title": "",
+    "heading": "",
+    "summary": "",
+    "revenue": "",
+    "cost": "",
+    "profit": "",
+    "margin": "",
+    "invoices": "{count, plural, =0 {} one {} other {}}",
+    "costsHeading": "",
+    "crew": "",
+    "van": "",
+    "passthrough": "",
+    "wrongStage": "",
+    "save": "",
+    "markReviewed": "",
+    "updateReviewed": "",
+    "finalize": "",
+    "lockedHelp": "",
+    "completedBy": "",
+    "statusLabel": {
+      "pending": "",
+      "reviewed": "",
+      "finalized": ""
+    },
+    "error": {
+      "invalid_input": "",
+      "not_found": "",
+      "wrong_stage": "",
+      "locked": "",
+      "forbidden": "",
+      "version_conflict": "",
+      "unknown": ""
+    },
+    "ok": {
+      "save": "",
+      "mark_reviewed": "",
+      "finalize": ""
     }
   },
   "pricing": {

@@ -35,9 +35,24 @@
   },
   "dashboard": {
     "title": "",
+    "today": "",
     "signedInAs": "",
     "emptyTitle": "",
-    "emptyBody": ""
+    "emptyBody": "",
+    "newLeads": "",
+    "quotesSent": "",
+    "quotesAccepted": "",
+    "last24h": "",
+    "slaOverdue": "{count, plural, one {} other {}}",
+    "view": "",
+    "viewAll": "",
+    "todaysMoves": "{count, plural, =0 {} one {} other {}}",
+    "noMovesToday": "",
+    "cash": "",
+    "outstanding": "",
+    "overdue": "",
+    "invoices": "{count, plural, =0 {} one {} other {}}",
+    "profitReviewPending": "{count, plural, one {} other {}}"
   },
   "users": {
     "navLabel": "",

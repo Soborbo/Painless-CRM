@@ -35,9 +35,24 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "today": "Today, {date}",
     "signedInAs": "Signed in as {name} · {role}",
     "emptyTitle": "Empty state",
-    "emptyBody": "Domain UI lands in phases 03 and onwards."
+    "emptyBody": "Domain UI lands in phases 03 and onwards.",
+    "newLeads": "New leads",
+    "quotesSent": "Quotes sent",
+    "quotesAccepted": "Quotes accepted",
+    "last24h": "Last 24 hours",
+    "slaOverdue": "{count, plural, one {# lead is past its SLA} other {# leads are past their SLA}}",
+    "view": "View",
+    "viewAll": "View all",
+    "todaysMoves": "{count, plural, =0 {Today's moves} one {Today's moves (#)} other {Today's moves (#)}}",
+    "noMovesToday": "No moves on the board today.",
+    "cash": "Cash",
+    "outstanding": "Outstanding",
+    "overdue": "Overdue",
+    "invoices": "{count, plural, =0 {No invoices} one {# invoice} other {# invoices}}",
+    "profitReviewPending": "{count, plural, one {# completed job awaiting profit review} other {# completed jobs awaiting profit review}}"
   },
   "users": {
     "navLabel": "Users",

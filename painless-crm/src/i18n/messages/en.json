@@ -103,6 +103,7 @@
     "title": "Customers",
     "totalCount": "{count, plural, =0 {No customers yet} one {# customer} other {# customers}}",
     "newCustomer": "New customer",
+    "exportCsv": "Export CSV",
     "newSubtitle": "Create an individual or business customer.",
     "search": "Search",
     "searchPlaceholder": "Name, email, phone, postcode…",

@@ -73,6 +73,52 @@ export async function listCustomers(filters: CustomerListFilters): Promise<Custo
   };
 }
 
+export const CUSTOMERS_EXPORT_MAX = 10_000;
+
+const EXPORT_COLUMNS =
+  'customer_type, first_name, last_name, company_name, primary_email, primary_phone, acquisition_source, created_at';
+
+export type CustomerExportRow = {
+  customer_type: CustomerType;
+  first_name: string | null;
+  last_name: string | null;
+  company_name: string | null;
+  primary_email: string | null;
+  primary_phone: string | null;
+  acquisition_source: string | null;
+  created_at: string;
+};
+
+export async function listCustomersForExport(
+  filters: Omit<CustomerListFilters, 'page'>,
+): Promise<CustomerExportRow[]> {
+  const supabase = await createClient();
+  let query = supabase
+    .from('customers')
+    .select(EXPORT_COLUMNS)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(CUSTOMERS_EXPORT_MAX);
+
+  if (filters.type) query = query.eq('customer_type', filters.type);
+  if (filters.q) {
+    const safe = filters.q.replace(/[%_,]/g, ' ');
+    const pattern = `%${safe}%`;
+    query = query.or(
+      [
+        `first_name.ilike.${pattern}`,
+        `last_name.ilike.${pattern}`,
+        `company_name.ilike.${pattern}`,
+        `primary_email.ilike.${pattern}`,
+        `primary_phone.ilike.${pattern}`,
+      ].join(','),
+    );
+  }
+
+  const { data } = await query;
+  return (data ?? []) as CustomerExportRow[];
+}
+
 export async function getCustomerById(id: string): Promise<CustomerRow | null> {
   const supabase = await createClient();
   const { data } = await supabase

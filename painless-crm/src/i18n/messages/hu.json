@@ -103,6 +103,7 @@
     "title": "",
     "totalCount": "{count, plural, =0 {} one {} other {}}",
     "newCustomer": "",
+    "exportCsv": "",
     "newSubtitle": "",
     "search": "",
     "searchPlaceholder": "",

@@ -1,5 +1,6 @@
 import { serverEnv } from '@/lib/env';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
+import { listPublicVariantsForQuote } from '@/lib/queries/quote-variants';
 import { extractPublicBreakdown } from '@/lib/quotes/public-breakdown';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
 import { formatDate, formatPence } from '@/lib/utils/format';
@@ -29,6 +30,7 @@ export default async function PrintQuotePage({ params }: Props) {
   const t = await getTranslations('publicQuote');
   const tp = await getTranslations('printQuote');
   const details = extractPublicBreakdown(quote.breakdown);
+  const variants = await listPublicVariantsForQuote(quote.id);
   const sizeLabel = details.size_label ?? quote.size_code ?? '—';
 
   return (
@@ -54,6 +56,26 @@ export default async function PrintQuotePage({ params }: Props) {
           {tp('validUntil', { at: formatDate(quote.valid_until) })}
         </p>
       </section>
+
+      {variants.length > 0 ? (
+        <section className="rounded-md border border-zinc-300 p-5 print:break-inside-avoid">
+          <h2 className="text-sm font-semibold uppercase tracking-wide">{tp('options')}</h2>
+          <p className="mt-1 text-xs text-zinc-500">{tp('optionsHint')}</p>
+          <ul className="mt-3 flex flex-col divide-y divide-zinc-200">
+            {variants.map((v) => (
+              <li key={v.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
+                <div className="flex flex-col">
+                  <span className="font-medium">{v.variant_label}</span>
+                  {v.description ? (
+                    <span className="text-xs text-zinc-600">{v.description}</span>
+                  ) : null}
+                </div>
+                <span className="font-mono text-sm">{formatPence(v.total_pence)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section>
         <h2 className="text-sm font-semibold uppercase tracking-wide">{tp('whatsIncluded')}</h2>

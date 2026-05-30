@@ -81,25 +81,88 @@ export interface QuoteAcceptanceAudit {
   accepted_at: string;
   acceptor_name: string | null;
   user_agent: string | null;
+  variant_label: string | null;
+  variant_total_pence: number | null;
 }
 
 export async function getJobAcceptanceAudits(jobId: string): Promise<QuoteAcceptanceAudit[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('quote_acceptances')
-    .select('quote_id, accepted_at, consents, user_agent, quote:quotes!inner(job_id)')
+    .select(
+      `quote_id, accepted_at, consents, user_agent,
+       quote:quotes!inner(job_id),
+       variant:quote_variants(variant_label, total_pence)`,
+    )
     .eq('quote.job_id', jobId)
     .order('accepted_at', { ascending: false })
     .limit(50);
   return ((data ?? []) as Array<Record<string, unknown>>).map((row) => {
     const consents = (row.consents as { accepted_full_name?: string | null } | null) ?? null;
+    const variantRaw = row.variant as unknown;
+    const variant = Array.isArray(variantRaw)
+      ? ((variantRaw[0] as { variant_label: string; total_pence: number } | undefined) ?? null)
+      : ((variantRaw as { variant_label: string; total_pence: number } | null) ?? null);
     return {
       quote_id: row.quote_id as string,
       accepted_at: row.accepted_at as string,
       acceptor_name: consents?.accepted_full_name ?? null,
       user_agent: (row.user_agent as string | null) ?? null,
+      variant_label: variant?.variant_label ?? null,
+      variant_total_pence: variant?.total_pence ?? null,
     };
   });
+}
+
+export interface QuoteAcceptanceDetail {
+  accepted_at: string;
+  acceptor_name: string | null;
+  variant_id: string | null;
+  variant_label: string | null;
+  variant_total_pence: number | null;
+}
+
+// Pure flatten helper — exported for unit testing without a live Supabase
+// connection. Quote-acceptances rows arrive with the joined variant either as
+// a single object or a one-element array depending on PostgREST embedding,
+// so the caller normalises both shapes.
+export function flattenQuoteAcceptanceRow(
+  raw: Record<string, unknown> | null | undefined,
+): QuoteAcceptanceDetail | null {
+  if (!raw) return null;
+  const consents = (raw.consents as { accepted_full_name?: string | null } | null) ?? null;
+  const variantRaw = raw.variant as unknown;
+  const variant = Array.isArray(variantRaw)
+    ? ((variantRaw[0] as { id: string; variant_label: string; total_pence: number } | undefined) ??
+      null)
+    : ((variantRaw as { id: string; variant_label: string; total_pence: number } | null) ?? null);
+  return {
+    accepted_at: raw.accepted_at as string,
+    acceptor_name: consents?.accepted_full_name ?? null,
+    variant_id: variant?.id ?? null,
+    variant_label: variant?.variant_label ?? null,
+    variant_total_pence: variant?.total_pence ?? null,
+  };
+}
+
+export async function getQuoteAcceptance(
+  jobId: string,
+  quoteId: string,
+): Promise<QuoteAcceptanceDetail | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('quote_acceptances')
+    .select(
+      `accepted_at, consents,
+       quote:quotes!inner(job_id),
+       variant:quote_variants(id, variant_label, total_pence)`,
+    )
+    .eq('quote_id', quoteId)
+    .eq('quote.job_id', jobId)
+    .order('accepted_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return flattenQuoteAcceptanceRow(data as Record<string, unknown> | null);
 }
 
 export async function getQuoteRevisionSeed(

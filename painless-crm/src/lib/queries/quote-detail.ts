@@ -19,6 +19,8 @@ export interface QuoteDetailRow {
   sent_at: string | null;
   declined_at: string | null;
   decline_reason: string | null;
+  withdrawn_at: string | null;
+  withdrawal_reason: string | null;
   first_opened_at: string | null;
   last_opened_at: string | null;
   open_count: number;
@@ -40,6 +42,7 @@ export async function getQuoteDetail(
     .select(
       `id, job_id, status, total_pence, size_code, distance_miles, complications,
        valid_until, sent_at, declined_at, decline_reason,
+       withdrawn_at, withdrawal_reason,
        first_opened_at, last_opened_at, open_count,
        revision_number, revised_from_id, created_at,
        pricing_snapshot, breakdown,
@@ -67,6 +70,8 @@ export async function getQuoteDetail(
     sent_at: (row.sent_at as string | null) ?? null,
     declined_at: (row.declined_at as string | null) ?? null,
     decline_reason: (row.decline_reason as string | null) ?? null,
+    withdrawn_at: (row.withdrawn_at as string | null) ?? null,
+    withdrawal_reason: (row.withdrawal_reason as string | null) ?? null,
     first_opened_at: (row.first_opened_at as string | null) ?? null,
     last_opened_at: (row.last_opened_at as string | null) ?? null,
     open_count: (row.open_count as number | null) ?? 0,

@@ -1,4 +1,6 @@
+import { formatFileSize } from '@/lib/documents/storage-path';
 import { serverEnv } from '@/lib/env';
+import { listPublicDocumentsForQuote, signPublicDocuments } from '@/lib/queries/documents';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { listPublicVariantsForQuote } from '@/lib/queries/quote-variants';
 import { expireSingleQuote, shouldExpire } from '@/lib/quotes/expiry';
@@ -46,6 +48,9 @@ export default async function PublicQuotePage({ params }: Props) {
     extractPublicBreakdown(quote.breakdown),
     await listPublicVariantsForQuote(quote.id),
   ];
+  const documents = await signPublicDocuments(
+    await listPublicDocumentsForQuote(quote.id, quote.job_id, quote.customer.id),
+  );
   const verdict = classifyAcceptable(quote);
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-6 py-10">
@@ -130,6 +135,31 @@ export default async function PublicQuotePage({ params }: Props) {
                   ) : null}
                 </div>
                 <span className="font-mono text-sm">{formatPence(v.total_pence)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {documents.length > 0 ? (
+        <section className="rounded-md border p-6">
+          <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+            {t('documentsHeader')}
+          </p>
+          <ul className="mt-3 flex flex-col divide-y">
+            {documents.map((doc) => (
+              <li key={doc.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2">
+                <a
+                  href={doc.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="font-medium text-[var(--color-primary)] underline"
+                >
+                  {doc.file_name}
+                </a>
+                <span className="text-xs text-[var(--color-muted-foreground)]">
+                  {formatFileSize(doc.file_size_bytes)}
+                </span>
               </li>
             ))}
           </ul>

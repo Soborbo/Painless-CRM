@@ -583,6 +583,7 @@
     "complications": "Includes: {items}",
     "surveyHint": "We'd like to do a quick survey before move day to make sure the price holds. We'll be in touch.",
     "variantsHeader": "Choose your option",
+    "documentsHeader": "Documents",
     "chooseVariant": "Pick the option that suits you:",
     "formTitle": "Accept this quote",
     "formIntro": "Confirm your name and tick the box to e-sign. We'll lock the price in and reach out to confirm details.",
@@ -683,6 +684,34 @@
     "deleteRetry": "Retry delete",
     "badgeInternal": "Internal",
     "badgeCustomerVisible": "Customer-visible"
+  },
+  "documents": {
+    "panelTitle": "Documents",
+    "empty": "No documents yet.",
+    "dropHint": "Drop a file here or click to choose",
+    "upload": "Upload",
+    "visibilityToggle": "Customer can see this",
+    "notesPlaceholder": "Optional note (e.g. bay 3 reserved)",
+    "badgeCustomerVisible": "Customer-visible",
+    "meta": "{size} · {at} · {by}",
+    "uploadedByCustomer": "uploaded by customer",
+    "uploadedBySystem": "system",
+    "preparing": "Preparing…",
+    "downloadRetry": "Retry download",
+    "delete": "Delete",
+    "deleteRetry": "Retry delete",
+    "type": {
+      "terms_accepted": "Terms accepted",
+      "parking_permit": "Parking permit",
+      "insurance_certificate": "Insurance certificate",
+      "signed_quote_pdf": "Signed quote",
+      "invoice_pdf": "Invoice",
+      "floor_plan": "Floor plan",
+      "inventory_list": "Inventory list",
+      "damage_report": "Damage report",
+      "identification": "ID",
+      "other": "Other"
+    }
   },
   "phoneCalls": {
     "panelTitle": "Calls",

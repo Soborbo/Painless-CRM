@@ -1,4 +1,6 @@
+import { DocumentVault } from '@/components/domain/document/document-vault';
 import { requireUser } from '@/lib/auth/require-role';
+import { listDocumentsForCustomer } from '@/lib/queries/documents';
 import {
   getCustomerById,
   getCustomerJobs,
@@ -20,9 +22,10 @@ export default async function CustomerPage({ params }: Props) {
   const customer = await getCustomerById(id);
   if (!customer) notFound();
 
-  const [jobs, ltv, t] = await Promise.all([
+  const [jobs, ltv, customerDocuments, t] = await Promise.all([
     getCustomerJobs(id),
     getCustomerLifetimeValuePence(id),
+    listDocumentsForCustomer(id),
     getTranslations('customers'),
   ]);
   const tj = await getTranslations('jobs');
@@ -140,6 +143,8 @@ export default async function CustomerPage({ params }: Props) {
               </table>
             </div>
           )}
+
+          <DocumentVault parentType="customer" parentId={id} rows={customerDocuments} />
         </section>
       </div>
     </main>

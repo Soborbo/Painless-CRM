@@ -1,3 +1,4 @@
+import { DocumentVault } from '@/components/domain/document/document-vault';
 import { CallsPanel } from '@/components/domain/job/calls-panel';
 import { LogCallForm } from '@/components/domain/job/log-call-form';
 import { NotesPanel } from '@/components/domain/job/notes-panel';
@@ -15,6 +16,7 @@ import {
   listSalesReps,
   listSurveyors,
 } from '@/lib/queries/jobs';
+import { listDocumentsForJob } from '@/lib/queries/documents';
 import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
@@ -39,7 +41,7 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, children, t] =
+  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, jobDocuments, children, t] =
     await Promise.all([
       getJobStatusHistory(id),
       getJobTags(id),
@@ -49,6 +51,7 @@ export default async function JobPage({ params }: Props) {
       getJobAcceptanceAudits(id),
       listPhoneCallsForJob(id),
       listNotesForJob(id),
+      listDocumentsForJob(id),
       listChildJobs(id),
       getTranslations('jobs'),
     ]);
@@ -237,6 +240,8 @@ export default async function JobPage({ params }: Props) {
           ) : null}
 
           <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
+
+          <DocumentVault parentType="job" parentId={job.id} rows={jobDocuments} />
 
           <LogCallForm jobId={job.id} defaultOccurredAt={defaultOccurredAt} />
 

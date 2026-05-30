@@ -583,6 +583,7 @@
     "complications": "",
     "surveyHint": "",
     "variantsHeader": "",
+    "documentsHeader": "",
     "chooseVariant": "",
     "formTitle": "",
     "formIntro": "",
@@ -683,6 +684,34 @@
     "deleteRetry": "",
     "badgeInternal": "",
     "badgeCustomerVisible": ""
+  },
+  "documents": {
+    "panelTitle": "",
+    "empty": "",
+    "dropHint": "",
+    "upload": "",
+    "visibilityToggle": "",
+    "notesPlaceholder": "",
+    "badgeCustomerVisible": "",
+    "meta": "",
+    "uploadedByCustomer": "",
+    "uploadedBySystem": "",
+    "preparing": "",
+    "downloadRetry": "",
+    "delete": "",
+    "deleteRetry": "",
+    "type": {
+      "terms_accepted": "",
+      "parking_permit": "",
+      "insurance_certificate": "",
+      "signed_quote_pdf": "",
+      "invoice_pdf": "",
+      "floor_plan": "",
+      "inventory_list": "",
+      "damage_report": "",
+      "identification": "",
+      "other": ""
+    }
   },
   "phoneCalls": {
     "panelTitle": "",

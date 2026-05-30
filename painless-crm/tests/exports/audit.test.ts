@@ -1,4 +1,4 @@
-import { buildExportAuditRow } from '@/lib/exports/audit';
+import { auditContextFromHeaders, buildExportAuditRow } from '@/lib/exports/audit';
 import { describe, expect, it } from 'vitest';
 
 describe('buildExportAuditRow', () => {
@@ -52,5 +52,56 @@ describe('buildExportAuditRow', () => {
       format: 'xlsx',
     });
     expect(row.format).toBe('xlsx');
+  });
+
+  it('attaches IP and a truncated user-agent when present', () => {
+    const longUa = 'x'.repeat(600);
+    const row = buildExportAuditRow({
+      companyId: 'c',
+      userId: 'u',
+      resource: 'jobs',
+      filters: {},
+      rowCount: 1,
+      ipAddress: '203.0.113.7',
+      userAgent: longUa,
+    });
+    expect(row.ip_address).toBe('203.0.113.7');
+    expect((row.user_agent as string).length).toBe(500);
+  });
+
+  it('omits IP / user-agent keys entirely when absent so inet never sees an empty string', () => {
+    const row = buildExportAuditRow({
+      companyId: 'c',
+      userId: 'u',
+      resource: 'jobs',
+      filters: {},
+      rowCount: 1,
+      ipAddress: null,
+      userAgent: null,
+    });
+    expect('ip_address' in row).toBe(false);
+    expect('user_agent' in row).toBe(false);
+  });
+});
+
+describe('auditContextFromHeaders', () => {
+  it('prefers cf-connecting-ip and reads the user-agent', () => {
+    const headers = new Headers({
+      'cf-connecting-ip': '198.51.100.4',
+      'x-forwarded-for': '10.0.0.1, 70.0.0.1',
+      'user-agent': 'Mozilla/5.0 test',
+    });
+    expect(auditContextFromHeaders(headers)).toEqual({
+      ipAddress: '198.51.100.4',
+      userAgent: 'Mozilla/5.0 test',
+    });
+  });
+
+  it('falls back to the first x-forwarded-for hop and tolerates a missing UA', () => {
+    const headers = new Headers({ 'x-forwarded-for': '70.0.0.1, 10.0.0.1' });
+    expect(auditContextFromHeaders(headers)).toEqual({
+      ipAddress: '70.0.0.1',
+      userAgent: null,
+    });
   });
 });

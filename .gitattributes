@@ -1,0 +1,16 @@
+# Normalise line endings repo-wide. Files are stored with LF in git; this
+# prevents Windows checkouts (core.autocrlf=true) from rewriting them to CRLF,
+# which otherwise trips Biome's formatter (`pnpm lint`) on every file.
+* text=auto eol=lf
+
+# Binary assets — never touch these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.woff binary
+*.woff2 binary

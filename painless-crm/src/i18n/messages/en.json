@@ -67,7 +67,8 @@
     "outstanding": "Outstanding",
     "overdue": "Overdue",
     "invoices": "{count, plural, =0 {No invoices} one {# invoice} other {# invoices}}",
-    "profitReviewPending": "{count, plural, one {# completed job awaiting profit review} other {# completed jobs awaiting profit review}}"
+    "profitReviewPending": "{count, plural, one {# completed job awaiting profit review} other {# completed jobs awaiting profit review}}",
+    "callbacksDueToday": "{count, plural, one {# call-back scheduled for today} other {# call-backs scheduled for today}}"
   },
   "users": {
     "navLabel": "Users",

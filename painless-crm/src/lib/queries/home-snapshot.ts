@@ -58,6 +58,7 @@ export interface HomeSnapshot {
   todaysMoves: TodayMoveRow[];
   cash: CashTotals;
   profitReviewPending: number;
+  callbacksDueToday: number;
 }
 
 export function bucketCashTotals(
@@ -150,6 +151,21 @@ async function fetchCashTotals(now: Date): Promise<CashTotals> {
   return bucketCashTotals(data ?? [], now);
 }
 
+// Call-backs scheduled for today (§4 follow-ups). Scoped to today's window so
+// the count stays bounded — phone_calls has no "done" flag yet, so a global
+// "all overdue" count would only ever grow. v0.2 adds a completion flag and a
+// dedicated call-backs queue; today's view is the v0.1 daily reminder.
+async function countCallbacksDueToday(window: DayWindow): Promise<number> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from('phone_calls')
+    .select('id', { count: 'exact', head: true })
+    .not('next_action_due_at', 'is', null)
+    .gte('next_action_due_at', window.startIso)
+    .lt('next_action_due_at', window.endIso);
+  return count ?? 0;
+}
+
 async function countProfitReviewPending(): Promise<number> {
   const supabase = await createClient();
   const { count } = await supabase
@@ -172,6 +188,7 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     todaysMoves,
     cash,
     profitReviewPending,
+    callbacksDueToday,
   ] = await Promise.all([
     countNewLeads(last24),
     countQuotesByStatusChange('sent_at', last24),
@@ -180,6 +197,7 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     listTodaysMoves(today),
     fetchCashTotals(now),
     countProfitReviewPending(),
+    countCallbacksDueToday(today),
   ]);
   return {
     newLeadsCount,
@@ -189,5 +207,6 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     todaysMoves,
     cash,
     profitReviewPending,
+    callbacksDueToday,
   };
 }

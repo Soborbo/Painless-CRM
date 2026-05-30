@@ -42,6 +42,15 @@ export default async function DashboardPage() {
         />
       ) : null}
 
+      {snapshot.callbacksDueToday > 0 ? (
+        <Banner
+          tone="muted"
+          message={t('callbacksDueToday', { count: snapshot.callbacksDueToday })}
+          ctaHref="/dashboard/jobs"
+          ctaLabel={t('view')}
+        />
+      ) : null}
+
       <TodaysMovesSection rows={snapshot.todaysMoves} t={t} />
 
       <CashSection cash={snapshot.cash} t={t} />

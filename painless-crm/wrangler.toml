@@ -21,6 +21,14 @@ binding = "AVAILABILITY_KV"
 id = "d41c64b23c394381b7717fe3fbe6b2b6"
 preview_id = "1d039bb1999c44e3a34f7f4acf6625a3"
 
+# Rate-limit counters (export caps, webhook overflow — SECURITY_MODEL Gate 5 / T4).
+# Provision via: wrangler kv namespace create RATE_LIMIT_KV
+# The helper degrades open when this binding is absent, so dev is unaffected.
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "REPLACE_WITH_RATE_LIMIT_KV_ID"
+preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_ID"
+
 # Secrets — set via: wrangler secret put NAME
 # SUPABASE_SERVICE_ROLE_KEY
 # RESEND_API_KEY

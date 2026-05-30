@@ -1,5 +1,6 @@
 import { requireRole } from '@/lib/auth/require-role';
 import { customersExportFilename, serializeCustomersToCsv } from '@/lib/exports/customers-csv';
+import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { listCustomersForExport } from '@/lib/queries/customers';
 import { CustomerListFiltersSchema } from '@/lib/schemas/customer';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -11,7 +12,10 @@ import { type NextRequest, NextResponse } from 'next/server';
 const EXPORT_ROLES = ['sales', 'manager', 'admin', 'accounts', 'super_admin'] as const;
 
 export async function GET(request: NextRequest): Promise<Response> {
-  await requireRole(EXPORT_ROLES);
+  const user = await requireRole(EXPORT_ROLES);
+
+  const limited = await enforceExportRateLimit(user.id, 'customers');
+  if (limited) return limited;
 
   const url = new URL(request.url);
   const parsed = CustomerListFiltersSchema.safeParse({

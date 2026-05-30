@@ -1,4 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
+import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { profitExportFilename, serializeProfitToCsv } from '@/lib/exports/profit-csv';
 import { type ProfitRange, resolveRange } from '@/lib/jobs/profit-dashboard';
 import { listProfitDashboardJobs } from '@/lib/queries/profit-dashboard';
@@ -18,7 +19,10 @@ function parseRange(value: string | null): ProfitRange {
 }
 
 export async function GET(request: NextRequest): Promise<Response> {
-  await requireRole(REVIEW_ROLES);
+  const user = await requireRole(REVIEW_ROLES);
+
+  const limited = await enforceExportRateLimit(user.id, 'profit');
+  if (limited) return limited;
 
   const url = new URL(request.url);
   const range = parseRange(url.searchParams.get('range'));

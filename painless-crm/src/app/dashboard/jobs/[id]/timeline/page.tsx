@@ -113,6 +113,11 @@ function Header({
       return (
         <p className="font-medium">
           {t(event.direction === 'inbound' ? 'callInbound' : 'callOutbound')}
+          {event.outcome ? (
+            <span className="ml-1 text-xs font-normal text-[var(--color-muted-foreground)]">
+              · {t(`callOutcomes.${event.outcome}` as never)}
+            </span>
+          ) : null}
           {event.duration_seconds !== null ? (
             <span className="ml-1 text-xs font-normal text-[var(--color-muted-foreground)]">
               · {formatDuration(event.duration_seconds)}

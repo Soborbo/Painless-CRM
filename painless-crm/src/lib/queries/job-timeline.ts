@@ -38,7 +38,7 @@ export async function getJobTimeline(jobId: string): Promise<TimelineEvent[]> {
     supabase
       .from('phone_calls')
       .select(
-        'occurred_at, direction, duration_seconds, user:users!phone_calls_user_id_fkey (full_name)',
+        'occurred_at, direction, duration_seconds, outcome, user:users!phone_calls_user_id_fkey (full_name)',
       )
       .eq('job_id', jobId)
       .order('occurred_at', { ascending: false })

@@ -2794,8 +2794,11 @@ export type Database = {
           duration_seconds: number | null
           id: string
           job_id: string | null
+          next_action: string | null
+          next_action_due_at: string | null
           notes: string | null
           occurred_at: string
+          outcome: string | null
           recording_url: string | null
           source: string | null
           user_id: string | null
@@ -2810,8 +2813,11 @@ export type Database = {
           duration_seconds?: number | null
           id?: string
           job_id?: string | null
+          next_action?: string | null
+          next_action_due_at?: string | null
           notes?: string | null
           occurred_at: string
+          outcome?: string | null
           recording_url?: string | null
           source?: string | null
           user_id?: string | null
@@ -2826,8 +2832,11 @@ export type Database = {
           duration_seconds?: number | null
           id?: string
           job_id?: string | null
+          next_action?: string | null
+          next_action_due_at?: string | null
           notes?: string | null
           occurred_at?: string
+          outcome?: string | null
           recording_url?: string | null
           source?: string | null
           user_id?: string | null

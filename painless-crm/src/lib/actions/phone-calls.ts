@@ -29,6 +29,9 @@ export async function logPhoneCall(
     duration_seconds: form.get('duration_seconds'),
     caller_number: form.get('caller_number'),
     called_number: form.get('called_number'),
+    outcome: form.get('outcome'),
+    next_action: form.get('next_action'),
+    next_action_due_at: form.get('next_action_due_at'),
     notes: form.get('notes'),
   });
   if (!parsed.success) {
@@ -58,6 +61,9 @@ export async function logPhoneCall(
       duration_seconds: parsed.data.duration_seconds,
       caller_number: parsed.data.caller_number,
       called_number: parsed.data.called_number,
+      outcome: parsed.data.outcome,
+      next_action: parsed.data.next_action,
+      next_action_due_at: parsed.data.next_action_due_at,
       notes: parsed.data.notes,
       source: 'manual',
       user_id: me.id,

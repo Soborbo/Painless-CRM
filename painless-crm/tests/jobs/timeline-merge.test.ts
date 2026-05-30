@@ -32,6 +32,7 @@ describe('mergeJobTimeline', () => {
           occurred_at: '2026-05-04T10:30:00Z',
           direction: 'outbound',
           duration_seconds: 90,
+          outcome: 'callback_requested',
           user: null,
         },
       ],

@@ -9,6 +9,9 @@ export interface PhoneCallRow {
   duration_seconds: number | null;
   caller_number: string | null;
   called_number: string | null;
+  outcome: string | null;
+  next_action: string | null;
+  next_action_due_at: string | null;
   notes: string | null;
   source: 'tamar_email' | 'tamar_api' | 'manual' | null;
   user: { id: string; full_name: string } | null;
@@ -16,7 +19,7 @@ export interface PhoneCallRow {
 
 const COLUMNS = `
   id, job_id, customer_id, direction, occurred_at, duration_seconds,
-  caller_number, called_number, notes, source,
+  caller_number, called_number, outcome, next_action, next_action_due_at, notes, source,
   user:users!phone_calls_user_id_fkey (id, full_name)
 `;
 
@@ -34,6 +37,9 @@ function flatten(raw: Record<string, unknown>): PhoneCallRow {
     duration_seconds: (raw.duration_seconds as number | null) ?? null,
     caller_number: (raw.caller_number as string | null) ?? null,
     called_number: (raw.called_number as string | null) ?? null,
+    outcome: (raw.outcome as string | null) ?? null,
+    next_action: (raw.next_action as string | null) ?? null,
+    next_action_due_at: (raw.next_action_due_at as string | null) ?? null,
     notes: (raw.notes as string | null) ?? null,
     source: (raw.source as PhoneCallRow['source']) ?? null,
     user,

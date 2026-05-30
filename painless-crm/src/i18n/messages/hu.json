@@ -347,6 +347,7 @@
   },
   "profitDashboard": {
     "title": "",
+    "exportCsv": "",
     "rangeWindow": "",
     "range": {
       "month": "",

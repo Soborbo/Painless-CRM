@@ -1,5 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
-import { recordExport } from '@/lib/exports/audit';
+import { auditContextFromHeaders, recordExport } from '@/lib/exports/audit';
 import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { profitExportFilename, serializeProfitToCsv } from '@/lib/exports/profit-csv';
 import { type ProfitRange, resolveRange } from '@/lib/jobs/profit-dashboard';
@@ -39,6 +39,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     resource: 'profit',
     filters: { range },
     rowCount: rows.length,
+    ...auditContextFromHeaders(request.headers),
   });
 
   return new Response(csv, {

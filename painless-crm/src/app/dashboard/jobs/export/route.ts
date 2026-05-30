@@ -1,5 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
-import { recordExport } from '@/lib/exports/audit';
+import { auditContextFromHeaders, recordExport } from '@/lib/exports/audit';
 import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { exportFilename, serializeJobsToCsv } from '@/lib/exports/jobs-csv';
 import { listJobsForExport } from '@/lib/queries/jobs';
@@ -47,6 +47,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       assigned_to_id: parsed.data.assigned_to_id,
     },
     rowCount: rows.length,
+    ...auditContextFromHeaders(request.headers),
   });
 
   return new Response(csv, {

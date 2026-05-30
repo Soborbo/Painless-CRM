@@ -1,5 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
-import { recordExport } from '@/lib/exports/audit';
+import { auditContextFromHeaders, recordExport } from '@/lib/exports/audit';
 import { customersExportFilename, serializeCustomersToCsv } from '@/lib/exports/customers-csv';
 import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { listCustomersForExport } from '@/lib/queries/customers';
@@ -41,6 +41,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     resource: 'customers',
     filters: { q: parsed.data.q, type: parsed.data.type },
     rowCount: rows.length,
+    ...auditContextFromHeaders(request.headers),
   });
 
   return new Response(csv, {

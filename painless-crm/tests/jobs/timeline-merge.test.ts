@@ -57,6 +57,9 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -83,6 +86,9 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -106,6 +112,9 @@ describe('mergeJobTimeline', () => {
           open_count: 3,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -136,6 +145,9 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: null,
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -160,6 +172,9 @@ describe('mergeJobTimeline', () => {
           open_count: 1,
           declined_at: '2026-05-04T11:00:00Z',
           decline_reason: 'wrong dates',
+          withdrawn_at: null,
+          withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
@@ -195,12 +210,75 @@ describe('mergeJobTimeline', () => {
           open_count: null,
           declined_at: '2026-05-04T11:00:00Z',
           decline_reason: null,
+          withdrawn_at: null,
+          withdrawal_reason: null,
+          withdrawn_by: null,
         },
       ],
       acceptances: [],
     });
     const declined = out.find((e) => e.kind === 'quote_declined');
     expect(declined).toMatchObject({ reason: null });
+  });
+
+  it('emits quote_withdrawn with the recorded reason', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q7',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: '2026-05-04T09:30:00Z',
+          total_pence: 13000,
+          status: 'expired',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
+          withdrawn_at: '2026-05-04T11:30:00Z',
+          withdrawal_reason: 'Out of capacity',
+          withdrawn_by: null,
+        },
+      ],
+      acceptances: [],
+    });
+    const withdrawn = out.find((e) => e.kind === 'quote_withdrawn');
+    expect(withdrawn).toEqual({
+      kind: 'quote_withdrawn',
+      at: '2026-05-04T11:30:00Z',
+      quote_id: 'q7',
+      reason: 'Out of capacity',
+      actor: null,
+    });
+  });
+
+  it('passes through the withdrawing rep on quote_withdrawn', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [
+        {
+          id: 'q8',
+          created_at: '2026-05-04T09:00:00Z',
+          sent_at: '2026-05-04T09:30:00Z',
+          total_pence: 14000,
+          status: 'expired',
+          first_opened_at: null,
+          open_count: null,
+          declined_at: null,
+          decline_reason: null,
+          withdrawn_at: '2026-05-04T12:00:00Z',
+          withdrawal_reason: null,
+          withdrawn_by: { full_name: 'Carol' },
+        },
+      ],
+      acceptances: [],
+    });
+    const withdrawn = out.find((e) => e.kind === 'quote_withdrawn');
+    expect(withdrawn).toMatchObject({ kind: 'quote_withdrawn', actor: 'Carol' });
   });
 
   it('extracts the acceptor name from the consents JSON', () => {
@@ -214,6 +292,7 @@ describe('mergeJobTimeline', () => {
           quote_id: 'q1',
           accepted_at: '2026-05-04T12:00:00Z',
           consents: { accepted_full_name: 'Alice Brown' },
+          variant: null,
         },
       ],
     });
@@ -223,8 +302,31 @@ describe('mergeJobTimeline', () => {
         at: '2026-05-04T12:00:00Z',
         quote_id: 'q1',
         acceptor_name: 'Alice Brown',
+        variant_label: null,
       },
     ]);
+  });
+
+  it('passes through the chosen variant label on quote_accepted', () => {
+    const out = mergeJobTimeline({
+      stages: [],
+      notes: [],
+      calls: [],
+      quotes: [],
+      acceptances: [
+        {
+          quote_id: 'q9',
+          accepted_at: '2026-05-04T12:00:00Z',
+          consents: { accepted_full_name: 'Bob' },
+          variant: { variant_label: 'Premium' },
+        },
+      ],
+    });
+    expect(out[0]).toMatchObject({
+      kind: 'quote_accepted',
+      variant_label: 'Premium',
+      acceptor_name: 'Bob',
+    });
   });
 
   it('breaks ties between same-timestamp events with a stable kind ranking', () => {
@@ -242,7 +344,7 @@ describe('mergeJobTimeline', () => {
       notes: [],
       calls: [],
       quotes: [],
-      acceptances: [{ quote_id: 'q1', accepted_at: ts, consents: null }],
+      acceptances: [{ quote_id: 'q1', accepted_at: ts, consents: null, variant: null }],
     });
     expect(out.map((e) => e.kind)).toEqual(['stage', 'quote_accepted']);
   });

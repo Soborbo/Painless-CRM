@@ -481,6 +481,7 @@
     "notOpened": "Not yet opened by customer",
     "declinedLine": "Declined {at}",
     "withdrawnLine": "Withdrawn by sales {at}",
+    "withdrawnByLine": "Withdrawn by {actor} {at}",
     "reviseAction": "Revise",
     "detailsAction": "Details",
     "withdrawAction": "Withdraw",
@@ -667,7 +668,9 @@
     "quoteOpened": "Quote opened by customer · {count} opens",
     "quoteAccepted": "Quote accepted by customer",
     "quoteAcceptedHelp": "Job auto-transitioned to accepted.",
-    "quoteDeclined": "Quote declined by customer"
+    "quoteAcceptedVariant": "Chose: {label}",
+    "quoteDeclined": "Quote declined by customer",
+    "quoteWithdrawn": "Quote withdrawn by sales"
   },
   "notes": {
     "panelTitle": "Notes",

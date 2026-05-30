@@ -481,6 +481,7 @@
     "notOpened": "",
     "declinedLine": "",
     "withdrawnLine": "",
+    "withdrawnByLine": "",
     "reviseAction": "",
     "detailsAction": "",
     "withdrawAction": "",
@@ -667,7 +668,9 @@
     "quoteOpened": "",
     "quoteAccepted": "",
     "quoteAcceptedHelp": "",
-    "quoteDeclined": ""
+    "quoteAcceptedVariant": "",
+    "quoteDeclined": "",
+    "quoteWithdrawn": ""
   },
   "notes": {
     "panelTitle": "",

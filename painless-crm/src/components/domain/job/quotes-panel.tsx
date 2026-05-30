@@ -165,7 +165,12 @@ export async function QuotesPanel({
               ) : null}
               {row.withdrawn_at ? (
                 <div className="text-xs text-amber-800">
-                  {t('withdrawnLine', { at: formatDateTime(row.withdrawn_at) })}
+                  {row.withdrawn_by_name
+                    ? t('withdrawnByLine', {
+                        at: formatDateTime(row.withdrawn_at),
+                        actor: row.withdrawn_by_name,
+                      })
+                    : t('withdrawnLine', { at: formatDateTime(row.withdrawn_at) })}
                   {row.withdrawal_reason ? ` — "${row.withdrawal_reason}"` : ''}
                 </div>
               ) : null}

@@ -46,6 +46,7 @@ export type TimelineEvent =
       at: string;
       quote_id: string;
       acceptor_name: string | null;
+      variant_label: string | null;
     }
   | {
       kind: 'quote_opened';
@@ -58,6 +59,13 @@ export type TimelineEvent =
       at: string;
       quote_id: string;
       reason: string | null;
+    }
+  | {
+      kind: 'quote_withdrawn';
+      at: string;
+      quote_id: string;
+      reason: string | null;
+      actor: string | null;
     };
 
 export interface StageHistoryRow {
@@ -92,12 +100,16 @@ export interface QuoteHistoryRow {
   open_count: number | null;
   declined_at: string | null;
   decline_reason: string | null;
+  withdrawn_at: string | null;
+  withdrawal_reason: string | null;
+  withdrawn_by: { full_name: string } | null;
 }
 
 export interface QuoteAcceptanceHistoryRow {
   quote_id: string;
   accepted_at: string;
   consents: { accepted_full_name?: string | null } | null;
+  variant: { variant_label: string } | null;
 }
 
 export interface TimelineSources {
@@ -168,6 +180,15 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
         reason: quote.decline_reason,
       });
     }
+    if (quote.withdrawn_at) {
+      events.push({
+        kind: 'quote_withdrawn',
+        at: quote.withdrawn_at,
+        quote_id: quote.id,
+        reason: quote.withdrawal_reason,
+        actor: quote.withdrawn_by?.full_name ?? null,
+      });
+    }
   }
 
   for (const acceptance of sources.acceptances) {
@@ -176,6 +197,7 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
       at: acceptance.accepted_at,
       quote_id: acceptance.quote_id,
       acceptor_name: acceptance.consents?.accepted_full_name ?? null,
+      variant_label: acceptance.variant?.variant_label ?? null,
     });
   }
 
@@ -193,10 +215,12 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
 function rankKind(kind: TimelineEvent['kind']): number {
   switch (kind) {
     case 'stage':
-      return 7;
+      return 8;
     case 'quote_accepted':
-      return 6;
+      return 7;
     case 'quote_declined':
+      return 6;
+    case 'quote_withdrawn':
       return 5;
     case 'quote_opened':
       return 4;

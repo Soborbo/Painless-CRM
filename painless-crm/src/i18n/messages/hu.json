@@ -673,7 +673,15 @@
     "quoteAcceptedHelp": "",
     "quoteAcceptedVariant": "",
     "quoteDeclined": "",
-    "quoteWithdrawn": ""
+    "quoteWithdrawn": "",
+    "callOutcomes": {
+      "connected_quote_sent": "",
+      "connected_no_answer": "",
+      "voicemail_left": "",
+      "wrong_number": "",
+      "not_interested": "",
+      "callback_requested": ""
+    }
   },
   "notes": {
     "panelTitle": "",
@@ -724,6 +732,11 @@
     "occurredAt": "",
     "callerNumber": "",
     "calledNumber": "",
+    "outcome": "",
+    "outcomeNone": "",
+    "nextAction": "",
+    "nextActionPlaceholder": "",
+    "nextActionDueAt": "",
     "notes": "",
     "submit": "",
     "logged": "",
@@ -732,6 +745,14 @@
     "directions": {
       "inbound": "",
       "outbound": ""
+    },
+    "outcomes": {
+      "connected_quote_sent": "",
+      "connected_no_answer": "",
+      "voicemail_left": "",
+      "wrong_number": "",
+      "not_interested": "",
+      "callback_requested": ""
     },
     "sources": {
       "tamar_email": "",

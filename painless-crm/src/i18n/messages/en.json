@@ -673,7 +673,15 @@
     "quoteAcceptedHelp": "Job auto-transitioned to accepted.",
     "quoteAcceptedVariant": "Chose: {label}",
     "quoteDeclined": "Quote declined by customer",
-    "quoteWithdrawn": "Quote withdrawn by sales"
+    "quoteWithdrawn": "Quote withdrawn by sales",
+    "callOutcomes": {
+      "connected_quote_sent": "Quote sent",
+      "connected_no_answer": "No answer",
+      "voicemail_left": "Voicemail",
+      "wrong_number": "Wrong number",
+      "not_interested": "Not interested",
+      "callback_requested": "Call-back requested"
+    }
   },
   "notes": {
     "panelTitle": "Notes",
@@ -724,6 +732,11 @@
     "occurredAt": "When",
     "callerNumber": "Caller number",
     "calledNumber": "Called number",
+    "outcome": "Outcome",
+    "outcomeNone": "— Select outcome —",
+    "nextAction": "Next action",
+    "nextActionPlaceholder": "e.g. call back with survey slot",
+    "nextActionDueAt": "Follow-up due",
     "notes": "Notes",
     "submit": "Log call",
     "logged": "Logged.",
@@ -732,6 +745,14 @@
     "directions": {
       "inbound": "Inbound",
       "outbound": "Outbound"
+    },
+    "outcomes": {
+      "connected_quote_sent": "Connected · quote sent",
+      "connected_no_answer": "Connected · no answer",
+      "voicemail_left": "Voicemail left",
+      "wrong_number": "Wrong number",
+      "not_interested": "Not interested",
+      "callback_requested": "Call-back requested"
     },
     "sources": {
       "tamar_email": "Tamar (email)",

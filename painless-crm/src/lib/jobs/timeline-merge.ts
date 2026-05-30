@@ -28,6 +28,7 @@ export type TimelineEvent =
       at: string;
       direction: 'inbound' | 'outbound' | null;
       duration_seconds: number | null;
+      outcome: string | null;
       actor: string | null;
     }
   | {
@@ -87,6 +88,7 @@ export interface CallHistoryRow {
   occurred_at: string;
   direction: 'inbound' | 'outbound' | null;
   duration_seconds: number | null;
+  outcome: string | null;
   user: { full_name: string } | null;
 }
 
@@ -150,6 +152,7 @@ export function mergeJobTimeline(sources: TimelineSources): TimelineEvent[] {
       at: call.occurred_at,
       direction: call.direction,
       duration_seconds: call.duration_seconds,
+      outcome: call.outcome,
       actor: call.user?.full_name ?? null,
     });
   }

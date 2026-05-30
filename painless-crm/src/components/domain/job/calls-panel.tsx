@@ -35,7 +35,12 @@ export async function CallsPanel({ rows }: { rows: PhoneCallRow[] }) {
                 {formatDateTime(row.occurred_at)}
               </span>
             </div>
-            <div className="flex flex-wrap gap-1.5 text-xs text-[var(--color-muted-foreground)]">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-[var(--color-muted-foreground)]">
+              {row.outcome ? (
+                <span className="rounded-full border px-2 py-0.5 font-medium text-[var(--color-foreground)]">
+                  {t(`outcomes.${row.outcome}` as never)}
+                </span>
+              ) : null}
               {row.user ? <span>{row.user.full_name}</span> : null}
               {row.source && row.source !== 'manual' ? (
                 <span>· {t(`sources.${row.source}` as never)}</span>
@@ -44,6 +49,15 @@ export async function CallsPanel({ rows }: { rows: PhoneCallRow[] }) {
               {row.called_number ? <span>· {t('to', { num: row.called_number })}</span> : null}
             </div>
             {row.notes ? <p className="whitespace-pre-wrap text-sm">{row.notes}</p> : null}
+            {row.next_action ? (
+              <p className="text-xs text-[var(--color-muted-foreground)]">
+                <span className="font-medium text-[var(--color-foreground)]">
+                  {t('nextAction')}:
+                </span>{' '}
+                {row.next_action}
+                {row.next_action_due_at ? ` · ${formatDateTime(row.next_action_due_at)}` : ''}
+              </p>
+            ) : null}
           </li>
         ))}
       </ul>

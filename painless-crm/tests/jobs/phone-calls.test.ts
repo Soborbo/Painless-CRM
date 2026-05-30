@@ -26,11 +26,54 @@ describe('LogPhoneCallSchema', () => {
       duration_seconds: '0',
       caller_number: '   ',
       called_number: '',
+      outcome: '',
+      next_action: '',
+      next_action_due_at: '',
       notes: '',
     });
     expect(parsed.caller_number).toBeNull();
     expect(parsed.called_number).toBeNull();
+    expect(parsed.outcome).toBeNull();
+    expect(parsed.next_action).toBeNull();
+    expect(parsed.next_action_due_at).toBeNull();
     expect(parsed.notes).toBeNull();
+  });
+
+  it('accepts a valid outcome and a follow-up with a due date', () => {
+    const parsed = LogPhoneCallSchema.parse({
+      job_id: JOB_ID,
+      direction: 'outbound',
+      occurred_at: NOW_ISO,
+      duration_seconds: '90',
+      outcome: 'callback_requested',
+      next_action: 'Call back with a survey slot',
+      next_action_due_at: '2026-05-06T09:00:00Z',
+    });
+    expect(parsed.outcome).toBe('callback_requested');
+    expect(parsed.next_action).toBe('Call back with a survey slot');
+    expect(parsed.next_action_due_at).toBe('2026-05-06T09:00:00Z');
+  });
+
+  it('rejects an unknown outcome', () => {
+    const result = LogPhoneCallSchema.safeParse({
+      job_id: JOB_ID,
+      direction: 'inbound',
+      occurred_at: NOW_ISO,
+      duration_seconds: '5',
+      outcome: 'sold_them_a_boat',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a malformed follow-up due date', () => {
+    const result = LogPhoneCallSchema.safeParse({
+      job_id: JOB_ID,
+      direction: 'inbound',
+      occurred_at: NOW_ISO,
+      duration_seconds: '5',
+      next_action_due_at: 'whenever',
+    });
+    expect(result.success).toBe(false);
   });
 
   it('rejects invalid timestamps', () => {

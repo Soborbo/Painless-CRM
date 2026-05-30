@@ -5,6 +5,7 @@ import {
   type LogPhoneCallState,
   logPhoneCall,
 } from '@/lib/actions/phone-calls';
+import { PHONE_CALL_OUTCOMES } from '@/lib/schemas/phone-call';
 import { useTranslations } from 'next-intl';
 import { useActionState, useRef } from 'react';
 
@@ -77,6 +78,35 @@ export function LogCallForm({ jobId, defaultOccurredAt }: Props) {
             type="tel"
             name="called_number"
             maxLength={40}
+            className="rounded-md border px-3 py-2"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm sm:col-span-2">
+          {t('outcome')}
+          <select name="outcome" defaultValue="" className="rounded-md border px-3 py-2">
+            <option value="">{t('outcomeNone')}</option>
+            {PHONE_CALL_OUTCOMES.map((o) => (
+              <option key={o} value={o}>
+                {t(`outcomes.${o}` as never)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          {t('nextAction')}
+          <input
+            type="text"
+            name="next_action"
+            maxLength={500}
+            placeholder={t('nextActionPlaceholder')}
+            className="rounded-md border px-3 py-2"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          {t('nextActionDueAt')}
+          <input
+            type="datetime-local"
+            name="next_action_due_at"
             className="rounded-md border px-3 py-2"
           />
         </label>

@@ -1,4 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
+import { recordExport } from '@/lib/exports/audit';
 import { customersExportFilename, serializeCustomersToCsv } from '@/lib/exports/customers-csv';
 import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { listCustomersForExport } from '@/lib/queries/customers';
@@ -33,6 +34,14 @@ export async function GET(request: NextRequest): Promise<Response> {
   });
   const csv = serializeCustomersToCsv(rows);
   const filename = customersExportFilename();
+
+  await recordExport({
+    companyId: user.company_id,
+    userId: user.id,
+    resource: 'customers',
+    filters: { q: parsed.data.q, type: parsed.data.type },
+    rowCount: rows.length,
+  });
 
   return new Response(csv, {
     status: 200,

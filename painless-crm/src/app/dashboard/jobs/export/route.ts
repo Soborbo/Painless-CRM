@@ -1,4 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
+import { recordExport } from '@/lib/exports/audit';
 import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { exportFilename, serializeJobsToCsv } from '@/lib/exports/jobs-csv';
 import { listJobsForExport } from '@/lib/queries/jobs';
@@ -35,6 +36,18 @@ export async function GET(request: NextRequest): Promise<Response> {
   });
   const csv = serializeJobsToCsv(rows);
   const filename = exportFilename();
+
+  await recordExport({
+    companyId: user.company_id,
+    userId: user.id,
+    resource: 'jobs',
+    filters: {
+      q: parsed.data.q,
+      stage: parsed.data.stage,
+      assigned_to_id: parsed.data.assigned_to_id,
+    },
+    rowCount: rows.length,
+  });
 
   return new Response(csv, {
     status: 200,

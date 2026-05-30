@@ -1154,6 +1154,60 @@ export type Database = {
           },
         ]
       }
+      data_export_log: {
+        Row: {
+          company_id: string
+          exported_at: string
+          exported_by_id: string | null
+          filters: Json
+          format: string
+          id: number
+          ip_address: unknown
+          resource: string
+          row_count: number
+          user_agent: string | null
+        }
+        Insert: {
+          company_id: string
+          exported_at?: string
+          exported_by_id?: string | null
+          filters?: Json
+          format?: string
+          id?: number
+          ip_address?: unknown
+          resource: string
+          row_count: number
+          user_agent?: string | null
+        }
+        Update: {
+          company_id?: string
+          exported_at?: string
+          exported_by_id?: string | null
+          filters?: Json
+          format?: string
+          id?: number
+          ip_address?: unknown
+          resource?: string
+          row_count?: number
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_export_log_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "data_export_log_exported_by_id_fkey"
+            columns: ["exported_by_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       direct_debit_mandates: {
         Row: {
           account_holder_name: string | null

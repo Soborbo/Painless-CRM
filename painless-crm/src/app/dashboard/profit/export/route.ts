@@ -1,4 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
+import { recordExport } from '@/lib/exports/audit';
 import { enforceExportRateLimit } from '@/lib/exports/guard';
 import { profitExportFilename, serializeProfitToCsv } from '@/lib/exports/profit-csv';
 import { type ProfitRange, resolveRange } from '@/lib/jobs/profit-dashboard';
@@ -31,6 +32,14 @@ export async function GET(request: NextRequest): Promise<Response> {
   const rows = await listProfitDashboardJobs(window);
   const csv = serializeProfitToCsv(rows);
   const filename = profitExportFilename();
+
+  await recordExport({
+    companyId: user.company_id,
+    userId: user.id,
+    resource: 'profit',
+    filters: { range },
+    rowCount: rows.length,
+  });
 
   return new Response(csv, {
     status: 200,

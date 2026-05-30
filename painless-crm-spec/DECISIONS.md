@@ -262,6 +262,19 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-021 — Export auditing + rate limiting in a dedicated table, not activity_log
+**Date:** 2026-05-30
+**Status:** accepted
+**Context:** SECURITY_MODEL.md T4 (insider data exfiltration) requires bulk read/export operations to be rate-limited and audit-logged with row counts. The CSV export routes (Phase 06b §8) initially had neither. The obvious sink, `activity_log`, is the wrong fit: Phase 03 RLS does `revoke insert ... from authenticated` (it is written only by the SECURITY DEFINER mutation trigger), and its `entity_id uuid not null` column has no meaning for a list export, which is a read with no single entity.
+**Decision:** (1) A reusable fixed-window rate limiter `rateLimitCheck(key, { windowSec, maxRequests })` backed by Cloudflare KV (`RATE_LIMIT_KV`), degrading open when unbound — this is the same helper SECURITY_MODEL Gate 5 already references for webhook overflow. Exports are capped at 10/user/hour. (2) A dedicated `data_export_log` table records each export (actor, resource, filters, row_count, format), mirroring the existing `integration_credential_access_log` precedent of keeping non-mutation audit events out of `activity_log`. Rows are insert-only for app roles (no update/delete) so the trail cannot be rewritten. The audit write is best-effort: it never blocks a legitimate export.
+**Alternatives considered:**
+- Insert export events into `activity_log` → blocked by the `authenticated` insert revoke, and pollutes the entity-keyed mutation trail with entity-less read events
+- A DB trigger for exports → exports are app-level reads, not table mutations, so no trigger can observe them
+- In-memory / per-instance rate limiting → useless across Cloudflare's distributed isolates; KV is the shared store
+**Consequences:** New `RATE_LIMIT_KV` namespace to provision (helper degrades open until then). New `data_export_log` table + migration `00000000000035`. When the Worker PWA and other bulk-read surfaces land, they reuse `rateLimitCheck` and `recordExport`. Full DLP (anomaly detection on export volume) remains post-v1 per T4.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

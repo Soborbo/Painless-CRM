@@ -43,7 +43,7 @@ export default async function ProfitDashboardPage({ searchParams }: Props) {
             })}
           </p>
         </div>
-        <nav className="flex gap-2 text-sm">
+        <nav className="flex items-center gap-2 text-sm">
           {VALID_RANGES.map((r) => (
             <Link
               key={r}
@@ -57,6 +57,12 @@ export default async function ProfitDashboardPage({ searchParams }: Props) {
               {t(`range.${r}` as never)}
             </Link>
           ))}
+          <a
+            href={`/dashboard/profit/export?range=${range}`}
+            className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
+          >
+            {t('exportCsv')}
+          </a>
         </nav>
       </header>
 

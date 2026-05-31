@@ -20,6 +20,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   const url = new URL(request.url);
   const parsed = QuoteListFiltersSchema.safeParse({
+    q: url.searchParams.get('q') ?? undefined,
     status: url.searchParams.get('status') ?? undefined,
     page: undefined,
   });
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     return NextResponse.json({ error: 'invalid_filters' }, { status: 400 });
   }
 
-  const rows = await listQuotesForExport({ status: parsed.data.status });
+  const rows = await listQuotesForExport({ q: parsed.data.q, status: parsed.data.status });
   const csv = serializeQuotesToCsv(rows);
   const filename = quotesExportFilename();
 
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     companyId: user.company_id,
     userId: user.id,
     resource: 'quotes',
-    filters: { status: parsed.data.status },
+    filters: { q: parsed.data.q, status: parsed.data.status },
     rowCount: rows.length,
     ...auditContextFromHeaders(request.headers),
   });

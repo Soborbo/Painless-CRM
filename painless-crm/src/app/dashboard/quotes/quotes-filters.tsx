@@ -2,36 +2,46 @@
 
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-// Status filter for the office-wide quotes list. Navigating is enough to
-// re-run the server component, so this is a controlled select that pushes on
-// change — no submit button needed for a single dropdown.
+// Search (by job number) + status filter for the office-wide quotes list.
+// Submitting navigates, which re-runs the server component with the new
+// querystring — mirrors the jobs list filter bar.
 export function QuotesFilters({
+  initialQ,
   initialStatus,
   statuses,
 }: {
+  initialQ: string;
   initialStatus: string;
   statuses: string[];
 }) {
   const router = useRouter();
   const t = useTranslations('quotes');
+  const [q, setQ] = useState(initialQ);
+  const [status, setStatus] = useState(initialStatus);
 
-  function onChange(value: string) {
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
     const params = new URLSearchParams();
-    if (value !== 'all') params.set('status', value);
+    if (q.trim()) params.set('q', q.trim());
+    if (status !== 'all') params.set('status', status);
     const qs = params.toString();
     router.push(qs ? `/dashboard/quotes?${qs}` : '/dashboard/quotes');
   }
 
   return (
-    <form className="flex flex-wrap items-center gap-3 text-sm">
-      <label className="text-[var(--color-muted-foreground)]" htmlFor="quote-status">
-        {t('list.statusFilter')}
-      </label>
+    <form onSubmit={submit} className="flex flex-wrap items-center gap-3 text-sm">
+      <input
+        type="search"
+        placeholder={t('list.searchPlaceholder')}
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        className="min-w-64 flex-1 rounded-md border px-3 py-2 outline-none focus:ring-2"
+      />
       <select
-        id="quote-status"
-        defaultValue={initialStatus}
-        onChange={(e) => onChange(e.target.value)}
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
         className="rounded-md border bg-transparent px-3 py-2 outline-none focus:ring-2"
       >
         <option value="all">{t('list.statusAll')}</option>
@@ -41,6 +51,12 @@ export function QuotesFilters({
           </option>
         ))}
       </select>
+      <button
+        type="submit"
+        className="rounded-md bg-[var(--color-primary)] px-4 py-2 font-medium text-[var(--color-primary-foreground)] transition-opacity hover:opacity-90"
+      >
+        {t('list.filter')}
+      </button>
     </form>
   );
 }

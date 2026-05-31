@@ -551,8 +551,9 @@
     },
     "list": {
       "title": "",
-      "statusFilter": "",
       "statusAll": "",
+      "searchPlaceholder": "",
+      "filter": "",
       "exportCsv": "",
       "totalCount": "",
       "empty": "",

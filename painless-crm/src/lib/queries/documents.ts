@@ -120,17 +120,13 @@ export interface SignedPublicDocument {
 // Mints short-lived signed URLs for the customer-visible documents in one batch
 // (admin client, anonymous caller). Rows whose signing fails are dropped rather
 // than rendered as dead links.
-export async function signPublicDocuments(
-  docs: PublicDocument[],
-): Promise<SignedPublicDocument[]> {
+export async function signPublicDocuments(docs: PublicDocument[]): Promise<SignedPublicDocument[]> {
   if (docs.length === 0) return [];
   const supabase = createAdminClient();
-  const { data } = await supabase.storage
-    .from(STORAGE_BUCKET)
-    .createSignedUrls(
-      docs.map((d) => d.storage_path),
-      PUBLIC_DOWNLOAD_URL_TTL_SECONDS,
-    );
+  const { data } = await supabase.storage.from(STORAGE_BUCKET).createSignedUrls(
+    docs.map((d) => d.storage_path),
+    PUBLIC_DOWNLOAD_URL_TTL_SECONDS,
+  );
   const byPath = new Map((data ?? []).map((entry) => [entry.path, entry.signedUrl]));
   return docs.flatMap((doc) => {
     const url = byPath.get(doc.storage_path);

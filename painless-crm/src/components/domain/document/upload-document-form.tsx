@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_DOCUMENT_ACTION_STATE,
   type DocumentActionState,
+  INITIAL_DOCUMENT_ACTION_STATE,
   uploadDocument,
 } from '@/lib/actions/documents';
 import { DOCUMENT_TYPES, type UploadParentType } from '@/lib/documents/constants';

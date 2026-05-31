@@ -26,11 +26,7 @@ export function sanitizeFileName(raw: string): string {
 // Canonical object key: {company_id}/documents/{document_id}/{filename}.
 // The first segment is what the Storage RLS policy keys off, so it must always
 // be the owning company_id.
-export function buildStoragePath(
-  companyId: string,
-  documentId: string,
-  fileName: string,
-): string {
+export function buildStoragePath(companyId: string, documentId: string, fileName: string): string {
   return `${companyId}/documents/${documentId}/${sanitizeFileName(fileName)}`;
 }
 

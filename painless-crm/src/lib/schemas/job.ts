@@ -1,5 +1,6 @@
 import { JOB_STAGES } from '@/lib/jobs/state-machine';
 import { z } from 'zod';
+import { optionalDateFilter } from './common';
 
 export const ACQUISITION_SOURCES = [
   'website',
@@ -132,16 +133,6 @@ export const JobTagSchema = z.object({
     .max(40)
     .regex(/^[\w\-+ ]+$/, { message: 'Tag may only contain letters, numbers, spaces, -, +, _' }),
 });
-
-// Calendar-day filter (matches an <input type="date"> value). Empty strings
-// arriving from the URL collapse to undefined so an unset control is a no-op.
-const optionalDateFilter = z.preprocess(
-  (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
-  z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'Expected YYYY-MM-DD' })
-    .optional(),
-);
 
 export const JobListFiltersSchema = z
   .object({

@@ -6,7 +6,13 @@ import { CustomerTable } from './customer-table';
 import { CustomerSearchForm } from './search-form';
 
 type Props = {
-  searchParams: Promise<{ q?: string; type?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    type?: string;
+    created_from?: string;
+    created_to?: string;
+    page?: string;
+  }>;
 };
 
 export default async function CustomersPage({ searchParams }: Props) {
@@ -14,6 +20,8 @@ export default async function CustomersPage({ searchParams }: Props) {
   const filters = CustomerListFiltersSchema.parse({
     q: params.q,
     type: params.type,
+    created_from: params.created_from,
+    created_to: params.created_to,
     page: params.page,
   });
 
@@ -24,6 +32,8 @@ export default async function CustomersPage({ searchParams }: Props) {
   const exportParams = new URLSearchParams();
   if (filters.q) exportParams.set('q', filters.q);
   if (filters.type) exportParams.set('type', filters.type);
+  if (filters.created_from) exportParams.set('created_from', filters.created_from);
+  if (filters.created_to) exportParams.set('created_to', filters.created_to);
   const exportHref = `/dashboard/customers/export${exportParams.size ? `?${exportParams}` : ''}`;
 
   return (

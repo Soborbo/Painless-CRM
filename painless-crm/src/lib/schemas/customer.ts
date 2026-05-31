@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { optionalDateFilter } from './common';
 
 export const CUSTOMER_TYPES = ['individual', 'business'] as const;
 export type CustomerType = (typeof CUSTOMER_TYPES)[number];
@@ -84,11 +85,19 @@ export type CustomerInput = z.infer<typeof CustomerSchema>;
 export const CustomerIdSchema = z.string().uuid();
 export const CustomerVersionSchema = z.coerce.number().int().min(1);
 
-export const CustomerListFiltersSchema = z.object({
-  q: z.string().trim().max(100).optional(),
-  type: z.enum(CUSTOMER_TYPES).optional(),
-  page: z.coerce.number().int().min(1).default(1),
-});
+export const CustomerListFiltersSchema = z
+  .object({
+    q: z.string().trim().max(100).optional(),
+    type: z.enum(CUSTOMER_TYPES).optional(),
+    // Phase 06b §8 — bound the signup window for filtered accountant exports.
+    created_from: optionalDateFilter,
+    created_to: optionalDateFilter,
+    page: z.coerce.number().int().min(1).default(1),
+  })
+  .refine((v) => !v.created_from || !v.created_to || v.created_from <= v.created_to, {
+    message: 'created_from must not be after created_to',
+    path: ['created_to'],
+  });
 export type CustomerListFilters = z.infer<typeof CustomerListFiltersSchema>;
 
 export const CUSTOMER_PAGE_SIZE = 50;

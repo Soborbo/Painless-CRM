@@ -22,6 +22,8 @@ export async function GET(request: NextRequest): Promise<Response> {
   const parsed = CustomerListFiltersSchema.safeParse({
     q: url.searchParams.get('q') ?? undefined,
     type: url.searchParams.get('type') ?? undefined,
+    created_from: url.searchParams.get('created_from') ?? undefined,
+    created_to: url.searchParams.get('created_to') ?? undefined,
     page: undefined,
   });
   if (!parsed.success) {
@@ -31,6 +33,8 @@ export async function GET(request: NextRequest): Promise<Response> {
   const rows = await listCustomersForExport({
     q: parsed.data.q,
     type: parsed.data.type,
+    created_from: parsed.data.created_from,
+    created_to: parsed.data.created_to,
   });
   const csv = serializeCustomersToCsv(rows);
   const filename = customersExportFilename();
@@ -39,7 +43,12 @@ export async function GET(request: NextRequest): Promise<Response> {
     companyId: user.company_id,
     userId: user.id,
     resource: 'customers',
-    filters: { q: parsed.data.q, type: parsed.data.type },
+    filters: {
+      q: parsed.data.q,
+      type: parsed.data.type,
+      created_from: parsed.data.created_from,
+      created_to: parsed.data.created_to,
+    },
     rowCount: rows.length,
     ...auditContextFromHeaders(request.headers),
   });

@@ -2,11 +2,12 @@
 
 import { globalSearch } from '@/lib/actions/global-search';
 import type { GlobalSearchResults } from '@/lib/queries/global-search';
+import { buildFlatHits, moveHighlight } from '@/lib/search/keyboard';
 import { RECENT_SEARCHES_KEY, addRecentSearch, parseRecentSearches } from '@/lib/search/recent';
-import { customerDisplayName, formatPence } from '@/lib/utils/format';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { RecentSearches, SearchResults } from './global-search-results';
 
 const DEBOUNCE_MS = 180;
 
@@ -14,12 +15,15 @@ const EMPTY: GlobalSearchResults = { customers: [], jobs: [], quotes: [], query:
 
 export function GlobalSearch() {
   const t = useTranslations('search');
+  const router = useRouter();
   const [q, setQ] = useState('');
   const [results, setResults] = useState<GlobalSearchResults>(EMPTY);
   const [open, setOpen] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [pending, startTransition] = useTransition();
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Load the persisted recent searches once on mount. localStorage can throw
   // (private mode, disabled storage) or hold malformed JSON — swallow both.
@@ -75,7 +79,34 @@ export function GlobalSearch() {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
-  const totalHits = results.customers.length + results.jobs.length + results.quotes.length;
+  // Cmd+K (Mac) / Ctrl+K (Windows) focuses the search from anywhere.
+  useEffect(() => {
+    function onShortcut(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setOpen(true);
+        inputRef.current?.focus();
+      }
+    }
+    document.addEventListener('keydown', onShortcut);
+    return () => document.removeEventListener('keydown', onShortcut);
+  }, []);
+
+  const flatHits = useMemo(() => buildFlatHits(results), [results]);
+  const highlightedKey = highlightedIndex >= 0 ? (flatHits[highlightedIndex]?.key ?? null) : null;
+
+  // A fresh result set invalidates the previous highlight position.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset on each new result set
+  useEffect(() => setHighlightedIndex(-1), [results]);
+
+  // Keep the highlighted row scrolled into view as arrow nav walks the list.
+  useEffect(() => {
+    if (!highlightedKey) return;
+    containerRef.current
+      ?.querySelector(`[data-hit-key="${highlightedKey}"]`)
+      ?.scrollIntoView({ block: 'nearest' });
+  }, [highlightedKey]);
+
   const hasQuery = q.trim().length >= 2;
   // With a live query we show results; with the box focused but empty we
   // surface recent searches (if any) so a click re-runs them.
@@ -87,9 +118,32 @@ export function GlobalSearch() {
     setOpen(false);
   }
 
+  function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'Escape') {
+      setOpen(false);
+      inputRef.current?.blur();
+      return;
+    }
+    if (!showResults) return;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setHighlightedIndex((i) => moveHighlight(i, flatHits.length, 1));
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setHighlightedIndex((i) => moveHighlight(i, flatHits.length, -1));
+    } else if (event.key === 'Enter') {
+      const hit = flatHits[highlightedIndex];
+      if (!hit) return;
+      event.preventDefault();
+      onSelectHit();
+      router.push(hit.href);
+    }
+  }
+
   return (
     <div ref={containerRef} className="relative flex-1 max-w-md">
       <input
+        ref={inputRef}
         type="search"
         value={q}
         onChange={(e) => {
@@ -97,139 +151,32 @@ export function GlobalSearch() {
           setOpen(true);
         }}
         onFocus={() => setOpen(true)}
+        onKeyDown={onKeyDown}
         placeholder={t('placeholder')}
         aria-label={t('label')}
-        className="w-full rounded-md border bg-white px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+        className="w-full rounded-md border bg-white px-3 py-1.5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
       />
+      <kbd className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border bg-[var(--color-muted)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-muted-foreground)]">
+        {t('shortcutHint')}
+      </kbd>
       {showRecent ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-[60vh] overflow-y-auto rounded-md border bg-white shadow-lg">
-          <div className="flex items-center justify-between bg-[var(--color-muted)] px-3 py-1">
-            <p className="text-[10px] uppercase tracking-wide text-[var(--color-muted-foreground)]">
-              {t('recent')}
-            </p>
-            <button
-              type="button"
-              onClick={clearRecent}
-              className="text-[10px] uppercase tracking-wide text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
-            >
-              {t('clearRecent')}
-            </button>
-          </div>
-          <ul className="divide-y">
-            {recent.map((term) => (
-              <li key={term}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQ(term);
-                    setOpen(true);
-                  }}
-                  className="flex w-full px-3 py-2 text-left text-sm hover:bg-[var(--color-muted)]"
-                >
-                  {term}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <RecentSearches
+          recent={recent}
+          onPick={(term) => {
+            setQ(term);
+            setOpen(true);
+          }}
+          onClear={clearRecent}
+        />
       ) : null}
       {showResults ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-[60vh] overflow-y-auto rounded-md border bg-white shadow-lg">
-          {pending && totalHits === 0 ? (
-            <p className="px-3 py-2 text-xs text-[var(--color-muted-foreground)]">
-              {t('searching')}
-            </p>
-          ) : null}
-          {!pending && totalHits === 0 ? (
-            <p className="px-3 py-2 text-xs text-[var(--color-muted-foreground)]">
-              {t('noResults')}
-            </p>
-          ) : null}
-          {results.customers.length > 0 ? (
-            <Group label={t('customers')}>
-              {results.customers.map((c) => (
-                <Row
-                  key={c.id}
-                  href={`/dashboard/customers/${c.id}`}
-                  title={customerDisplayName(c)}
-                  subtitle={c.primary_email ?? c.primary_phone ?? t('groupLabel.customer')}
-                  onSelect={onSelectHit}
-                />
-              ))}
-            </Group>
-          ) : null}
-          {results.jobs.length > 0 ? (
-            <Group label={t('jobs')}>
-              {results.jobs.map((j) => (
-                <Row
-                  key={j.id}
-                  href={`/dashboard/jobs/${j.id}`}
-                  title={j.job_number}
-                  subtitle={`${j.stage}${
-                    j.customer
-                      ? ` · ${customerDisplayName({ customer_type: 'individual', primary_email: null, ...j.customer })}`
-                      : ''
-                  }`}
-                  mono
-                  onSelect={onSelectHit}
-                />
-              ))}
-            </Group>
-          ) : null}
-          {results.quotes.length > 0 ? (
-            <Group label={t('quotes')}>
-              {results.quotes.map((q) => (
-                <Row
-                  key={q.id}
-                  href={`/dashboard/jobs/${q.job_id}/quote/${q.id}`}
-                  title={q.job?.job_number ?? '—'}
-                  subtitle={`${q.status ?? 'draft'} · ${formatPence(q.total_pence)}`}
-                  mono
-                  onSelect={onSelectHit}
-                />
-              ))}
-            </Group>
-          ) : null}
-        </div>
+        <SearchResults
+          results={results}
+          pending={pending}
+          highlightedKey={highlightedKey}
+          onSelectHit={onSelectHit}
+        />
       ) : null}
     </div>
-  );
-}
-
-function Group({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="border-b last:border-b-0">
-      <p className="bg-[var(--color-muted)] px-3 py-1 text-[10px] uppercase tracking-wide text-[var(--color-muted-foreground)]">
-        {label}
-      </p>
-      <ul className="divide-y">{children}</ul>
-    </div>
-  );
-}
-
-function Row({
-  href,
-  title,
-  subtitle,
-  mono,
-  onSelect,
-}: {
-  href: string;
-  title: string;
-  subtitle: string;
-  mono?: boolean;
-  onSelect: () => void;
-}) {
-  return (
-    <li>
-      <Link
-        href={href}
-        onClick={onSelect}
-        className="flex items-baseline justify-between gap-3 px-3 py-2 text-sm hover:bg-[var(--color-muted)]"
-      >
-        <span className={mono ? 'font-mono' : ''}>{title}</span>
-        <span className="truncate text-xs text-[var(--color-muted-foreground)]">{subtitle}</span>
-      </Link>
-    </li>
   );
 }

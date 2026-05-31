@@ -180,6 +180,8 @@
     "searchPlaceholder": "",
     "stageAll": "",
     "assigneeAll": "",
+    "moveFrom": "",
+    "moveTo": "",
     "emptyList": "",
     "customer": "",
     "email": "",

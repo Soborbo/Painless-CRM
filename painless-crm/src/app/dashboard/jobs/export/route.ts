@@ -23,6 +23,8 @@ export async function GET(request: NextRequest): Promise<Response> {
     q: url.searchParams.get('q') ?? undefined,
     stage: url.searchParams.get('stage') ?? undefined,
     assigned_to_id: url.searchParams.get('assigned_to_id') ?? undefined,
+    move_from: url.searchParams.get('move_from') ?? undefined,
+    move_to: url.searchParams.get('move_to') ?? undefined,
     page: undefined,
   });
   if (!parsed.success) {
@@ -33,6 +35,8 @@ export async function GET(request: NextRequest): Promise<Response> {
     q: parsed.data.q,
     stage: parsed.data.stage,
     assigned_to_id: parsed.data.assigned_to_id,
+    move_from: parsed.data.move_from,
+    move_to: parsed.data.move_to,
   });
   const csv = serializeJobsToCsv(rows);
   const filename = exportFilename();
@@ -45,6 +49,8 @@ export async function GET(request: NextRequest): Promise<Response> {
       q: parsed.data.q,
       stage: parsed.data.stage,
       assigned_to_id: parsed.data.assigned_to_id,
+      move_from: parsed.data.move_from,
+      move_to: parsed.data.move_to,
     },
     rowCount: rows.length,
     ...auditContextFromHeaders(request.headers),

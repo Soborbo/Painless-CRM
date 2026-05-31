@@ -133,12 +133,30 @@ export const JobTagSchema = z.object({
     .regex(/^[\w\-+ ]+$/, { message: 'Tag may only contain letters, numbers, spaces, -, +, _' }),
 });
 
-export const JobListFiltersSchema = z.object({
-  q: z.string().trim().max(100).optional(),
-  stage: z.enum(JOB_STAGES).optional(),
-  assigned_to_id: z.string().uuid().optional(),
-  page: z.coerce.number().int().min(1).default(1),
-});
+// Calendar-day filter (matches an <input type="date"> value). Empty strings
+// arriving from the URL collapse to undefined so an unset control is a no-op.
+const optionalDateFilter = z.preprocess(
+  (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, { message: 'Expected YYYY-MM-DD' })
+    .optional(),
+);
+
+export const JobListFiltersSchema = z
+  .object({
+    q: z.string().trim().max(100).optional(),
+    stage: z.enum(JOB_STAGES).optional(),
+    assigned_to_id: z.string().uuid().optional(),
+    // Phase 06b §8 — bound the move-date window for filtered ops exports.
+    move_from: optionalDateFilter,
+    move_to: optionalDateFilter,
+    page: z.coerce.number().int().min(1).default(1),
+  })
+  .refine((v) => !v.move_from || !v.move_to || v.move_from <= v.move_to, {
+    message: 'move_from must not be after move_to',
+    path: ['move_to'],
+  });
 export type JobListFilters = z.infer<typeof JobListFiltersSchema>;
 
 export const JOB_PAGE_SIZE = 50;

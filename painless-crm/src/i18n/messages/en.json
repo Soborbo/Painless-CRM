@@ -180,6 +180,8 @@
     "searchPlaceholder": "Job number, notes…",
     "stageAll": "All stages",
     "assigneeAll": "All assignees",
+    "moveFrom": "Move from",
+    "moveTo": "Move to",
     "emptyList": "No jobs match your filters.",
     "customer": "Customer",
     "email": "Email",

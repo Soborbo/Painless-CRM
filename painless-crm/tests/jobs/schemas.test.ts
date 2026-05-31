@@ -122,4 +122,31 @@ describe('JobListFiltersSchema', () => {
   it('parses page from string', () => {
     expect(JobListFiltersSchema.parse({ page: '7' }).page).toBe(7);
   });
+
+  it('accepts a valid move-date range', () => {
+    const result = JobListFiltersSchema.parse({
+      move_from: '2026-03-01',
+      move_to: '2026-03-31',
+    });
+    expect(result.move_from).toBe('2026-03-01');
+    expect(result.move_to).toBe('2026-03-31');
+  });
+
+  it('treats empty move-date strings as unset', () => {
+    const result = JobListFiltersSchema.parse({ move_from: '', move_to: '' });
+    expect(result.move_from).toBeUndefined();
+    expect(result.move_to).toBeUndefined();
+  });
+
+  it('rejects a non-ISO move-date', () => {
+    expect(JobListFiltersSchema.safeParse({ move_from: '01/03/2026' }).success).toBe(false);
+  });
+
+  it('rejects an inverted move-date range', () => {
+    const result = JobListFiltersSchema.safeParse({
+      move_from: '2026-03-31',
+      move_to: '2026-03-01',
+    });
+    expect(result.success).toBe(false);
+  });
 });

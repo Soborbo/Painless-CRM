@@ -35,6 +35,20 @@
     "profit": "",
     "settings": ""
   },
+  "exports": {
+    "navLabel": "",
+    "title": "",
+    "subtitle": "",
+    "empty": "",
+    "when": "",
+    "resource": "",
+    "format": "",
+    "rows": "",
+    "actor": "",
+    "filters": "",
+    "ip": "",
+    "unknownActor": ""
+  },
   "search": {
     "label": "",
     "placeholder": "",

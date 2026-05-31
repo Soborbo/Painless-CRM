@@ -29,4 +29,31 @@ describe('QuoteListFiltersSchema', () => {
   it('keeps the documented page size', () => {
     expect(QUOTE_PAGE_SIZE).toBe(50);
   });
+
+  it('accepts a valid created-date range', () => {
+    const parsed = QuoteListFiltersSchema.parse({
+      created_from: '2026-04-01',
+      created_to: '2026-04-30',
+    });
+    expect(parsed.created_from).toBe('2026-04-01');
+    expect(parsed.created_to).toBe('2026-04-30');
+  });
+
+  it('treats empty created-date strings as unset', () => {
+    const parsed = QuoteListFiltersSchema.parse({ created_from: '', created_to: '' });
+    expect(parsed.created_from).toBeUndefined();
+    expect(parsed.created_to).toBeUndefined();
+  });
+
+  it('rejects a non-ISO created-date', () => {
+    expect(QuoteListFiltersSchema.safeParse({ created_from: '30-04-2026' }).success).toBe(false);
+  });
+
+  it('rejects an inverted created-date range', () => {
+    const parsed = QuoteListFiltersSchema.safeParse({
+      created_from: '2026-04-30',
+      created_to: '2026-04-01',
+    });
+    expect(parsed.success).toBe(false);
+  });
 });

@@ -93,6 +93,8 @@ export async function listJobs(filters: JobListFilters): Promise<JobListResult> 
 
   if (filters.stage) query = query.eq('stage', filters.stage);
   if (filters.assigned_to_id) query = query.eq('assigned_to_id', filters.assigned_to_id);
+  if (filters.move_from) query = query.gte('move_date', `${filters.move_from}T00:00:00.000Z`);
+  if (filters.move_to) query = query.lte('move_date', `${filters.move_to}T23:59:59.999Z`);
   if (filters.q) {
     const safe = filters.q.replace(/[%_,]/g, ' ');
     const pattern = `%${safe}%`;
@@ -127,6 +129,8 @@ export async function listJobsForExport(
 
   if (filters.stage) query = query.eq('stage', filters.stage);
   if (filters.assigned_to_id) query = query.eq('assigned_to_id', filters.assigned_to_id);
+  if (filters.move_from) query = query.gte('move_date', `${filters.move_from}T00:00:00.000Z`);
+  if (filters.move_to) query = query.lte('move_date', `${filters.move_to}T23:59:59.999Z`);
   if (filters.q) {
     const safe = filters.q.replace(/[%_,]/g, ' ');
     const pattern = `%${safe}%`;
@@ -147,6 +151,8 @@ export async function listJobsForKanban(filters: KanbanFilters): Promise<JobList
     .limit(KANBAN_PER_STAGE_LIMIT * 13);
 
   if (filters.assigned_to_id) query = query.eq('assigned_to_id', filters.assigned_to_id);
+  if (filters.move_from) query = query.gte('move_date', `${filters.move_from}T00:00:00.000Z`);
+  if (filters.move_to) query = query.lte('move_date', `${filters.move_to}T23:59:59.999Z`);
   if (filters.q) {
     const safe = filters.q.replace(/[%_,]/g, ' ');
     const pattern = `%${safe}%`;

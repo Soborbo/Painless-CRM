@@ -6,7 +6,13 @@ import { CustomerTable } from './customer-table';
 import { CustomerSearchForm } from './search-form';
 
 type Props = {
-  searchParams: Promise<{ q?: string; type?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    type?: string;
+    created_from?: string;
+    created_to?: string;
+    page?: string;
+  }>;
 };
 
 export default async function CustomersPage({ searchParams }: Props) {
@@ -14,6 +20,8 @@ export default async function CustomersPage({ searchParams }: Props) {
   const filters = CustomerListFiltersSchema.parse({
     q: params.q,
     type: params.type,
+    created_from: params.created_from,
+    created_to: params.created_to,
     page: params.page,
   });
 
@@ -24,6 +32,8 @@ export default async function CustomersPage({ searchParams }: Props) {
   const exportParams = new URLSearchParams();
   if (filters.q) exportParams.set('q', filters.q);
   if (filters.type) exportParams.set('type', filters.type);
+  if (filters.created_from) exportParams.set('created_from', filters.created_from);
+  if (filters.created_to) exportParams.set('created_to', filters.created_to);
   const exportHref = `/dashboard/customers/export${exportParams.size ? `?${exportParams}` : ''}`;
 
   return (
@@ -51,11 +61,23 @@ export default async function CustomersPage({ searchParams }: Props) {
         </div>
       </header>
 
-      <CustomerSearchForm initialQuery={filters.q ?? ''} initialType={filters.type ?? 'all'} />
+      <CustomerSearchForm
+        initialQuery={filters.q ?? ''}
+        initialType={filters.type ?? 'all'}
+        initialCreatedFrom={filters.created_from ?? ''}
+        initialCreatedTo={filters.created_to ?? ''}
+      />
 
       <CustomerTable rows={result.rows} />
 
-      <Pagination page={filters.page} lastPage={lastPage} q={filters.q} type={filters.type} />
+      <Pagination
+        page={filters.page}
+        lastPage={lastPage}
+        q={filters.q}
+        type={filters.type}
+        createdFrom={filters.created_from}
+        createdTo={filters.created_to}
+      />
     </main>
   );
 }
@@ -65,16 +87,22 @@ function Pagination({
   lastPage,
   q,
   type,
+  createdFrom,
+  createdTo,
 }: {
   page: number;
   lastPage: number;
   q?: string;
   type?: string;
+  createdFrom?: string;
+  createdTo?: string;
 }) {
   if (lastPage <= 1) return null;
   const params = new URLSearchParams();
   if (q) params.set('q', q);
   if (type) params.set('type', type);
+  if (createdFrom) params.set('created_from', createdFrom);
+  if (createdTo) params.set('created_to', createdTo);
   const link = (n: number) => {
     const p = new URLSearchParams(params);
     p.set('page', String(n));

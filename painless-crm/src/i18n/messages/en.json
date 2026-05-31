@@ -47,7 +47,9 @@
       "customer": "Customer",
       "job": "Job",
       "quote": "Quote"
-    }
+    },
+    "recent": "Recent searches",
+    "clearRecent": "Clear"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -112,6 +114,8 @@
     "typeAll": "All types",
     "typeIndividual": "Individual",
     "typeBusiness": "Business",
+    "createdFrom": "Joined from",
+    "createdTo": "Joined to",
     "emptyList": "No customers match your filters.",
     "edit": "Edit",
     "delete": "Delete",
@@ -180,6 +184,8 @@
     "searchPlaceholder": "Job number, notes…",
     "stageAll": "All stages",
     "assigneeAll": "All assignees",
+    "moveFrom": "Move from",
+    "moveTo": "Move to",
     "emptyList": "No jobs match your filters.",
     "customer": "Customer",
     "email": "Email",
@@ -567,6 +573,8 @@
     "list": {
       "title": "Quotes",
       "statusAll": "All statuses",
+      "createdFrom": "Created from",
+      "createdTo": "Created to",
       "searchPlaceholder": "Search by job number",
       "filter": "Filter",
       "exportCsv": "Export CSV",

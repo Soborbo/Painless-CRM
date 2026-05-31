@@ -97,4 +97,31 @@ describe('CustomerListFiltersSchema', () => {
     const result = CustomerListFiltersSchema.safeParse({ type: 'whales' });
     expect(result.success).toBe(false);
   });
+
+  it('accepts a valid created-date range', () => {
+    const result = CustomerListFiltersSchema.parse({
+      created_from: '2026-01-01',
+      created_to: '2026-01-31',
+    });
+    expect(result.created_from).toBe('2026-01-01');
+    expect(result.created_to).toBe('2026-01-31');
+  });
+
+  it('treats empty created-date strings as unset', () => {
+    const result = CustomerListFiltersSchema.parse({ created_from: '', created_to: '' });
+    expect(result.created_from).toBeUndefined();
+    expect(result.created_to).toBeUndefined();
+  });
+
+  it('rejects a non-ISO created-date', () => {
+    expect(CustomerListFiltersSchema.safeParse({ created_from: '2026/01/01' }).success).toBe(false);
+  });
+
+  it('rejects an inverted created-date range', () => {
+    const result = CustomerListFiltersSchema.safeParse({
+      created_from: '2026-02-01',
+      created_to: '2026-01-01',
+    });
+    expect(result.success).toBe(false);
+  });
 });

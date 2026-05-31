@@ -1,5 +1,6 @@
 import { JOB_STAGES } from '@/lib/jobs/state-machine';
 import { z } from 'zod';
+import { optionalDateFilter } from './common';
 
 export const ACQUISITION_SOURCES = [
   'website',
@@ -133,12 +134,20 @@ export const JobTagSchema = z.object({
     .regex(/^[\w\-+ ]+$/, { message: 'Tag may only contain letters, numbers, spaces, -, +, _' }),
 });
 
-export const JobListFiltersSchema = z.object({
-  q: z.string().trim().max(100).optional(),
-  stage: z.enum(JOB_STAGES).optional(),
-  assigned_to_id: z.string().uuid().optional(),
-  page: z.coerce.number().int().min(1).default(1),
-});
+export const JobListFiltersSchema = z
+  .object({
+    q: z.string().trim().max(100).optional(),
+    stage: z.enum(JOB_STAGES).optional(),
+    assigned_to_id: z.string().uuid().optional(),
+    // Phase 06b §8 — bound the move-date window for filtered ops exports.
+    move_from: optionalDateFilter,
+    move_to: optionalDateFilter,
+    page: z.coerce.number().int().min(1).default(1),
+  })
+  .refine((v) => !v.move_from || !v.move_to || v.move_from <= v.move_to, {
+    message: 'move_from must not be after move_to',
+    path: ['move_to'],
+  });
 export type JobListFilters = z.infer<typeof JobListFiltersSchema>;
 
 export const JOB_PAGE_SIZE = 50;

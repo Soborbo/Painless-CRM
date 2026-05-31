@@ -47,7 +47,9 @@
       "customer": "",
       "job": "",
       "quote": ""
-    }
+    },
+    "recent": "",
+    "clearRecent": ""
   },
   "dashboard": {
     "title": "",
@@ -112,6 +114,8 @@
     "typeAll": "",
     "typeIndividual": "",
     "typeBusiness": "",
+    "createdFrom": "",
+    "createdTo": "",
     "emptyList": "",
     "edit": "",
     "delete": "",
@@ -180,6 +184,8 @@
     "searchPlaceholder": "",
     "stageAll": "",
     "assigneeAll": "",
+    "moveFrom": "",
+    "moveTo": "",
     "emptyList": "",
     "customer": "",
     "email": "",
@@ -567,6 +573,8 @@
     "list": {
       "title": "",
       "statusAll": "",
+      "createdFrom": "",
+      "createdTo": "",
       "searchPlaceholder": "",
       "filter": "",
       "exportCsv": "",

@@ -13,6 +13,8 @@ type Props = {
     q?: string;
     stage?: string;
     assigned_to_id?: string;
+    move_from?: string;
+    move_to?: string;
     page?: string;
     view?: string;
   }>;
@@ -24,6 +26,8 @@ export default async function JobsPage({ searchParams }: Props) {
     q: params.q,
     stage: params.stage,
     assigned_to_id: params.assigned_to_id,
+    move_from: params.move_from,
+    move_to: params.move_to,
     page: params.page,
   });
   const view: 'list' | 'kanban' = params.view === 'kanban' ? 'kanban' : 'list';
@@ -34,6 +38,8 @@ export default async function JobsPage({ searchParams }: Props) {
   if (filters.q) exportParams.set('q', filters.q);
   if (filters.stage) exportParams.set('stage', filters.stage);
   if (filters.assigned_to_id) exportParams.set('assigned_to_id', filters.assigned_to_id);
+  if (filters.move_from) exportParams.set('move_from', filters.move_from);
+  if (filters.move_to) exportParams.set('move_to', filters.move_to);
   const exportHref = `/dashboard/jobs/export${exportParams.size ? `?${exportParams}` : ''}`;
 
   return (
@@ -63,6 +69,8 @@ export default async function JobsPage({ searchParams }: Props) {
         initialQ={filters.q ?? ''}
         initialStage={filters.stage ?? 'all'}
         initialAssignedTo={filters.assigned_to_id ?? 'all'}
+        initialMoveFrom={filters.move_from ?? ''}
+        initialMoveTo={filters.move_to ?? ''}
         stages={[...JOB_STAGES]}
         reps={reps.map((r) => ({ id: r.id, full_name: r.full_name }))}
       />
@@ -80,6 +88,8 @@ async function KanbanView({
   const rows = await listJobsForKanban({
     q: filters.q,
     assigned_to_id: filters.assigned_to_id,
+    move_from: filters.move_from,
+    move_to: filters.move_to,
   });
   return <KanbanBoard rows={rows} />;
 }
@@ -105,6 +115,8 @@ async function ListView({
         q={filters.q}
         stage={filters.stage}
         assignedTo={filters.assigned_to_id}
+        moveFrom={filters.move_from}
+        moveTo={filters.move_to}
       />
     </>
   );
@@ -116,18 +128,24 @@ function Pagination({
   q,
   stage,
   assignedTo,
+  moveFrom,
+  moveTo,
 }: {
   page: number;
   lastPage: number;
   q?: string;
   stage?: string;
   assignedTo?: string;
+  moveFrom?: string;
+  moveTo?: string;
 }) {
   if (lastPage <= 1) return null;
   const params = new URLSearchParams();
   if (q) params.set('q', q);
   if (stage) params.set('stage', stage);
   if (assignedTo) params.set('assigned_to_id', assignedTo);
+  if (moveFrom) params.set('move_from', moveFrom);
+  if (moveTo) params.set('move_to', moveTo);
   const link = (n: number) => {
     const p = new URLSearchParams(params);
     p.set('page', String(n));

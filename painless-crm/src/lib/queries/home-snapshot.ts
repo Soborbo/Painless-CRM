@@ -163,16 +163,18 @@ async function fetchCashTotals(now: Date): Promise<CashTotals> {
   return bucketCashTotals(data ?? [], now);
 }
 
-// Call-backs scheduled for today (§4 follow-ups). Scoped to today's window so
-// the count stays bounded — phone_calls has no "done" flag yet, so a global
-// "all overdue" count would only ever grow. v0.2 adds a completion flag and a
-// dedicated call-backs queue; today's view is the v0.1 daily reminder.
+// Open call-backs scheduled for today (§4 follow-ups). A same-day nudge on the
+// owner home: due inside today's window and not yet completed (migration 37's
+// done-flag). Overdue ones live on the dedicated call-back queue, which is the
+// full open worklist; this stays scoped to today so the home banner is a
+// "what's on for today" reminder, not a backlog.
 async function countCallbacksDueToday(window: DayWindow): Promise<number> {
   const supabase = await createClient();
   const { count } = await supabase
     .from('phone_calls')
     .select('id', { count: 'exact', head: true })
     .not('next_action_due_at', 'is', null)
+    .is('next_action_completed_at', null)
     .gte('next_action_due_at', window.startIso)
     .lt('next_action_due_at', window.endIso);
   return count ?? 0;

@@ -3,7 +3,7 @@
 import { requireRole } from '@/lib/auth/require-role';
 import { shouldRecordFirstResponse } from '@/lib/jobs/sla-touch';
 import type { JobStage } from '@/lib/jobs/state-machine';
-import { LogPhoneCallSchema } from '@/lib/schemas/phone-call';
+import { CallbackCompletionSchema, LogPhoneCallSchema } from '@/lib/schemas/phone-call';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
@@ -90,4 +90,44 @@ export async function logPhoneCall(
 
   revalidatePath(`/dashboard/jobs/${job.id}`);
   return { status: 'ok', phone_call_id: inserted.id as string };
+}
+
+export type CallbackActionState =
+  | { status: 'idle' }
+  | { status: 'error'; message: string }
+  | { status: 'ok' };
+
+export const INITIAL_CALLBACK_ACTION_STATE: CallbackActionState = { status: 'idle' };
+
+// Marks a scheduled call-back done. The completion stamp is set server-side
+// from the authenticated user; RLS scopes the write to the tenant, and the
+// explicit company_id filter is belt-and-braces. Revalidates both the call-back
+// queue and the owner home, whose "due today" count excludes completed rows.
+export async function completeCallback(
+  _prev: CallbackActionState,
+  form: FormData,
+): Promise<CallbackActionState> {
+  const me = await requireRole(SALES_ROLES);
+
+  const parsed = CallbackCompletionSchema.safeParse({ phone_call_id: form.get('phone_call_id') });
+  if (!parsed.success) {
+    return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Invalid input' };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from('phone_calls')
+    .update({
+      next_action_completed_at: new Date().toISOString(),
+      next_action_completed_by_id: me.id,
+    })
+    .eq('id', parsed.data.phone_call_id)
+    .eq('company_id', me.company_id);
+  if (error) {
+    return { status: 'error', message: 'Could not update call-back' };
+  }
+
+  revalidatePath('/dashboard/callbacks');
+  revalidatePath('/dashboard');
+  return { status: 'ok' };
 }

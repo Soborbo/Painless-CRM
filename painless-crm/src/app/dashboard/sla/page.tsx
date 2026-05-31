@@ -3,21 +3,12 @@ import { type SlaQueueRow, bucketSlaQueue, listSlaQueue } from '@/lib/queries/sl
 import { customerDisplayName, formatDateTime } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import { SlaAutoRefresh } from './sla-auto-refresh';
+import { SlaCountdown } from './sla-countdown';
 
 const SCOPED_ROLES = ['sales', 'surveyor'] as const;
 
 export const dynamic = 'force-dynamic';
-
-function formatRemaining(dueAt: string, now: Date): string {
-  const diffMs = new Date(dueAt).getTime() - now.getTime();
-  const sign = diffMs < 0 ? -1 : 1;
-  const abs = Math.abs(diffMs);
-  const minutes = Math.floor(abs / 60_000);
-  if (minutes < 60) return `${sign < 0 ? '-' : ''}${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  const remainingMins = minutes % 60;
-  return `${sign < 0 ? '-' : ''}${hours}h ${remainingMins}m`;
-}
 
 export default async function SlaPage() {
   const me = await requireUser();
@@ -30,6 +21,7 @@ export default async function SlaPage() {
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10">
+      <SlaAutoRefresh />
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
         <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">
@@ -137,8 +129,12 @@ function Group({
               <td className="px-4 py-2">{row.acquisition_source ?? '—'}</td>
               <td className="px-4 py-2">{row.assigned_to?.full_name ?? '—'}</td>
               <td className="px-4 py-2">{formatDateTime(row.first_response_due_at)}</td>
-              <td className={`px-4 py-2 text-right tabular-nums ${tonClass}`}>
-                {formatRemaining(row.first_response_due_at, now)}
+              <td className="px-4 py-2 text-right">
+                <SlaCountdown
+                  dueAtMs={new Date(row.first_response_due_at).getTime()}
+                  serverNowMs={now.getTime()}
+                  baseTone={tonClass}
+                />
               </td>
             </tr>
           ))}

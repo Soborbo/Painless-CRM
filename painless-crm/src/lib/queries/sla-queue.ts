@@ -2,8 +2,9 @@ import { computeSLAStatus } from '@/lib/jobs/sla';
 import { createClient } from '@/lib/supabase/server';
 
 // Lead-funnel SLA queue: jobs in lead/contacted that have a deadline and
-// haven't yet been responded to. Backs `/dashboard/sla` (Phase 06b §1) and
-// — once Realtime wiring lands — the live ticking list.
+// haven't yet been responded to. Backs `/dashboard/sla` (Phase 06b §1), whose
+// rows tick down live and poll for fresh data via SlaAutoRefresh — the v0.1
+// stand-in until a Supabase Realtime subscription on `jobs` lands.
 
 export interface SlaQueueRow {
   id: string;

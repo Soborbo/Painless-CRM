@@ -2795,6 +2795,8 @@ export type Database = {
           id: string
           job_id: string | null
           next_action: string | null
+          next_action_completed_at: string | null
+          next_action_completed_by_id: string | null
           next_action_due_at: string | null
           notes: string | null
           occurred_at: string
@@ -2814,6 +2816,8 @@ export type Database = {
           id?: string
           job_id?: string | null
           next_action?: string | null
+          next_action_completed_at?: string | null
+          next_action_completed_by_id?: string | null
           next_action_due_at?: string | null
           notes?: string | null
           occurred_at: string
@@ -2833,6 +2837,8 @@ export type Database = {
           id?: string
           job_id?: string | null
           next_action?: string | null
+          next_action_completed_at?: string | null
+          next_action_completed_by_id?: string | null
           next_action_due_at?: string | null
           notes?: string | null
           occurred_at?: string

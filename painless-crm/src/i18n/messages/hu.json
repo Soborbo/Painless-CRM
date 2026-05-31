@@ -804,6 +804,9 @@
     "title": "",
     "subtitle": "",
     "empty": "",
+    "overdue": "",
+    "markDone": "",
+    "markDoneRetry": "",
     "columns": {
       "dueAt": "",
       "customer": "",

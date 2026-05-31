@@ -1,4 +1,5 @@
-import { flattenCallbackRow } from '@/lib/queries/callbacks';
+import { flattenCallbackRow, isCallbackOverdue } from '@/lib/queries/callbacks';
+import { CallbackCompletionSchema } from '@/lib/schemas/phone-call';
 import { describe, expect, it } from 'vitest';
 
 const CUSTOMER = {
@@ -50,5 +51,34 @@ describe('flattenCallbackRow', () => {
   it('defaults direction when missing', () => {
     const r = flattenCallbackRow(raw({ direction: null }));
     expect(r.direction).toBe('outbound');
+  });
+});
+
+describe('isCallbackOverdue', () => {
+  // Local-time dates so the comparison against local midnight is timezone-safe.
+  const now = new Date(2026, 4, 31, 12, 0, 0); // 31 May, noon
+
+  it('flags a follow-up due on an earlier day as overdue', () => {
+    expect(isCallbackOverdue(new Date(2026, 4, 29, 10, 0, 0).toISOString(), now)).toBe(true);
+    expect(isCallbackOverdue(new Date(2026, 4, 30, 23, 0, 0).toISOString(), now)).toBe(true);
+  });
+
+  it('does not flag a follow-up still due today', () => {
+    expect(isCallbackOverdue(new Date(2026, 4, 31, 0, 0, 0).toISOString(), now)).toBe(false);
+    expect(isCallbackOverdue(new Date(2026, 4, 31, 18, 0, 0).toISOString(), now)).toBe(false);
+  });
+});
+
+describe('CallbackCompletionSchema', () => {
+  it('accepts a uuid phone_call_id', () => {
+    const out = CallbackCompletionSchema.safeParse({
+      phone_call_id: '00000000-0000-0000-0000-000000000001',
+    });
+    expect(out.success).toBe(true);
+  });
+
+  it('rejects a non-uuid id', () => {
+    expect(CallbackCompletionSchema.safeParse({ phone_call_id: 'nope' }).success).toBe(false);
+    expect(CallbackCompletionSchema.safeParse({}).success).toBe(false);
   });
 });

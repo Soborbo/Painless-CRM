@@ -62,3 +62,11 @@ export const LogPhoneCallSchema = z.object({
 });
 
 export type LogPhoneCallInput = z.infer<typeof LogPhoneCallSchema>;
+
+// §4 follow-up: marking a scheduled call-back done (or reopening it). Only the
+// phone-call row id is needed; the action stamps who/when server-side.
+export const CallbackCompletionSchema = z.object({
+  phone_call_id: z.string().uuid(),
+});
+
+export type CallbackCompletionInput = z.infer<typeof CallbackCompletionSchema>;

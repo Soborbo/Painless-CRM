@@ -548,6 +548,22 @@
       "fresh": "Valid",
       "expiring_soon": "Expires soon",
       "expired": "Expired"
+    },
+    "list": {
+      "title": "Quotes",
+      "statusFilter": "Status",
+      "statusAll": "All statuses",
+      "exportCsv": "Export CSV",
+      "totalCount": "{count} quotes",
+      "empty": "No quotes match this filter.",
+      "columns": {
+        "job": "Job",
+        "customer": "Customer",
+        "status": "Status",
+        "total": "Total",
+        "validUntil": "Valid until",
+        "created": "Created"
+      }
     }
   },
   "variants": {

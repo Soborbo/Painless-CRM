@@ -1,3 +1,9 @@
+import {
+  QUOTES_EXPORT_MAX,
+  QUOTE_PAGE_SIZE,
+  type QuoteListFilters,
+  type QuoteStatus,
+} from '@/lib/schemas/quote';
 import { createClient } from '@/lib/supabase/server';
 
 export interface QuoteRow {
@@ -222,4 +228,123 @@ export function classifyQuoteValidity(
   if (remainingMs <= 0) return 'expired';
   if (remainingMs <= SOON_HOURS * 60 * 60 * 1000) return 'expiring_soon';
   return 'fresh';
+}
+
+// =====================================================
+// Office-wide quotes list + CSV export (Phase 06b §8)
+// =====================================================
+
+export interface QuoteListCustomer {
+  customer_type: string;
+  first_name: string | null;
+  last_name: string | null;
+  company_name: string | null;
+  primary_email: string | null;
+}
+
+export interface QuoteListItem {
+  id: string;
+  job_id: string;
+  job_number: string;
+  move_date: string | null;
+  status: QuoteStatus | null;
+  total_pence: number;
+  valid_until: string;
+  sent_at: string | null;
+  declined_at: string | null;
+  withdrawn_at: string | null;
+  revision_number: number;
+  open_count: number;
+  created_at: string;
+  customer: QuoteListCustomer | null;
+}
+
+const QUOTE_OFFICE_COLUMNS = `
+  id, job_id, status, total_pence, valid_until, sent_at,
+  declined_at, withdrawn_at, revision_number, open_count, created_at,
+  job:jobs!quotes_job_id_fkey (
+    job_number, move_date,
+    customer:customers (customer_type, first_name, last_name, company_name, primary_email)
+  )
+`;
+
+// PostgREST embeds a to-one relation as either a single object or a
+// one-element array depending on the inferred cardinality — normalise both.
+function embedOne<T>(raw: unknown): T | null {
+  if (Array.isArray(raw)) return (raw[0] as T | undefined) ?? null;
+  return (raw as T | null) ?? null;
+}
+
+// Pure flatten — exported so the join-shape normalisation is unit-testable
+// without a live Supabase connection.
+export function flattenQuoteListItem(raw: Record<string, unknown>): QuoteListItem {
+  const job = embedOne<{
+    job_number?: string;
+    move_date?: string | null;
+    customer?: unknown;
+  }>(raw.job);
+  const customer = embedOne<QuoteListCustomer>(job?.customer);
+  return {
+    id: raw.id as string,
+    job_id: raw.job_id as string,
+    job_number: job?.job_number ?? '—',
+    move_date: job?.move_date ?? null,
+    status: (raw.status as QuoteStatus | null) ?? null,
+    total_pence: (raw.total_pence as number | null) ?? 0,
+    valid_until: raw.valid_until as string,
+    sent_at: (raw.sent_at as string | null) ?? null,
+    declined_at: (raw.declined_at as string | null) ?? null,
+    withdrawn_at: (raw.withdrawn_at as string | null) ?? null,
+    revision_number: (raw.revision_number as number | null) ?? 1,
+    open_count: (raw.open_count as number | null) ?? 0,
+    created_at: raw.created_at as string,
+    customer,
+  };
+}
+
+export interface QuoteListResult {
+  rows: QuoteListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export async function listQuotes(filters: QuoteListFilters): Promise<QuoteListResult> {
+  const supabase = await createClient();
+  const from = (filters.page - 1) * QUOTE_PAGE_SIZE;
+  const to = from + QUOTE_PAGE_SIZE - 1;
+
+  let query = supabase
+    .from('quotes')
+    .select(QUOTE_OFFICE_COLUMNS, { count: 'exact' })
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (filters.status) query = query.eq('status', filters.status);
+
+  const { data, count } = await query;
+  return {
+    rows: ((data ?? []) as Array<Record<string, unknown>>).map(flattenQuoteListItem),
+    total: count ?? 0,
+    page: filters.page,
+    pageSize: QUOTE_PAGE_SIZE,
+  };
+}
+
+export async function listQuotesForExport(
+  filters: Omit<QuoteListFilters, 'page'>,
+): Promise<QuoteListItem[]> {
+  const supabase = await createClient();
+  let query = supabase
+    .from('quotes')
+    .select(QUOTE_OFFICE_COLUMNS)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(QUOTES_EXPORT_MAX);
+
+  if (filters.status) query = query.eq('status', filters.status);
+
+  const { data } = await query;
+  return ((data ?? []) as Array<Record<string, unknown>>).map(flattenQuoteListItem);
 }

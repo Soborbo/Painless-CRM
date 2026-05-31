@@ -26,8 +26,8 @@ preview_id = "1d039bb1999c44e3a34f7f4acf6625a3"
 # The helper degrades open when this binding is absent, so dev is unaffected.
 [[kv_namespaces]]
 binding = "RATE_LIMIT_KV"
-id = "REPLACE_WITH_RATE_LIMIT_KV_ID"
-preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_ID"
+id = "175b3be17523491a8c4d98b806f8181c"
+preview_id = "2b140e77774f414f912ed9f3cc1c064c"
 
 # Secrets — set via: wrangler secret put NAME
 # SUPABASE_SERVICE_ROLE_KEY

@@ -35,6 +35,20 @@
     "profit": "Profit",
     "settings": "Settings"
   },
+  "exports": {
+    "navLabel": "Exports",
+    "title": "Export history",
+    "subtitle": "Every bulk export of customer, job, quote or profit data — who pulled it, when, with which filters, and how many rows.",
+    "empty": "No exports recorded yet.",
+    "when": "When",
+    "resource": "Resource",
+    "format": "Format",
+    "rows": "Rows",
+    "actor": "Exported by",
+    "filters": "Filters",
+    "ip": "IP",
+    "unknownActor": "Unknown"
+  },
   "search": {
     "label": "Search",
     "placeholder": "Search customers, jobs, quotes…",

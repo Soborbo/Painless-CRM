@@ -47,7 +47,9 @@
       "customer": "",
       "job": "",
       "quote": ""
-    }
+    },
+    "recent": "",
+    "clearRecent": ""
   },
   "dashboard": {
     "title": "",

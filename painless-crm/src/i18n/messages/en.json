@@ -47,7 +47,9 @@
       "customer": "Customer",
       "job": "Job",
       "quote": "Quote"
-    }
+    },
+    "recent": "Recent searches",
+    "clearRecent": "Clear"
   },
   "dashboard": {
     "title": "Dashboard",

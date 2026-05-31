@@ -59,9 +59,10 @@ describe('validateUpload', () => {
   });
 
   it('rejects files over the size ceiling', () => {
-    expect(
-      validateUpload({ size: MAX_FILE_SIZE_BYTES + 1, mimeType: 'application/pdf' }),
-    ).toEqual({ ok: false, reason: 'too_large' });
+    expect(validateUpload({ size: MAX_FILE_SIZE_BYTES + 1, mimeType: 'application/pdf' })).toEqual({
+      ok: false,
+      reason: 'too_large',
+    });
   });
 
   it('accepts a file exactly at the ceiling', () => {

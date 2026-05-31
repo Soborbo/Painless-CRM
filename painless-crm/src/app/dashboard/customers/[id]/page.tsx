@@ -1,11 +1,11 @@
 import { DocumentVault } from '@/components/domain/document/document-vault';
 import { requireUser } from '@/lib/auth/require-role';
-import { listDocumentsForCustomer } from '@/lib/queries/documents';
 import {
   getCustomerById,
   getCustomerJobs,
   getCustomerLifetimeValuePence,
 } from '@/lib/queries/customers';
+import { listDocumentsForCustomer } from '@/lib/queries/documents';
 import { customerDisplayName, formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';

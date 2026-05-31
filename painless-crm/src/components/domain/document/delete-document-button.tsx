@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_DOCUMENT_ACTION_STATE,
   type DocumentActionState,
+  INITIAL_DOCUMENT_ACTION_STATE,
   softDeleteDocument,
 } from '@/lib/actions/documents';
 import type { UploadParentType } from '@/lib/documents/constants';

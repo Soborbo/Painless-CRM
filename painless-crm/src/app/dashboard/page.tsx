@@ -46,7 +46,7 @@ export default async function DashboardPage() {
         <Banner
           tone="muted"
           message={t('callbacksDueToday', { count: snapshot.callbacksDueToday })}
-          ctaHref="/dashboard/jobs"
+          ctaHref="/dashboard/callbacks"
           ctaLabel={t('view')}
         />
       ) : null}

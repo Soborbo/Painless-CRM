@@ -31,6 +31,7 @@
     "jobs": "Jobs",
     "quotes": "Quotes",
     "sla": "SLA",
+    "callbacks": "Call-backs",
     "profit": "Profit",
     "settings": "Settings"
   },
@@ -775,6 +776,18 @@
     "sources": {
       "tamar_email": "Tamar (email)",
       "tamar_api": "Tamar (API)"
+    }
+  },
+  "callbacks": {
+    "title": "Call-backs due today",
+    "subtitle": "Phone-call follow-ups scheduled for today. Clear them by logging the next call on the job.",
+    "empty": "No call-backs due today.",
+    "columns": {
+      "dueAt": "Due",
+      "customer": "Customer",
+      "job": "Job",
+      "action": "Next action",
+      "outcome": "Last outcome"
     }
   },
   "smoke": {

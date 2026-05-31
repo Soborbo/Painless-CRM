@@ -571,6 +571,8 @@
     "list": {
       "title": "Quotes",
       "statusAll": "All statuses",
+      "createdFrom": "Created from",
+      "createdTo": "Created to",
       "searchPlaceholder": "Search by job number",
       "filter": "Filter",
       "exportCsv": "Export CSV",

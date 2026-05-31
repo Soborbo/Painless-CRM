@@ -332,6 +332,9 @@ export async function listQuotes(filters: QuoteListFilters): Promise<QuoteListRe
     .range(from, to);
 
   if (filters.status) query = query.eq('status', filters.status);
+  if (filters.created_from)
+    query = query.gte('created_at', `${filters.created_from}T00:00:00.000Z`);
+  if (filters.created_to) query = query.lte('created_at', `${filters.created_to}T23:59:59.999Z`);
   if (filters.q) query = query.ilike('job.job_number', jobNumberPattern(filters.q));
 
   const { data, count } = await query;
@@ -355,6 +358,9 @@ export async function listQuotesForExport(
     .limit(QUOTES_EXPORT_MAX);
 
   if (filters.status) query = query.eq('status', filters.status);
+  if (filters.created_from)
+    query = query.gte('created_at', `${filters.created_from}T00:00:00.000Z`);
+  if (filters.created_to) query = query.lte('created_at', `${filters.created_to}T23:59:59.999Z`);
   if (filters.q) query = query.ilike('job.job_number', jobNumberPattern(filters.q));
 
   const { data } = await query;

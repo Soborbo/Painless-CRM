@@ -22,13 +22,20 @@ export async function GET(request: NextRequest): Promise<Response> {
   const parsed = QuoteListFiltersSchema.safeParse({
     q: url.searchParams.get('q') ?? undefined,
     status: url.searchParams.get('status') ?? undefined,
+    created_from: url.searchParams.get('created_from') ?? undefined,
+    created_to: url.searchParams.get('created_to') ?? undefined,
     page: undefined,
   });
   if (!parsed.success) {
     return NextResponse.json({ error: 'invalid_filters' }, { status: 400 });
   }
 
-  const rows = await listQuotesForExport({ q: parsed.data.q, status: parsed.data.status });
+  const rows = await listQuotesForExport({
+    q: parsed.data.q,
+    status: parsed.data.status,
+    created_from: parsed.data.created_from,
+    created_to: parsed.data.created_to,
+  });
   const csv = serializeQuotesToCsv(rows);
   const filename = quotesExportFilename();
 
@@ -36,7 +43,12 @@ export async function GET(request: NextRequest): Promise<Response> {
     companyId: user.company_id,
     userId: user.id,
     resource: 'quotes',
-    filters: { q: parsed.data.q, status: parsed.data.status },
+    filters: {
+      q: parsed.data.q,
+      status: parsed.data.status,
+      created_from: parsed.data.created_from,
+      created_to: parsed.data.created_to,
+    },
     rowCount: rows.length,
     ...auditContextFromHeaders(request.headers),
   });

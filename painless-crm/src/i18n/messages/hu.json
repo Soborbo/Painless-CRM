@@ -571,6 +571,8 @@
     "list": {
       "title": "",
       "statusAll": "",
+      "createdFrom": "",
+      "createdTo": "",
       "searchPlaceholder": "",
       "filter": "",
       "exportCsv": "",

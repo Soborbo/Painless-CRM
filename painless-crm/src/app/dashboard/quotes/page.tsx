@@ -8,7 +8,13 @@ import { QuotesFilters } from './quotes-filters';
 export const dynamic = 'force-dynamic';
 
 type Props = {
-  searchParams: Promise<{ q?: string; status?: string; page?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    status?: string;
+    created_from?: string;
+    created_to?: string;
+    page?: string;
+  }>;
 };
 
 export default async function QuotesPage({ searchParams }: Props) {
@@ -16,6 +22,8 @@ export default async function QuotesPage({ searchParams }: Props) {
   const filters = QuoteListFiltersSchema.parse({
     q: params.q,
     status: params.status,
+    created_from: params.created_from,
+    created_to: params.created_to,
     page: params.page,
   });
 
@@ -45,6 +53,8 @@ export default async function QuotesPage({ searchParams }: Props) {
       <QuotesFilters
         initialQ={filters.q ?? ''}
         initialStatus={filters.status ?? 'all'}
+        initialCreatedFrom={filters.created_from ?? ''}
+        initialCreatedTo={filters.created_to ?? ''}
         statuses={[...QUOTE_STATUSES]}
       />
 
@@ -78,7 +88,14 @@ export default async function QuotesPage({ searchParams }: Props) {
         </section>
       )}
 
-      <Pagination page={filters.page} lastPage={lastPage} q={filters.q} status={filters.status} />
+      <Pagination
+        page={filters.page}
+        lastPage={lastPage}
+        q={filters.q}
+        status={filters.status}
+        createdFrom={filters.created_from}
+        createdTo={filters.created_to}
+      />
     </main>
   );
 }
@@ -130,17 +147,23 @@ function Pagination({
   lastPage,
   q,
   status,
+  createdFrom,
+  createdTo,
 }: {
   page: number;
   lastPage: number;
   q?: string;
   status?: string;
+  createdFrom?: string;
+  createdTo?: string;
 }) {
   if (lastPage <= 1) return null;
   const link = (n: number) => {
     const p = new URLSearchParams();
     if (q) p.set('q', q);
     if (status) p.set('status', status);
+    if (createdFrom) p.set('created_from', createdFrom);
+    if (createdTo) p.set('created_to', createdTo);
     p.set('page', String(n));
     return `/dashboard/quotes?${p.toString()}`;
   };

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { optionalDateFilter } from './common';
 
 // Filters for the office-wide quotes list + CSV export (Phase 06b §8).
 // `status` mirrors the quotes.status check constraint; the list and export

@@ -993,9 +993,12 @@
     }
   },
   "callbacks": {
-    "title": "Call-backs due today",
-    "subtitle": "Phone-call follow-ups scheduled for today. Clear them by logging the next call on the job.",
-    "empty": "No call-backs due today.",
+    "title": "Open call-backs",
+    "subtitle": "Phone-call follow-ups due today or overdue. Mark one done once you've made the call.",
+    "empty": "No open call-backs. Nicely done.",
+    "overdue": "Overdue",
+    "markDone": "Mark done",
+    "markDoneRetry": "Retry",
     "columns": {
       "dueAt": "Due",
       "customer": "Customer",

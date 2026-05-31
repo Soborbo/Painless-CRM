@@ -1,15 +1,16 @@
 import { type DayWindow, todayWindow } from '@/lib/queries/home-snapshot';
 import { createClient } from '@/lib/supabase/server';
 
-// Call-back queue (Phase 06b §4 follow-ups + §10 owner home). Lists the
-// phone-call follow-ups whose next_action_due_at falls inside today's window —
-// the exact same filter countCallbacksDueToday uses, so the owner-home banner
-// count always matches this list's length.
+// Call-back queue (Phase 06b §4 follow-ups + §10 owner home). Lists the *open*
+// phone-call follow-ups — a due date that has not been completed — that are due
+// by the end of today, i.e. overdue ones plus today's. The completion flag
+// (migration 37) keeps this bounded: clearing a follow-up drops it from the
+// set, so surfacing overdue rows no longer risks an ever-growing list.
 //
-// phone_calls has no "done" flag in v0.1, so scoping to today keeps the queue
-// bounded (a global "all overdue" view would only ever grow). v0.2 adds a
-// completion flag and a rolling overdue queue. The table has no deleted_at
-// column, so there is nothing to soft-delete-filter. RLS scopes to company.
+// This is intentionally a superset of the owner-home "due today" count, which
+// stays a same-day nudge; the queue is the full open worklist so nothing
+// overdue is stranded un-clearable. The table has no deleted_at column, so
+// there is nothing to soft-delete-filter. RLS scopes to company.
 
 export interface CallbackCustomer {
   customer_type: string;
@@ -60,14 +61,21 @@ export function flattenCallbackRow(raw: Record<string, unknown>): CallbackRow {
   };
 }
 
-export async function listCallbacksDueToday(now: Date = new Date()): Promise<CallbackRow[]> {
+// Pure overdue test — exported so the badge logic is unit-testable. A call-back
+// is overdue once its due time is before the start of today (anything still
+// due *within* today is just "due", not yet late).
+export function isCallbackOverdue(dueAtIso: string, now: Date = new Date()): boolean {
+  return Date.parse(dueAtIso) < Date.parse(todayWindow(now).startIso);
+}
+
+export async function listOpenCallbacks(now: Date = new Date()): Promise<CallbackRow[]> {
   const window: DayWindow = todayWindow(now);
   const supabase = await createClient();
   const { data } = await supabase
     .from('phone_calls')
     .select(CALLBACK_COLUMNS)
     .not('next_action_due_at', 'is', null)
-    .gte('next_action_due_at', window.startIso)
+    .is('next_action_completed_at', null)
     .lt('next_action_due_at', window.endIso)
     .order('next_action_due_at', { ascending: true })
     .limit(200);

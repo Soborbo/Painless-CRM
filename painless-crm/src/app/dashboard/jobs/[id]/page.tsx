@@ -8,6 +8,7 @@ import { StageBadge } from '@/components/domain/job/stage-badge';
 import { requireUser } from '@/lib/auth/require-role';
 import { isProfitReviewStage } from '@/lib/jobs/profit';
 import { isRequoteEligibleStage } from '@/lib/jobs/requote';
+import { listDocumentsForJob } from '@/lib/queries/documents';
 import {
   getJobById,
   getJobStatusHistory,
@@ -16,7 +17,6 @@ import {
   listSalesReps,
   listSurveyors,
 } from '@/lib/queries/jobs';
-import { listDocumentsForJob } from '@/lib/queries/documents';
 import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
@@ -41,20 +41,31 @@ export default async function JobPage({ params }: Props) {
   const job = await getJobById(id);
   if (!job) notFound();
 
-  const [history, tags, reps, surveyors, quotes, audits, calls, jobNotes, jobDocuments, children, t] =
-    await Promise.all([
-      getJobStatusHistory(id),
-      getJobTags(id),
-      listSalesReps(),
-      listSurveyors(),
-      listQuotesForJob(id),
-      getJobAcceptanceAudits(id),
-      listPhoneCallsForJob(id),
-      listNotesForJob(id),
-      listDocumentsForJob(id),
-      listChildJobs(id),
-      getTranslations('jobs'),
-    ]);
+  const [
+    history,
+    tags,
+    reps,
+    surveyors,
+    quotes,
+    audits,
+    calls,
+    jobNotes,
+    jobDocuments,
+    children,
+    t,
+  ] = await Promise.all([
+    getJobStatusHistory(id),
+    getJobTags(id),
+    listSalesReps(),
+    listSurveyors(),
+    listQuotesForJob(id),
+    getJobAcceptanceAudits(id),
+    listPhoneCallsForJob(id),
+    listNotesForJob(id),
+    listDocumentsForJob(id),
+    listChildJobs(id),
+    getTranslations('jobs'),
+  ]);
 
   const isAdmin = (ADMIN_ROLES as readonly string[]).includes(me.role);
   const isManager = (MANAGER_ROLES as readonly string[]).includes(me.role);

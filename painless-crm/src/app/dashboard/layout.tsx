@@ -38,8 +38,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <Link href="/dashboard/jobs" className="hover:underline">
                 {t('jobs')}
               </Link>
+              <Link href="/dashboard/quotes" className="hover:underline">
+                {t('quotes')}
+              </Link>
               <Link href="/dashboard/sla" className="hover:underline">
                 {t('sla')}
+              </Link>
+              <Link href="/dashboard/callbacks" className="hover:underline">
+                {t('callbacks')}
               </Link>
               <RequireRole allowed={['manager', 'admin', 'super_admin']}>
                 <Link href="/dashboard/profit" className="hover:underline">

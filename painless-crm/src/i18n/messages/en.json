@@ -31,6 +31,7 @@
     "jobs": "Jobs",
     "quotes": "Quotes",
     "sla": "SLA",
+    "callbacks": "Call-backs",
     "profit": "Profit",
     "settings": "Settings"
   },
@@ -344,6 +345,19 @@
       "save": "Saved.",
       "mark_reviewed": "Marked as reviewed.",
       "finalize": "Finalised."
+    },
+    "queue": {
+      "title": "Profit review queue",
+      "subtitle": "Every completed job still awaiting a profit review, oldest first.",
+      "dashboardLink": "Profit",
+      "empty": "Nothing awaiting profit review. Nice.",
+      "cols": {
+        "job": "Job",
+        "customer": "Customer",
+        "completed": "Completed",
+        "stage": "Stage",
+        "assigned": "Assigned"
+      }
     }
   },
   "profitDashboard": {
@@ -375,7 +389,8 @@
       "pending": "Pending",
       "reviewed": "Reviewed",
       "finalized": "Finalised"
-    }
+    },
+    "reviewQueueLink": "Open review queue"
   },
   "pricing": {
     "navLabel": "Pricing",
@@ -548,6 +563,23 @@
       "fresh": "Valid",
       "expiring_soon": "Expires soon",
       "expired": "Expired"
+    },
+    "list": {
+      "title": "Quotes",
+      "statusAll": "All statuses",
+      "searchPlaceholder": "Search by job number",
+      "filter": "Filter",
+      "exportCsv": "Export CSV",
+      "totalCount": "{count} quotes",
+      "empty": "No quotes match this filter.",
+      "columns": {
+        "job": "Job",
+        "customer": "Customer",
+        "status": "Status",
+        "total": "Total",
+        "validUntil": "Valid until",
+        "created": "Created"
+      }
     }
   },
   "variants": {
@@ -758,6 +790,18 @@
     "sources": {
       "tamar_email": "Tamar (email)",
       "tamar_api": "Tamar (API)"
+    }
+  },
+  "callbacks": {
+    "title": "Call-backs due today",
+    "subtitle": "Phone-call follow-ups scheduled for today. Clear them by logging the next call on the job.",
+    "empty": "No call-backs due today.",
+    "columns": {
+      "dueAt": "Due",
+      "customer": "Customer",
+      "job": "Job",
+      "action": "Next action",
+      "outcome": "Last outcome"
     }
   },
   "smoke": {

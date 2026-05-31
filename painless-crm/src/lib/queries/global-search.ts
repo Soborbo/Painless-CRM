@@ -103,7 +103,7 @@ async function findQuotes(q: string): Promise<QuoteHit[]> {
   const pattern = `%${q}%`;
   const { data } = await supabase
     .from('quotes')
-    .select('id, job_id, status, total_pence, created_at, job:jobs (job_number)')
+    .select('id, job_id, status, total_pence, created_at, job:jobs!inner (job_number)')
     .is('deleted_at', null)
     .ilike('job.job_number', pattern)
     .order('created_at', { ascending: false })

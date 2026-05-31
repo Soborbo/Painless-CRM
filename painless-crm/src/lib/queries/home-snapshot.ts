@@ -99,17 +99,29 @@ async function countNewLeads(window: DayWindow): Promise<number> {
   return count ?? 0;
 }
 
-async function countQuotesByStatusChange(
-  column: 'sent_at' | 'accepted_at',
-  window: DayWindow,
-): Promise<number> {
+async function countQuotesSent(window: DayWindow): Promise<number> {
   const supabase = await createClient();
   const { count } = await supabase
     .from('quotes')
     .select('id', { count: 'exact', head: true })
     .is('deleted_at', null)
-    .gte(column, window.startIso)
-    .lt(column, window.endIso);
+    .gte('sent_at', window.startIso)
+    .lt('sent_at', window.endIso);
+  return count ?? 0;
+}
+
+// Acceptances live in their own event table — `quotes` has no `accepted_at`
+// column (acceptance is recorded as a quote_acceptances row + a status flip).
+// Counting acceptance events in the window is the funnel's "accepted" figure.
+// No deleted_at filter: quote_acceptances is append-only and has no such
+// column. RLS scopes the read to the caller's company.
+async function countQuotesAccepted(window: DayWindow): Promise<number> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from('quote_acceptances')
+    .select('id', { count: 'exact', head: true })
+    .gte('accepted_at', window.startIso)
+    .lt('accepted_at', window.endIso);
   return count ?? 0;
 }
 
@@ -191,8 +203,8 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     callbacksDueToday,
   ] = await Promise.all([
     countNewLeads(last24),
-    countQuotesByStatusChange('sent_at', last24),
-    countQuotesByStatusChange('accepted_at', last24),
+    countQuotesSent(last24),
+    countQuotesAccepted(last24),
     countSlaOverdue(now),
     listTodaysMoves(today),
     fetchCashTotals(now),

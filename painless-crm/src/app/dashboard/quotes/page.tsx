@@ -26,6 +26,8 @@ export default async function QuotesPage({ searchParams }: Props) {
   const exportParams = new URLSearchParams();
   if (filters.q) exportParams.set('q', filters.q);
   if (filters.status) exportParams.set('status', filters.status);
+  if (filters.created_from) exportParams.set('created_from', filters.created_from);
+  if (filters.created_to) exportParams.set('created_to', filters.created_to);
   const exportHref = `/dashboard/quotes/export${exportParams.size ? `?${exportParams}` : ''}`;
 
   return (

@@ -345,6 +345,19 @@
       "save": "",
       "mark_reviewed": "",
       "finalize": ""
+    },
+    "queue": {
+      "title": "",
+      "subtitle": "",
+      "dashboardLink": "",
+      "empty": "",
+      "cols": {
+        "job": "",
+        "customer": "",
+        "completed": "",
+        "stage": "",
+        "assigned": ""
+      }
     }
   },
   "profitDashboard": {
@@ -376,7 +389,8 @@
       "pending": "",
       "reviewed": "",
       "finalized": ""
-    }
+    },
+    "reviewQueueLink": ""
   },
   "pricing": {
     "navLabel": "",

@@ -548,6 +548,22 @@
       "fresh": "",
       "expiring_soon": "",
       "expired": ""
+    },
+    "list": {
+      "title": "",
+      "statusFilter": "",
+      "statusAll": "",
+      "exportCsv": "",
+      "totalCount": "",
+      "empty": "",
+      "columns": {
+        "job": "",
+        "customer": "",
+        "status": "",
+        "total": "",
+        "validUntil": "",
+        "created": ""
+      }
     }
   },
   "variants": {

@@ -38,6 +38,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <Link href="/dashboard/jobs" className="hover:underline">
                 {t('jobs')}
               </Link>
+              <Link href="/dashboard/quotes" className="hover:underline">
+                {t('quotes')}
+              </Link>
               <Link href="/dashboard/sla" className="hover:underline">
                 {t('sla')}
               </Link>

@@ -82,9 +82,13 @@ export default async function ProfitDashboardPage({ searchParams }: Props) {
       </section>
 
       {totals.pendingReviewCount > 0 ? (
-        <div className="flex items-center justify-between rounded-md border bg-[var(--color-muted)] px-4 py-3 text-sm">
+        <Link
+          href="/dashboard/profit/review"
+          className="flex items-center justify-between rounded-md border bg-[var(--color-muted)] px-4 py-3 text-sm hover:bg-[var(--color-muted)]/70"
+        >
           <span>{t('pendingReview', { count: totals.pendingReviewCount })}</span>
-        </div>
+          <span className="font-medium">{t('reviewQueueLink')} →</span>
+        </Link>
       ) : null}
 
       <section className="rounded-md border">

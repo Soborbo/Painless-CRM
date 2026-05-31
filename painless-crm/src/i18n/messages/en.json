@@ -345,6 +345,19 @@
       "save": "Saved.",
       "mark_reviewed": "Marked as reviewed.",
       "finalize": "Finalised."
+    },
+    "queue": {
+      "title": "Profit review queue",
+      "subtitle": "Every completed job still awaiting a profit review, oldest first.",
+      "dashboardLink": "Profit",
+      "empty": "Nothing awaiting profit review. Nice.",
+      "cols": {
+        "job": "Job",
+        "customer": "Customer",
+        "completed": "Completed",
+        "stage": "Stage",
+        "assigned": "Assigned"
+      }
     }
   },
   "profitDashboard": {
@@ -376,7 +389,8 @@
       "pending": "Pending",
       "reviewed": "Reviewed",
       "finalized": "Finalised"
-    }
+    },
+    "reviewQueueLink": "Open review queue"
   },
   "pricing": {
     "navLabel": "Pricing",

@@ -551,8 +551,9 @@
     },
     "list": {
       "title": "Quotes",
-      "statusFilter": "Status",
       "statusAll": "All statuses",
+      "searchPlaceholder": "Search by job number",
+      "filter": "Filter",
       "exportCsv": "Export CSV",
       "totalCount": "{count} quotes",
       "empty": "No quotes match this filter.",

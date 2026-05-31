@@ -8,6 +8,7 @@ export const QUOTE_STATUSES = ['draft', 'sent', 'accepted', 'declined', 'expired
 export type QuoteStatus = (typeof QUOTE_STATUSES)[number];
 
 export const QuoteListFiltersSchema = z.object({
+  q: z.string().trim().max(100).optional(),
   status: z.enum(QUOTE_STATUSES).optional(),
   page: z.coerce.number().int().min(1).default(1),
 });

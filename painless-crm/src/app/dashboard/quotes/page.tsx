@@ -8,18 +8,23 @@ import { QuotesFilters } from './quotes-filters';
 export const dynamic = 'force-dynamic';
 
 type Props = {
-  searchParams: Promise<{ status?: string; page?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; page?: string }>;
 };
 
 export default async function QuotesPage({ searchParams }: Props) {
   const params = await searchParams;
-  const filters = QuoteListFiltersSchema.parse({ status: params.status, page: params.page });
+  const filters = QuoteListFiltersSchema.parse({
+    q: params.q,
+    status: params.status,
+    page: params.page,
+  });
 
   const [result, t] = await Promise.all([listQuotes(filters), getTranslations('quotes')]);
   const lastPage = Math.max(1, Math.ceil(result.total / QUOTE_PAGE_SIZE));
   const now = new Date();
 
   const exportParams = new URLSearchParams();
+  if (filters.q) exportParams.set('q', filters.q);
   if (filters.status) exportParams.set('status', filters.status);
   const exportHref = `/dashboard/quotes/export${exportParams.size ? `?${exportParams}` : ''}`;
 
@@ -35,7 +40,11 @@ export default async function QuotesPage({ searchParams }: Props) {
         </a>
       </header>
 
-      <QuotesFilters initialStatus={filters.status ?? 'all'} statuses={[...QUOTE_STATUSES]} />
+      <QuotesFilters
+        initialQ={filters.q ?? ''}
+        initialStatus={filters.status ?? 'all'}
+        statuses={[...QUOTE_STATUSES]}
+      />
 
       <p className="text-sm text-[var(--color-muted-foreground)]">
         {t('list.totalCount', { count: result.total })}
@@ -67,7 +76,7 @@ export default async function QuotesPage({ searchParams }: Props) {
         </section>
       )}
 
-      <Pagination page={filters.page} lastPage={lastPage} status={filters.status} />
+      <Pagination page={filters.page} lastPage={lastPage} q={filters.q} status={filters.status} />
     </main>
   );
 }
@@ -117,15 +126,18 @@ function QuoteRow({
 function Pagination({
   page,
   lastPage,
+  q,
   status,
 }: {
   page: number;
   lastPage: number;
+  q?: string;
   status?: string;
 }) {
   if (lastPage <= 1) return null;
   const link = (n: number) => {
     const p = new URLSearchParams();
+    if (q) p.set('q', q);
     if (status) p.set('status', status);
     p.set('page', String(n));
     return `/dashboard/quotes?${p.toString()}`;

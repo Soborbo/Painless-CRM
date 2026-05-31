@@ -259,14 +259,24 @@ export interface QuoteListItem {
   customer: QuoteListCustomer | null;
 }
 
+// The job embed is !inner so a job_number search (.ilike on job.job_number)
+// actually prunes the quote rows rather than just nulling the embed — see the
+// global-search read. Every quote has a non-null job_id, so the inner join
+// never drops a row when no search is applied.
 const QUOTE_OFFICE_COLUMNS = `
   id, job_id, status, total_pence, valid_until, sent_at,
   declined_at, withdrawn_at, revision_number, open_count, created_at,
-  job:jobs!quotes_job_id_fkey (
+  job:jobs!inner (
     job_number, move_date,
     customer:customers (customer_type, first_name, last_name, company_name, primary_email)
   )
 `;
+
+// Builds the ilike pattern for a job-number search, stripping LIKE
+// metacharacters so user input can't change the match shape.
+function jobNumberPattern(q: string): string {
+  return `%${q.replace(/[%_,]/g, ' ')}%`;
+}
 
 // PostgREST embeds a to-one relation as either a single object or a
 // one-element array depending on the inferred cardinality — normalise both.
@@ -322,6 +332,7 @@ export async function listQuotes(filters: QuoteListFilters): Promise<QuoteListRe
     .range(from, to);
 
   if (filters.status) query = query.eq('status', filters.status);
+  if (filters.q) query = query.ilike('job.job_number', jobNumberPattern(filters.q));
 
   const { data, count } = await query;
   return {
@@ -344,6 +355,7 @@ export async function listQuotesForExport(
     .limit(QUOTES_EXPORT_MAX);
 
   if (filters.status) query = query.eq('status', filters.status);
+  if (filters.q) query = query.ilike('job.job_number', jobNumberPattern(filters.q));
 
   const { data } = await query;
   return ((data ?? []) as Array<Record<string, unknown>>).map(flattenQuoteListItem);

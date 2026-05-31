@@ -112,6 +112,8 @@
     "typeAll": "All types",
     "typeIndividual": "Individual",
     "typeBusiness": "Business",
+    "createdFrom": "Joined from",
+    "createdTo": "Joined to",
     "emptyList": "No customers match your filters.",
     "edit": "Edit",
     "delete": "Delete",

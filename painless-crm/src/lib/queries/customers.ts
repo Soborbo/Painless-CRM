@@ -50,7 +50,8 @@ export async function listCustomers(filters: CustomerListFilters): Promise<Custo
     .range(from, to);
 
   if (filters.type) query = query.eq('customer_type', filters.type);
-  if (filters.created_from) query = query.gte('created_at', `${filters.created_from}T00:00:00.000Z`);
+  if (filters.created_from)
+    query = query.gte('created_at', `${filters.created_from}T00:00:00.000Z`);
   if (filters.created_to) query = query.lte('created_at', `${filters.created_to}T23:59:59.999Z`);
   if (filters.q) {
     const safe = filters.q.replace(/[%_,]/g, ' ');
@@ -103,7 +104,8 @@ export async function listCustomersForExport(
     .limit(CUSTOMERS_EXPORT_MAX);
 
   if (filters.type) query = query.eq('customer_type', filters.type);
-  if (filters.created_from) query = query.gte('created_at', `${filters.created_from}T00:00:00.000Z`);
+  if (filters.created_from)
+    query = query.gte('created_at', `${filters.created_from}T00:00:00.000Z`);
   if (filters.created_to) query = query.lte('created_at', `${filters.created_to}T23:59:59.999Z`);
   if (filters.q) {
     const safe = filters.q.replace(/[%_,]/g, ' ');

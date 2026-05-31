@@ -61,11 +61,23 @@ export default async function CustomersPage({ searchParams }: Props) {
         </div>
       </header>
 
-      <CustomerSearchForm initialQuery={filters.q ?? ''} initialType={filters.type ?? 'all'} />
+      <CustomerSearchForm
+        initialQuery={filters.q ?? ''}
+        initialType={filters.type ?? 'all'}
+        initialCreatedFrom={filters.created_from ?? ''}
+        initialCreatedTo={filters.created_to ?? ''}
+      />
 
       <CustomerTable rows={result.rows} />
 
-      <Pagination page={filters.page} lastPage={lastPage} q={filters.q} type={filters.type} />
+      <Pagination
+        page={filters.page}
+        lastPage={lastPage}
+        q={filters.q}
+        type={filters.type}
+        createdFrom={filters.created_from}
+        createdTo={filters.created_to}
+      />
     </main>
   );
 }
@@ -75,16 +87,22 @@ function Pagination({
   lastPage,
   q,
   type,
+  createdFrom,
+  createdTo,
 }: {
   page: number;
   lastPage: number;
   q?: string;
   type?: string;
+  createdFrom?: string;
+  createdTo?: string;
 }) {
   if (lastPage <= 1) return null;
   const params = new URLSearchParams();
   if (q) params.set('q', q);
   if (type) params.set('type', type);
+  if (createdFrom) params.set('created_from', createdFrom);
+  if (createdTo) params.set('created_to', createdTo);
   const link = (n: number) => {
     const p = new URLSearchParams(params);
     p.set('page', String(n));

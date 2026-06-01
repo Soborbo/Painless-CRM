@@ -1122,6 +1122,22 @@
       "unload_start": "",
       "unload_end": "",
       "clock_out": ""
+    },
+    "sheet": {
+      "openLink": "",
+      "heading": "",
+      "alreadySubmitted": "",
+      "actualHours": "",
+      "actualCubicFt": "",
+      "complications": "",
+      "satisfaction": "",
+      "damageReported": "",
+      "damageDetails": "",
+      "submit": "",
+      "submitting": "",
+      "submitted": "",
+      "queued": "",
+      "hoursRequired": ""
     }
   }
 }

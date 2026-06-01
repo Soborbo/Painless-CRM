@@ -1,0 +1,36 @@
+import { getWorkerJobDetail } from '@/lib/queries/worker-app';
+import type { JobSheetInput } from '@/lib/schemas/job-sheet';
+import { createClient } from '@/lib/supabase/server';
+
+// Shared persister for the end-of-job sheet. Idempotent via the client_event_id
+// dedup index (23505 = a replayed queued submit → success).
+
+export type PersistJobSheetResult = 'ok' | 'not_assigned' | 'error';
+
+export async function persistJobSheet(
+  worker: { id: string; company_id: string },
+  input: JobSheetInput,
+): Promise<PersistJobSheetResult> {
+  const today = new Date().toISOString().slice(0, 10);
+  const detail = await getWorkerJobDetail(input.job_id, worker.id, today);
+  if (!detail) return 'not_assigned';
+
+  const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+  const supabase = await createClient();
+  const { error } = await supabase.from('job_sheets').insert({
+    company_id: worker.company_id,
+    job_id: input.job_id,
+    worker_id: worker.id,
+    actual_hours: input.actual_hours,
+    actual_cubic_ft: input.actual_cubic_ft,
+    complications_encountered: input.complications_encountered ?? null,
+    damage_reported: input.damage_reported,
+    damage_details: input.damage_details ?? null,
+    customer_satisfaction_score: input.customer_satisfaction_score,
+    client_event_id: input.client_event_id,
+    client_recorded_at: recordedAt,
+  });
+
+  if (error && error.code !== '23505') return 'error';
+  return 'ok';
+}

@@ -87,6 +87,15 @@ export default async function WorkerJobPage({ params }: Props) {
           <TimeEntrySteps jobId={job.job_id} jobNumber={job.job_number} recorded={recorded} />
         </section>
       ) : null}
+
+      {job.clocked_in ? (
+        <Link
+          href={`/jobs/${job.job_id}/sheet`}
+          className="rounded-lg border px-4 py-3 text-center text-sm font-medium active:bg-[var(--color-muted)]/40"
+        >
+          {t('sheet.openLink')}
+        </Link>
+      ) : null}
     </main>
   );
 }

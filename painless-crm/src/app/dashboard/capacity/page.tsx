@@ -1,7 +1,16 @@
+import { RequireRole } from '@/components/auth/require-role';
+import { ClearOverrideButton } from '@/components/domain/capacity/clear-override-button';
+import { OverrideForm } from '@/components/domain/capacity/override-form';
 import { requireRole } from '@/lib/auth/require-role';
 import type { CapacityBand } from '@/lib/capacity/band';
 import { capacityWindow, chunkIntoWeeks } from '@/lib/capacity/calendar';
-import { type DayCapacity, getCapacityCalendar } from '@/lib/queries/capacity';
+import {
+  type ActiveOverride,
+  type DayCapacity,
+  getCapacityCalendar,
+  listActiveOverrides,
+} from '@/lib/queries/capacity';
+import { formatDate } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 
 const CAPACITY_ROLES = ['manager', 'admin', 'super_admin'] as const;
@@ -20,7 +29,11 @@ const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 export default async function CapacityPage() {
   await requireRole(CAPACITY_ROLES);
   const window = capacityWindow(new Date());
-  const [days, t] = await Promise.all([getCapacityCalendar(window), getTranslations('capacity')]);
+  const [days, overrides, t] = await Promise.all([
+    getCapacityCalendar(window),
+    listActiveOverrides(window),
+    getTranslations('capacity'),
+  ]);
   const byDate = new Map(days.map((d) => [d.date, d]));
   const weeks = chunkIntoWeeks(days.map((d) => d.date));
 
@@ -51,7 +64,47 @@ export default async function CapacityPage() {
           )}
         </div>
       </section>
+
+      <RequireRole allowed={['admin', 'super_admin']}>
+        <OverrideForm />
+        <OverridesList overrides={overrides} t={t} />
+      </RequireRole>
     </main>
+  );
+}
+
+function OverridesList({
+  overrides,
+  t,
+}: {
+  overrides: ActiveOverride[];
+  t: Awaited<ReturnType<typeof getTranslations>>;
+}) {
+  if (overrides.length === 0) return null;
+  return (
+    <section className="rounded-md border">
+      <header className="border-b px-4 py-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-[var(--color-muted-foreground)]">
+          {t('activeOverrides')}
+        </h3>
+      </header>
+      <ul className="divide-y text-sm">
+        {overrides.map((o) => (
+          <li key={o.date} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2">
+            <span className="flex flex-wrap items-baseline gap-2">
+              <span className="font-medium tabular-nums">{formatDate(o.date)}</span>
+              <span
+                className={`rounded-full border px-2 py-0.5 text-xs ${BAND_CLASS[o.forced_band]}`}
+              >
+                {t(`bands.${o.forced_band}` as never)}
+              </span>
+              <span className="text-[var(--color-muted-foreground)]">{o.reason}</span>
+            </span>
+            <ClearOverrideButton date={o.date} />
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

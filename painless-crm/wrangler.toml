@@ -33,8 +33,28 @@ preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_ID"
 # SUPABASE_SERVICE_ROLE_KEY
 # RESEND_API_KEY
 # SENTRY_AUTH_TOKEN
-# CRM_WEBHOOK_SECRET (HMAC for inbound from painlessremovals.com)
+# CRM_WEBHOOK_SECRET (HMAC for inbound from painlessremovals.com + cron triggers)
 # ANTHROPIC_API_KEY
+
+# Cloudflare Cron Triggers. Each expression fires the Worker's scheduled()
+# handler, which signs the matching /api/cron/* payload with CRM_WEBHOOK_SECRET
+# and POSTs it (see worker.ts + src/worker-cron/schedule.ts — keep the crontab
+# expressions in lockstep with CRON_SCHEDULE there).
+#
+# ACTIVATION: the scheduled handler lives in worker.ts, which is NOT yet the
+# Worker entry. Until `main` points at worker.ts (after `opennextjs-cloudflare
+# migrate` initialises the build — run from WSL/CI, not native Windows), these
+# triggers fire on the generated worker, which has no scheduled handler (no-op).
+[triggers]
+crons = [
+  "0 1 * * *",     # recompute-availability — nightly
+  "0 2 * * *",     # expire-quotes — daily
+  "0 6 * * *",     # vehicle-compliance — daily 06:00
+  "30 6 * * *",    # complaint-sla — daily, escalate >7d open complaints
+  "0 9 * * *",     # sla-digest — daily 09:00 overdue-lead digest
+  "15 * * * *",    # review-requests — hourly (send +24h after paid, follow up +7d/+14d)
+  "*/30 * * * *",  # stale-clock-in — every 30 min
+]
 
 [env.preview]
 name = "painless-crm-preview"

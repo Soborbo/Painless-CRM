@@ -37,7 +37,8 @@
     "capacity": "",
     "settings": "",
     "vehicles": "",
-    "storage": ""
+    "storage": "",
+    "workers": ""
   },
   "capacity": {
     "title": "",
@@ -1003,6 +1004,54 @@
       "pending": "",
       "active": "",
       "terminated": ""
+    }
+  },
+  "workers": {
+    "title": "",
+    "totalCount": "",
+    "newWorker": "",
+    "newSubtitle": "",
+    "create": "",
+    "edit": "",
+    "delete": "",
+    "confirmDelete": "",
+    "emptyList": "",
+    "inactiveBadge": "",
+    "filterActive": "",
+    "filterInactive": "",
+    "filterAll": "",
+    "skillsPlaceholder": "",
+    "performanceHeading": "",
+    "performanceNote": "",
+    "availabilityHeading": "",
+    "availabilityNote": "",
+    "noAvailability": "",
+    "available": "",
+    "unavailable": "",
+    "columns": {
+      "name": "",
+      "phone": "",
+      "email": "",
+      "hourlyRate": ""
+    },
+    "stats": {
+      "assignments": "",
+      "jobs": ""
+    },
+    "roles": {
+      "lead_loader": "",
+      "loader": "",
+      "driver": "",
+      "surveyor": ""
+    },
+    "fields": {
+      "fullName": "",
+      "phone": "",
+      "email": "",
+      "hourlyRatePounds": "",
+      "skills": "",
+      "active": "",
+      "notes": ""
     }
   }
 }

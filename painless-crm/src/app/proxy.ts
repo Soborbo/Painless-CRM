@@ -8,6 +8,11 @@ const PUBLIC_PREFIXES = [
   '/availability',
   '/auth/callback',
   '/quote/',
+  // Phase 11 — public review-link redirect + complaints form (token-gated, no
+  // login). The token is the review_request id; access is scoped by the token.
+  '/r/',
+  '/feedback/',
+  '/api/feedback/',
 ];
 const AUTH_PREFIXES = ['/login', '/auth'];
 

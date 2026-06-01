@@ -2,11 +2,13 @@
 @import "tw-animate-css";
 
 @theme inline {
+  /* Neutrals carry a faint cool/steel cast (low chroma at hue ~245) — reads as
+     engineered rather than flat grey, and pairs with the teal. */
   --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.145 0 0);
-  --color-muted: oklch(0.97 0 0);
-  --color-muted-foreground: oklch(0.556 0 0);
-  --color-border: oklch(0.922 0 0);
+  --color-foreground: oklch(0.16 0.012 250);
+  --color-muted: oklch(0.968 0.005 245);
+  --color-muted-foreground: oklch(0.5 0.02 248);
+  --color-border: oklch(0.905 0.006 245);
   /* Painless Removals brand: dark teal + orange (from painlessremovals.com). */
   --color-primary: #0e3c54;
   --color-primary-foreground: #ffffff;
@@ -29,11 +31,11 @@
       choice (no .light / .dark class) — so the toggle always wins.
    The selectors below use :root.dark (specificity beats the @theme :root). */
 :root.dark {
-  --color-background: oklch(0.145 0 0);
+  --color-background: oklch(0.165 0.012 250);
   --color-foreground: oklch(0.985 0 0);
-  --color-muted: oklch(0.205 0 0);
-  --color-muted-foreground: oklch(0.708 0 0);
-  --color-border: oklch(0.269 0 0);
+  --color-muted: oklch(0.225 0.012 248);
+  --color-muted-foreground: oklch(0.715 0.018 245);
+  --color-border: oklch(0.285 0.012 248);
   /* Lift the brand teal so filled buttons stay legible on the dark canvas. */
   --color-primary: #1b6087;
   color-scheme: dark;
@@ -41,11 +43,11 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not(.dark) {
-    --color-background: oklch(0.145 0 0);
+    --color-background: oklch(0.165 0.012 250);
     --color-foreground: oklch(0.985 0 0);
-    --color-muted: oklch(0.205 0 0);
-    --color-muted-foreground: oklch(0.708 0 0);
-    --color-border: oklch(0.269 0 0);
+    --color-muted: oklch(0.225 0.012 248);
+    --color-muted-foreground: oklch(0.715 0.018 245);
+    --color-border: oklch(0.285 0.012 248);
     --color-primary: #1b6087;
     color-scheme: dark;
   }
@@ -64,4 +66,17 @@ body {
   color: var(--color-foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* Console feel: aligned, equal-width figures everywhere (a left-brain detail
+     that keeps tables and totals lining up). */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Considered details — keyboard-first focus + on-brand selection. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+::selection {
+  background: var(--color-accent);
+  color: #fff;
 }

@@ -84,8 +84,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
     >
       <div className="flex min-h-screen">
         <aside className="sticky top-0 flex h-screen w-56 shrink-0 flex-col bg-[var(--color-sidebar)] text-[var(--color-sidebar-foreground)]">
-          <div className="flex items-center border-b border-white/10 px-4 py-4">
-            <Link href="/dashboard" className="block">
+          {/* Brand tick: a 2px orange rule across the top edge. */}
+          <div className="h-0.5 w-full shrink-0 bg-[var(--color-accent)]" aria-hidden />
+
+          <div className="border-b border-white/10 px-4 pb-4 pt-4">
+            <Link
+              href="/dashboard"
+              className="block rounded-[3px] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+            >
               <Image
                 src="/logo.svg"
                 alt="Painless Removals"
@@ -93,21 +99,28 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 height={56}
                 priority
                 unoptimized
-                className="h-10 w-auto"
+                className="h-9 w-auto"
               />
             </Link>
+            <p className="mt-2.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--color-sidebar-foreground)]/40">
+              Operations Console
+            </p>
           </div>
 
           <SidebarNav groups={groups} />
 
           <div className="border-t border-white/10 px-3 py-3">
-            <p className="truncate px-1 text-xs text-[var(--color-sidebar-foreground)]/70">
-              {profile.full_name}
-            </p>
-            <p className="px-1 text-[11px] uppercase tracking-wide text-[var(--color-sidebar-foreground)]/45">
-              {profile.role}
-            </p>
-            <div className="mt-2 flex items-center gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <p className="truncate text-xs font-medium text-[var(--color-sidebar-foreground)]/85">
+                  {profile.full_name}
+                </p>
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-accent)]/90">
+                  {profile.role}
+                </p>
+              </div>
+            </div>
+            <div className="mt-2.5 flex items-center gap-2">
               <ThemeToggle />
               <SignOutButton />
             </div>
@@ -115,7 +128,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex items-center gap-4 border-b px-6 py-3">
+          <header className="flex items-center gap-4 border-b border-b-[var(--color-border)] px-6 py-3">
             <GlobalSearch />
           </header>
           {children}

@@ -13,7 +13,7 @@ export function SignOutButton() {
       type="button"
       disabled={pending}
       onClick={() => startTransition(() => signOut())}
-      className="rounded-md border px-3 py-1.5 text-xs hover:bg-[var(--color-muted)] disabled:opacity-50"
+      className="rounded-[3px] border border-current/25 px-3 py-1.5 text-xs outline-none transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] disabled:opacity-50"
     >
       {t('signOut')}
     </button>

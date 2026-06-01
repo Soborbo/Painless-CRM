@@ -190,6 +190,21 @@ export async function getRecordedTimeEntries(
   return (data ?? []) as Array<{ type: string | null; occurred_at: string }>;
 }
 
+// Whether this worker has already submitted an end-of-job sheet for the job
+// (a sheet is a one-off, not per-day).
+export async function hasJobSheet(workerId: string, jobId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('job_sheets')
+    .select('id')
+    .eq('worker_id', workerId)
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+  return Boolean(data);
+}
+
 // Per-company clock-in distance threshold (metres), from settings.feature_flags,
 // falling back to the default. Admin-scoped read (the action has the company id).
 export async function getGpsThresholdForCompany(companyId: string): Promise<number> {

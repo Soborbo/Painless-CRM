@@ -1122,6 +1122,22 @@
       "unload_start": "Start unloading",
       "unload_end": "Finished unloading",
       "clock_out": "Clock out (job done)"
+    },
+    "sheet": {
+      "openLink": "End-of-job sheet",
+      "heading": "End-of-job sheet",
+      "alreadySubmitted": "Sheet already submitted for this job.",
+      "actualHours": "Actual hours",
+      "actualCubicFt": "Actual cubic feet",
+      "complications": "Complications encountered",
+      "satisfaction": "Customer satisfaction (1–5, internal)",
+      "damageReported": "Damage reported",
+      "damageDetails": "Damage details",
+      "submit": "Submit sheet",
+      "submitting": "Submitting…",
+      "submitted": "Sheet submitted.",
+      "queued": "Saved — will sync when you reconnect.",
+      "hoursRequired": "Enter the actual hours worked."
     }
   }
 }

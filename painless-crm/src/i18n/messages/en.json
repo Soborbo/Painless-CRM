@@ -1138,6 +1138,21 @@
       "submitted": "Sheet submitted.",
       "queued": "Saved — will sync when you reconnect.",
       "hoursRequired": "Enter the actual hours worked."
+    },
+    "check": {
+      "openLink": "Vehicle pre-check",
+      "heading": "Vehicle pre-check",
+      "noVehicle": "No vehicle assigned to you on this job.",
+      "alreadyDone": "Pre-check already done today.",
+      "fuelLevel": "Fuel level (%)",
+      "mileage": "Mileage",
+      "walkAroundClear": "Walk-around clear (no defects)",
+      "defects": "Defects found",
+      "defectsRequired": "Note the defects you found.",
+      "submit": "Submit check",
+      "submitting": "Submitting…",
+      "submitted": "Pre-check submitted.",
+      "queued": "Saved — will sync when you reconnect."
     }
   }
 }

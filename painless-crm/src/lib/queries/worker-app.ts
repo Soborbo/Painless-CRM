@@ -190,6 +190,48 @@ export async function getRecordedTimeEntries(
   return (data ?? []) as Array<{ type: string | null; occurred_at: string }>;
 }
 
+// The vehicle this worker is assigned to drive/use on the job (from the rota).
+// Null when no vehicle is on their assignment — then there's no pre-check to do.
+export async function getAssignedVehicle(
+  workerId: string,
+  jobId: string,
+): Promise<{ vehicle_id: string; registration: string } | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('job_assignments')
+    .select('vehicle_id, vehicle:vehicles (registration)')
+    .eq('worker_id', workerId)
+    .eq('job_id', jobId)
+    .not('vehicle_id', 'is', null)
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+  if (!data?.vehicle_id) return null;
+  const vehicle = embedOne<{ registration: string }>((data as Record<string, unknown>).vehicle);
+  return { vehicle_id: data.vehicle_id as string, registration: vehicle?.registration ?? '—' };
+}
+
+// Whether a vehicle pre-check exists for this worker/vehicle/job today.
+export async function hasVehicleCheck(
+  workerId: string,
+  vehicleId: string,
+  jobId: string,
+  date: string,
+): Promise<boolean> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('vehicle_checks')
+    .select('id')
+    .eq('worker_id', workerId)
+    .eq('vehicle_id', vehicleId)
+    .eq('job_id', jobId)
+    .eq('date', date)
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+  return Boolean(data);
+}
+
 // Whether this worker has already submitted an end-of-job sheet for the job
 // (a sheet is a one-off, not per-day).
 export async function hasJobSheet(workerId: string, jobId: string): Promise<boolean> {

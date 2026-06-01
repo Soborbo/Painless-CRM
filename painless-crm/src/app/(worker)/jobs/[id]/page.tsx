@@ -1,5 +1,6 @@
 import { requireUser } from '@/lib/auth/require-role';
 import {
+  getAssignedVehicle,
   getRecordedTimeEntries,
   getWorkerForUser,
   getWorkerJobDetail,
@@ -23,6 +24,7 @@ export default async function WorkerJobPage({ params }: Props) {
   if (!job) notFound();
 
   const recorded = job.clocked_in ? await getRecordedTimeEntries(worker.id, id, today) : [];
+  const assignedVehicle = await getAssignedVehicle(worker.id, id);
   const t = await getTranslations('workerApp');
   const mapsQuery = job.from_address
     ? encodeURIComponent(
@@ -86,6 +88,15 @@ export default async function WorkerJobPage({ params }: Props) {
           <h2 className="mb-3 font-medium">{t('progressHeading')}</h2>
           <TimeEntrySteps jobId={job.job_id} jobNumber={job.job_number} recorded={recorded} />
         </section>
+      ) : null}
+
+      {assignedVehicle ? (
+        <Link
+          href={`/jobs/${job.job_id}/vehicle-check`}
+          className="rounded-lg border px-4 py-3 text-center text-sm font-medium active:bg-[var(--color-muted)]/40"
+        >
+          {t('check.openLink')} · {assignedVehicle.registration}
+        </Link>
       ) : null}
 
       {job.clocked_in ? (

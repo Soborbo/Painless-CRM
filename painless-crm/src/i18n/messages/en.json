@@ -1080,5 +1080,29 @@
       "driver": "Driver",
       "surveyor": "Surveyor"
     }
+  },
+  "workerApp": {
+    "appName": "Painless Crew",
+    "todaysJobs": "Today’s jobs",
+    "noWorkerProfile": "No worker profile is linked to your account. Ask an admin to link you.",
+    "noJobsToday": "No jobs assigned for today.",
+    "clockedIn": "Clocked in",
+    "noTimeSet": "No time set",
+    "callCustomer": "Call customer",
+    "fromAddress": "Pick-up address",
+    "openInMaps": "Open in Maps",
+    "clockInHeading": "Clock in",
+    "alreadyClockedIn": "You are clocked in for this job.",
+    "clockIn": "Clock in",
+    "clockingIn": "Clocking in…",
+    "locating": "Getting your location…",
+    "locationReady": "Location ready",
+    "locationUnavailable": "Location unavailable — you can still clock in.",
+    "roles": {
+      "lead_loader": "Lead loader",
+      "loader": "Loader",
+      "driver": "Driver",
+      "surveyor": "Surveyor"
+    }
   }
 }

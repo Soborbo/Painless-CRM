@@ -67,6 +67,7 @@
   },
   "reports": {
     "title": "Reports",
+    "teamLink": "Team",
     "rangeWindow": "{start} → {end}",
     "range": {
       "month": "This month",

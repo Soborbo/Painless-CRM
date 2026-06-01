@@ -69,6 +69,12 @@ export default async function ReportsPage({ searchParams }: Props) {
               {t(`range.${r}` as never)}
             </Link>
           ))}
+          <Link
+            href="/dashboard/reports/team"
+            className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
+          >
+            {t('teamLink')}
+          </Link>
         </nav>
       </header>
 

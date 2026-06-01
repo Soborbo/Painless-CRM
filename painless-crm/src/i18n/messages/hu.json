@@ -38,7 +38,8 @@
     "settings": "",
     "vehicles": "",
     "storage": "",
-    "workers": ""
+    "workers": "",
+    "rota": ""
   },
   "capacity": {
     "title": "",
@@ -1052,6 +1053,32 @@
       "skills": "",
       "active": "",
       "notes": ""
+    }
+  },
+  "rota": {
+    "title": "",
+    "subtitle": "",
+    "jobCount": "",
+    "assignedCount": "",
+    "prevDay": "",
+    "nextDay": "",
+    "print": "",
+    "noJobs": "",
+    "noneAssigned": "",
+    "worker": "",
+    "vehicle": "",
+    "noVehicle": "",
+    "role": "",
+    "start": "",
+    "end": "",
+    "assign": "",
+    "remove": "",
+    "selectWorker": "",
+    "roles": {
+      "lead_loader": "",
+      "loader": "",
+      "driver": "",
+      "surveyor": ""
     }
   }
 }

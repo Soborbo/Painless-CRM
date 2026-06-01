@@ -38,7 +38,8 @@
     "settings": "Settings",
     "vehicles": "Vehicles",
     "storage": "Storage",
-    "workers": "Workers"
+    "workers": "Workers",
+    "rota": "Rota"
   },
   "capacity": {
     "title": "Capacity",
@@ -1052,6 +1053,32 @@
       "skills": "Skills / certifications",
       "active": "Active",
       "notes": "Notes"
+    }
+  },
+  "rota": {
+    "title": "Rota",
+    "subtitle": "Pick a day to assign crews and vehicles to scheduled jobs.",
+    "jobCount": "{count, plural, =0 {no jobs} one {# job} other {# jobs}}",
+    "assignedCount": "{count, plural, =0 {nobody assigned} one {# assigned} other {# assigned}}",
+    "prevDay": "Prev",
+    "nextDay": "Next",
+    "print": "Print",
+    "noJobs": "No jobs scheduled for this day.",
+    "noneAssigned": "No crew assigned yet.",
+    "worker": "Worker",
+    "vehicle": "Vehicle",
+    "noVehicle": "No vehicle",
+    "role": "Role",
+    "start": "Start",
+    "end": "End",
+    "assign": "Assign",
+    "remove": "Remove",
+    "selectWorker": "Select…",
+    "roles": {
+      "lead_loader": "Lead loader",
+      "loader": "Loader",
+      "driver": "Driver",
+      "surveyor": "Surveyor"
     }
   }
 }

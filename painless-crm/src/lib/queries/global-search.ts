@@ -1,3 +1,4 @@
+import { isPhoneLikeQuery, normalizePhoneDigits } from '@/lib/search/phone';
 import { createClient } from '@/lib/supabase/server';
 
 // Phase 06b §3 — global search backbone. Returns the top matches per
@@ -67,19 +68,23 @@ const EMPTY: Omit<GlobalSearchResults, 'query'> = {
 async function findCustomers(q: string): Promise<CustomerHit[]> {
   const supabase = await createClient();
   const pattern = `%${q}%`;
+  const orTerms = [
+    `first_name.ilike.${pattern}`,
+    `last_name.ilike.${pattern}`,
+    `company_name.ilike.${pattern}`,
+    `primary_email.ilike.${pattern}`,
+    `primary_phone.ilike.${pattern}`,
+  ];
+  // For a phone-like query, also match on the bare digits so a formatted query
+  // ("07700 900123") still finds a normalised stored number ("07700900123").
+  if (isPhoneLikeQuery(q)) {
+    orTerms.push(`primary_phone.ilike.%${normalizePhoneDigits(q)}%`);
+  }
   const { data } = await supabase
     .from('customers')
     .select('id, customer_type, first_name, last_name, company_name, primary_email, primary_phone')
     .is('deleted_at', null)
-    .or(
-      [
-        `first_name.ilike.${pattern}`,
-        `last_name.ilike.${pattern}`,
-        `company_name.ilike.${pattern}`,
-        `primary_email.ilike.${pattern}`,
-        `primary_phone.ilike.${pattern}`,
-      ].join(','),
-    )
+    .or(orTerms.join(','))
     .order('updated_at', { ascending: false })
     .limit(5);
   return (data ?? []).map((row) => ({ kind: 'customer' as const, ...row })) as CustomerHit[];

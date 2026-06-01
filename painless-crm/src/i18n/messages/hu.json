@@ -67,6 +67,7 @@
   },
   "reports": {
     "title": "",
+    "teamLink": "",
     "rangeWindow": "",
     "range": {
       "month": "",

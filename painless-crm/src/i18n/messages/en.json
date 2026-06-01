@@ -1103,6 +1103,8 @@
       "loader": "Loader",
       "driver": "Driver",
       "surveyor": "Surveyor"
-    }
+    },
+    "online": "Online",
+    "offline": "No connection — changes will sync when you reconnect"
   }
 }

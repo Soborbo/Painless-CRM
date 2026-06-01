@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: 'Painless CRM',
   description: 'Operations CRM for Painless Removals',
   robots: { index: false, follow: false },
+  appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Painless Crew' },
+  icons: { apple: '/icon.svg' },
 };
 
 export default async function RootLayout({

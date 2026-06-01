@@ -1153,6 +1153,22 @@
       "submitting": "",
       "submitted": "",
       "queued": ""
+    },
+    "signoff": {
+      "openLink": "",
+      "heading": "",
+      "alreadySigned": "",
+      "signature": "",
+      "clear": "",
+      "signatureRequired": "",
+      "rating": "",
+      "ratingHint": "",
+      "feedback": "",
+      "emailConfirm": "",
+      "submit": "",
+      "submitting": "",
+      "submitted": "",
+      "queued": ""
     }
   }
 }

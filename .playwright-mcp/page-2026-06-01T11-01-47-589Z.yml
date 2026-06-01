@@ -1,0 +1,116 @@
+- generic [ref=e1]:
+  - generic [active]:
+    - generic [ref=e278]:
+      - generic [ref=e279]:
+        - generic [ref=e280]:
+          - navigation [ref=e281]:
+            - button "previous" [disabled] [ref=e282]:
+              - img "previous" [ref=e283]
+            - generic [ref=e285]:
+              - generic [ref=e286]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e287]:
+              - img "next" [ref=e288]
+          - img
+        - generic [ref=e290]:
+          - link "Next.js 16.2.4 (stale) Turbopack" [ref=e291] [cursor=pointer]:
+            - /url: https://nextjs.org/docs/messages/version-staleness
+            - img [ref=e292]
+            - generic "There is a newer version (16.2.6) available, upgrade recommended!" [ref=e294]: Next.js 16.2.4 (stale)
+            - generic [ref=e295]: Turbopack
+          - img
+      - generic [ref=e296]:
+        - dialog "Runtime Error" [ref=e297]:
+          - generic [ref=e300]:
+            - generic [ref=e301]:
+              - generic [ref=e302]:
+                - generic [ref=e303]:
+                  - generic [ref=e304]: Runtime Error
+                  - generic [ref=e305]: Server
+                - generic [ref=e306]:
+                  - button "Copy Error Info" [ref=e307] [cursor=pointer]:
+                    - img [ref=e308]
+                  - link "Go to related documentation" [ref=e310] [cursor=pointer]:
+                    - /url: https://nextjs.org/docs/messages/invalid-use-server-value
+                    - img [ref=e311]
+                  - button "Attach Node.js inspector" [ref=e313] [cursor=pointer]:
+                    - img [ref=e314]
+              - generic [ref=e323]:
+                - text: "A \"use server\" file can only export async functions, found object. Read more:"
+                - link "https://nextjs.org/docs/messages/invalid-use-server-value" [ref=e324] [cursor=pointer]:
+                  - /url: https://nextjs.org/docs/messages/invalid-use-server-value
+            - generic [ref=e325]:
+              - generic [ref=e326]:
+                - paragraph [ref=e328]:
+                  - img [ref=e330]
+                  - generic [ref=e332]: .next-internal\server\app\dashboard\capacity\page\actions.js (server actions loader) (3:1) @ module evaluation
+                  - button "Open in editor" [ref=e333] [cursor=pointer]:
+                    - img [ref=e335]
+                - generic [ref=e338]:
+                  - generic [ref=e339]: "1 | export {signOut as '00ad59f0771784fb0a40a423224cdb142b78b25cb9'} from 'ACTIONS_MODULE0'"
+                  - generic [ref=e340]: "2 | export {globalSearch as '40f55698d2314794c45c0bfab68b932f67ff59b7d0'} from 'ACTIONS_MODULE1'"
+                  - generic [ref=e341]: "> 3 | export {INITIAL_CAPACITY_OVERRIDE_STATE as '7f7285ce43c23d471c8e77534ddf2fb7cb7304a2d9'} fr..."
+                  - generic [ref=e342]: "| ^"
+                  - generic [ref=e343]: "4 | export {clearCapacityOverride as '60d2ebf55363a49138df925939874e254c51462475'} from 'ACTION..."
+                  - generic [ref=e344]: "5 | export {setCapacityOverride as '6025b60b233bf150072ee58e04dfd7ed584734679a'} from 'ACTIONS_..."
+                  - generic [ref=e345]: 6 |
+              - generic [ref=e346]:
+                - generic [ref=e347]:
+                  - paragraph [ref=e348]:
+                    - text: Call Stack
+                    - generic [ref=e349]: "9"
+                  - button "Show 5 ignore-listed frame(s)" [ref=e350] [cursor=pointer]:
+                    - text: Show 5 ignore-listed frame(s)
+                    - img [ref=e351]
+                - generic [ref=e353]:
+                  - generic [ref=e354]:
+                    - text: module evaluation
+                    - button "Sourcemapping failed. Click to log cause of error." [ref=e355] [cursor=pointer]:
+                      - img [ref=e356]
+                  - text: about:/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5C_0-u_w.d._.js (472:449)
+                - generic [ref=e358]:
+                  - generic [ref=e359]:
+                    - text: module evaluation
+                    - button "Open module evaluation in editor" [ref=e360] [cursor=pointer]:
+                      - img [ref=e361]
+                  - text: .next-internal\server\app\dashboard\capacity\page\actions.js (server actions loader) (3:1)
+                - generic [ref=e363]:
+                  - generic [ref=e364]:
+                    - text: module evaluation
+                    - button "Sourcemapping failed. Click to log cause of error." [ref=e365] [cursor=pointer]:
+                      - img [ref=e366]
+                  - text: about:/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5C_0-u_w.d._.js (509:651)
+                - generic [ref=e368]:
+                  - generic [ref=e369]:
+                    - text: CapacityPage
+                    - button "Open CapacityPage in editor" [ref=e370] [cursor=pointer]:
+                      - img [ref=e371]
+                  - text: src\app\dashboard\capacity\page.tsx (69:9)
+          - generic [ref=e373]: "1"
+          - generic [ref=e374]: "2"
+        - contentinfo [ref=e375]:
+          - region "Error feedback" [ref=e376]:
+            - paragraph [ref=e377]:
+              - link "Was this helpful?" [ref=e378] [cursor=pointer]:
+                - /url: https://nextjs.org/telemetry#error-feedback
+            - button "Mark as helpful" [ref=e379] [cursor=pointer]:
+              - img [ref=e380]
+            - button "Mark as not helpful" [ref=e383] [cursor=pointer]:
+              - img [ref=e384]
+    - generic [ref=e269] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e270]:
+        - img [ref=e271]
+      - generic [ref=e386]:
+        - button "Open issues overlay" [ref=e387]:
+          - generic [ref=e388]:
+            - generic [ref=e389]: "0"
+            - generic [ref=e390]: "1"
+          - generic [ref=e391]: Issue
+        - button "Collapse issues badge" [ref=e392]:
+          - img [ref=e393]
+  - generic [ref=e396]:
+    - img [ref=e397]
+    - heading "This page couldn’t load" [level=1] [ref=e399]
+    - paragraph [ref=e400]: A server error occurred. Reload to try again.
+    - button "Reload" [ref=e403] [cursor=pointer]
+  - paragraph [ref=e404]: ERROR 2090833249@E352

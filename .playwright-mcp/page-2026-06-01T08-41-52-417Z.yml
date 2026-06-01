@@ -1,0 +1,66 @@
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e20] [cursor=pointer]:
+    - img [ref=e21]
+  - alert [ref=e24]
+  - generic [ref=e25]:
+    - banner [ref=e26]:
+      - generic [ref=e27]:
+        - link "Painless CRM" [ref=e28] [cursor=pointer]:
+          - /url: /dashboard
+        - navigation [ref=e29]:
+          - link "Dashboard" [ref=e30] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Customers" [ref=e31] [cursor=pointer]:
+            - /url: /dashboard/customers
+          - link "Jobs" [ref=e32] [cursor=pointer]:
+            - /url: /dashboard/jobs
+          - link "Quotes" [ref=e33] [cursor=pointer]:
+            - /url: /dashboard/quotes
+          - link "SLA" [ref=e34] [cursor=pointer]:
+            - /url: /dashboard/sla
+          - link "Call-backs" [ref=e35] [cursor=pointer]:
+            - /url: /dashboard/callbacks
+          - link "Profit" [ref=e36] [cursor=pointer]:
+            - /url: /dashboard/profit
+          - link "Pricing" [ref=e37] [cursor=pointer]:
+            - /url: /dashboard/settings/pricing
+          - link "Users" [ref=e38] [cursor=pointer]:
+            - /url: /dashboard/settings/users
+        - searchbox "Search" [ref=e40]
+        - generic [ref=e41]: Marketing Admin · admin
+        - button "Switch to light mode" [active] [ref=e78]: ☀️
+        - button "Sign out" [ref=e43]
+    - main [ref=e44]:
+      - generic [ref=e45]:
+        - heading "Today, 1 Jun 2026" [level=1] [ref=e46]
+        - paragraph [ref=e47]: Signed in as Marketing Admin · admin
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: New leads
+          - paragraph [ref=e51]: "0"
+          - paragraph [ref=e52]: Last 24 hours
+        - generic [ref=e53]:
+          - paragraph [ref=e54]: Quotes sent
+          - paragraph [ref=e55]: "0"
+          - paragraph [ref=e56]: Last 24 hours
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: Quotes accepted
+          - paragraph [ref=e59]: "0"
+          - paragraph [ref=e60]: Last 24 hours
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - heading "Today's moves" [level=2] [ref=e63]
+          - link "View all →" [ref=e64] [cursor=pointer]:
+            - /url: /dashboard/jobs
+        - paragraph [ref=e65]: No moves on the board today.
+      - generic [ref=e66]:
+        - heading "Cash" [level=2] [ref=e68]
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - paragraph [ref=e71]: Outstanding
+            - paragraph [ref=e72]: £0
+            - paragraph [ref=e73]: No invoices
+          - generic [ref=e74]:
+            - paragraph [ref=e75]: Overdue
+            - paragraph [ref=e76]: £0
+            - paragraph [ref=e77]: No invoices

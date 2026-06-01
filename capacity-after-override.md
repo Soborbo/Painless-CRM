@@ -1,0 +1,33 @@
+- generic [ref=e1]:
+  - generic [active]:
+    - generic [ref=e278]:
+      - generic [ref=e279]:
+        - generic [ref=e280]:
+          - navigation [ref=e281]
+          - img
+        - generic [ref=e290]:
+          - link "Next.js 16.2.4 (stale) Turbopack" [ref=e291] [cursor=pointer]:
+            - /url: https://nextjs.org/docs/messages/version-staleness
+          - img
+      - generic [ref=e296]:
+        - dialog "Runtime Error" [ref=e297]:
+          - generic [ref=e300]
+          - generic [ref=e373]: "1"
+          - generic [ref=e374]: "2"
+        - contentinfo [ref=e375]:
+          - region "Error feedback" [ref=e376]
+    - generic [ref=e269] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=e270]:
+        - img [ref=e271]
+      - generic [ref=e386]:
+        - button "Open issues overlay" [ref=e387]:
+          - generic [ref=e388]
+          - generic [ref=e391]: Issue
+        - button "Collapse issues badge" [ref=e392]:
+          - img [ref=e393]
+  - generic [ref=e396]:
+    - img [ref=e397]
+    - heading "This page couldn’t load" [level=1] [ref=e399]
+    - paragraph [ref=e400]: A server error occurred. Reload to try again.
+    - button "Reload" [ref=e403] [cursor=pointer]
+  - paragraph [ref=e404]: ERROR 2090833249@E352

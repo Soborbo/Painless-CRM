@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(NEXT_PUBLIC_APP_URL=https://crm.example.com NEXT_PUBLIC_SUPABASE_URL=https://example.supabase.co NEXT_PUBLIC_SUPABASE_ANON_KEY=dummy-anon-key-for-build pnpm build)",
+      "Bash(git -C d:/Painless-CRM ls-files --eol painless-crm/src/app/dashboard/jobs/page.tsx painless-crm/src/lib/exports/jobs-csv.ts)",
+      "Bash(git -C d:/Painless-CRM diff --stat -- painless-crm/tests/jobs/profit-csv.test.ts painless-crm/src/lib/exports/profit-csv.ts painless-crm/src/app/dashboard/profit/export/route.ts)",
+      "Bash(awk '/^      activity_log: \\\\{/,/^      [a-z_]+: \\\\{/' src/lib/database.types.ts)",
+      "Bash(git -C d:/Painless-CRM/painless-crm log --oneline -5 origin/main)",
+      "Bash(git -C d:/Painless-CRM/painless-crm log --oneline -10 origin/claude/development-continuation-iAXw9)",
+      "Bash(git -C d:/Painless-CRM/painless-crm log --oneline -10 origin/claude/development-continuation-ZlsSd)",
+      "Bash(git -C d:/Painless-CRM/painless-crm merge --ff-only origin/main)",
+      "Bash(git -C d:/Painless-CRM/painless-crm log --oneline -3)",
+      "Bash(ls painless-crm-spec/phases/)",
+      "Bash(ls painless-crm-spec*/phases/06b-v01-light.md)",
+      "Bash(find . -maxdepth 3 -name \"06b-v01-light.md\")",
+      "Bash(pnpm lint:fix)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__list_migrations",
+      "mcp__claude_ai_Supabase__restore_project",
+      "Bash(ls -la wrangler.*)",
+      "Bash(cat wrangler.toml)",
+      "Bash(cat wrangler.jsonc)",
+      "Bash(cat wrangler.json)",
+      "mcp__cloudflare__get_kvs"
+    ]
+  }
+}

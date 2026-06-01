@@ -2,9 +2,20 @@
 
 import type { CapacityOverrideState } from '@/lib/actions/capacity-state';
 import { requireRole } from '@/lib/auth/require-role';
+import { publishAvailability } from '@/lib/capacity/publish';
 import { ClearCapacityOverrideSchema, SetCapacityOverrideSchema } from '@/lib/schemas/capacity';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+
+// Re-broadcast the availability calendar after an override change. Best-effort:
+// a KV/read failure must not fail the override the admin just made.
+async function rebroadcast(companyId: string): Promise<void> {
+  try {
+    await publishAvailability(companyId);
+  } catch {
+    // swallow — broadcasting is best-effort
+  }
+}
 
 // Admin capacity overrides. The capacity_overrides_audit trigger records every
 // change to activity_log (migration 37), so no manual audit here. RLS scopes
@@ -41,6 +52,7 @@ export async function setCapacityOverride(
   );
   if (error) return { status: 'error', message: 'Could not save the override' };
 
+  await rebroadcast(me.company_id);
   revalidatePath('/dashboard/capacity');
   return { status: 'ok' };
 }
@@ -62,6 +74,7 @@ export async function clearCapacityOverride(
     .eq('date', parsed.data.date);
   if (error) return { status: 'error', message: 'Could not clear the override' };
 
+  await rebroadcast(me.company_id);
   revalidatePath('/dashboard/capacity');
   return { status: 'ok' };
 }

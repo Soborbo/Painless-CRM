@@ -1,17 +1,76 @@
-import { RequireRole } from '@/components/auth/require-role';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { GlobalSearch } from '@/components/layout/global-search';
+import { type NavGroup, SidebarNav } from '@/components/layout/sidebar-nav';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { requireUser } from '@/lib/auth/require-role';
 import { UserProvider } from '@/lib/auth/user-context';
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
 import Link from 'next/link';
+
+const MANAGER = ['manager', 'admin', 'super_admin'];
+const BILLING = ['accounts', 'manager', 'admin', 'super_admin'];
+const ADMIN = ['admin', 'super_admin'];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const profile = await requireUser();
   const t = await getTranslations('nav');
   const tu = await getTranslations('users');
   const tp = await getTranslations('pricing');
+
+  // Server-side role filtering — only links this role can open are rendered.
+  const can = (roles?: string[]) => !roles || roles.includes(profile.role);
+  const link = (href: string, label: string, roles?: string[]) =>
+    can(roles) ? [{ href, label }] : [];
+
+  const rawGroups: NavGroup[] = [
+    { links: [...link('/dashboard', t('dashboard'))] },
+    {
+      title: 'Sales',
+      links: [
+        ...link('/dashboard/customers', t('customers')),
+        ...link('/dashboard/jobs', t('jobs')),
+        ...link('/dashboard/quotes', t('quotes')),
+        ...link('/dashboard/sla', t('sla')),
+        ...link('/dashboard/callbacks', t('callbacks')),
+      ],
+    },
+    {
+      title: 'Operations',
+      links: [
+        ...link('/dashboard/rota', t('rota'), MANAGER),
+        ...link('/dashboard/vehicles', t('vehicles'), MANAGER),
+        ...link('/dashboard/storage', t('storage'), MANAGER),
+        ...link('/dashboard/workers', t('workers'), MANAGER),
+        ...link('/dashboard/capacity', t('capacity'), MANAGER),
+      ],
+    },
+    {
+      title: 'Finance',
+      links: [
+        ...link('/dashboard/invoices', t('invoices'), BILLING),
+        ...link('/dashboard/profit', t('profit'), MANAGER),
+      ],
+    },
+    {
+      title: 'Customer care',
+      links: [
+        ...link('/dashboard/complaints', t('complaints'), MANAGER),
+        ...link('/dashboard/damages', t('damages'), MANAGER),
+        ...link('/dashboard/reports', t('reports'), MANAGER),
+      ],
+    },
+    {
+      title: 'Settings',
+      links: [
+        ...link('/dashboard/settings/pricing', tp('navLabel'), MANAGER),
+        ...link('/dashboard/settings/templates', t('templates'), MANAGER),
+        ...link('/dashboard/settings/automations', t('automations'), MANAGER),
+        ...link('/dashboard/settings/users', tu('navLabel'), ADMIN),
+      ],
+    },
+  ];
+  const groups = rawGroups.filter((g) => g.links.length > 0);
 
   return (
     <UserProvider
@@ -23,111 +82,44 @@ export default async function DashboardLayout({ children }: { children: React.Re
         role: profile.role,
       }}
     >
-      <div className="min-h-screen">
-        <header className="border-b">
-          <div className="mx-auto flex max-w-5xl items-center gap-4 px-6 py-3 text-sm">
-            <Link href="/dashboard" className="font-semibold tracking-tight">
-              Painless CRM
+      <div className="flex min-h-screen">
+        <aside className="sticky top-0 flex h-screen w-56 shrink-0 flex-col bg-[var(--color-sidebar)] text-[var(--color-sidebar-foreground)]">
+          <div className="flex items-center border-b border-white/10 px-4 py-4">
+            <Link href="/dashboard" className="block">
+              <Image
+                src="/logo.svg"
+                alt="Painless Removals"
+                width={176}
+                height={56}
+                priority
+                unoptimized
+                className="h-10 w-auto"
+              />
             </Link>
-            <nav className="flex gap-3">
-              <Link href="/dashboard" className="hover:underline">
-                {t('dashboard')}
-              </Link>
-              <Link href="/dashboard/customers" className="hover:underline">
-                {t('customers')}
-              </Link>
-              <Link href="/dashboard/jobs" className="hover:underline">
-                {t('jobs')}
-              </Link>
-              <Link href="/dashboard/quotes" className="hover:underline">
-                {t('quotes')}
-              </Link>
-              <Link href="/dashboard/sla" className="hover:underline">
-                {t('sla')}
-              </Link>
-              <Link href="/dashboard/callbacks" className="hover:underline">
-                {t('callbacks')}
-              </Link>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/profit" className="hover:underline">
-                  {t('profit')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/reports" className="hover:underline">
-                  {t('reports')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['accounts', 'manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/invoices" className="hover:underline">
-                  {t('invoices')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/complaints" className="hover:underline">
-                  {t('complaints')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/damages" className="hover:underline">
-                  {t('damages')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/capacity" className="hover:underline">
-                  {t('capacity')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/vehicles" className="hover:underline">
-                  {t('vehicles')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/storage" className="hover:underline">
-                  {t('storage')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/workers" className="hover:underline">
-                  {t('workers')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/rota" className="hover:underline">
-                  {t('rota')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/settings/pricing" className="hover:underline">
-                  {tp('navLabel')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/settings/templates" className="hover:underline">
-                  {t('templates')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['manager', 'admin', 'super_admin']}>
-                <Link href="/dashboard/settings/automations" className="hover:underline">
-                  {t('automations')}
-                </Link>
-              </RequireRole>
-              <RequireRole allowed={['admin', 'super_admin']}>
-                <Link href="/dashboard/settings/users" className="hover:underline">
-                  {tu('navLabel')}
-                </Link>
-              </RequireRole>
-            </nav>
-            <GlobalSearch />
-            <span className="text-[var(--color-muted-foreground)]">
-              {profile.full_name} · {profile.role}
-            </span>
-            <ThemeToggle />
-            <SignOutButton />
           </div>
-        </header>
-        {children}
+
+          <SidebarNav groups={groups} />
+
+          <div className="border-t border-white/10 px-3 py-3">
+            <p className="truncate px-1 text-xs text-[var(--color-sidebar-foreground)]/70">
+              {profile.full_name}
+            </p>
+            <p className="px-1 text-[11px] uppercase tracking-wide text-[var(--color-sidebar-foreground)]/45">
+              {profile.role}
+            </p>
+            <div className="mt-2 flex items-center gap-2">
+              <ThemeToggle />
+              <SignOutButton />
+            </div>
+          </div>
+        </aside>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          <header className="flex items-center gap-4 border-b px-6 py-3">
+            <GlobalSearch />
+          </header>
+          {children}
+        </div>
       </div>
     </UserProvider>
   );

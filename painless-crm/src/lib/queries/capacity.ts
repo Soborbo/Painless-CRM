@@ -81,3 +81,24 @@ export async function getCapacityCalendar(
     };
   });
 }
+
+export interface ActiveOverride {
+  date: string;
+  forced_band: CapacityBand;
+  reason: string;
+}
+
+export async function listActiveOverrides(window: CapacityWindow): Promise<ActiveOverride[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('capacity_overrides')
+    .select('date, forced_band, reason')
+    .gte('date', dateKey(window.startIso))
+    .lt('date', dateKey(window.endIso))
+    .order('date', { ascending: true });
+  return (data ?? [])
+    .filter((r): r is { date: string; forced_band: string; reason: string } =>
+      isCapacityBand((r.forced_band as string | null) ?? ''),
+    )
+    .map((r) => ({ date: r.date, forced_band: r.forced_band as CapacityBand, reason: r.reason }));
+}

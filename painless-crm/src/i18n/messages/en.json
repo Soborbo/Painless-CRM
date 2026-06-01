@@ -1105,6 +1105,13 @@
       "surveyor": "Surveyor"
     },
     "online": "Online",
-    "offline": "No connection — changes will sync when you reconnect"
+    "offline": "No connection — changes will sync when you reconnect",
+    "clockInRecorded": "Clocked in.",
+    "clockInQueued": "Saved — will sync when you reconnect.",
+    "syncNow": "Sync now",
+    "syncing": "Syncing…",
+    "unsynced": "{count, plural, one {# item waiting} other {# items waiting}}",
+    "syncFailed": "{count, plural, one {# item failed — tap Sync now} other {# items failed — tap Sync now}}",
+    "syncedAt": "Synced {time} ago"
   }
 }

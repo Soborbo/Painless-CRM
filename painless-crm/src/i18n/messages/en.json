@@ -35,7 +35,8 @@
     "profit": "Profit",
     "reports": "Reports",
     "capacity": "Capacity",
-    "settings": "Settings"
+    "settings": "Settings",
+    "vehicles": "Vehicles"
   },
   "capacity": {
     "title": "Capacity",
@@ -62,7 +63,10 @@
   "reports": {
     "title": "Reports",
     "rangeWindow": "{start} → {end}",
-    "range": { "month": "This month", "quarter": "This quarter" },
+    "range": {
+      "month": "This month",
+      "quarter": "This quarter"
+    },
     "totals": {
       "enquiries": "Enquiries",
       "quoted": "Quoted",
@@ -885,6 +889,59 @@
       "pass": "Pass",
       "fail": "Fail",
       "partial": "Partial"
+    }
+  },
+  "vehicles": {
+    "title": "Vehicles",
+    "totalCount": "{count, plural, =0 {No vehicles} one {# vehicle} other {# vehicles}}",
+    "newVehicle": "Add vehicle",
+    "newSubtitle": "Register a van, truck or trailer in the fleet.",
+    "emptyList": "No vehicles yet.",
+    "edit": "Edit",
+    "create": "Add vehicle",
+    "delete": "Delete",
+    "confirmDelete": "Delete this vehicle? It will be hidden but not erased.",
+    "inactiveBadge": "inactive",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "filterActive": "Active",
+    "filterInactive": "Inactive",
+    "filterAll": "All",
+    "complianceLegend": "Compliance",
+    "overdueByDays": "{days, plural, one {# day overdue} other {# days overdue}}",
+    "inDays": "{days, plural, =0 {today} one {in # day} other {in # days}}",
+    "columns": {
+      "registration": "Registration",
+      "type": "Type",
+      "capacity": "Capacity",
+      "monthlyCost": "Monthly cost",
+      "compliance": "Compliance"
+    },
+    "types": {
+      "luton": "Luton",
+      "transit": "Transit",
+      "7.5t": "7.5 tonne",
+      "18t": "18 tonne",
+      "trailer": "Trailer",
+      "car": "Car"
+    },
+    "complianceState": {
+      "expired": "Expired",
+      "due-soon": "Due soon",
+      "ok": "OK",
+      "none": "Not set"
+    },
+    "fields": {
+      "registration": "Registration",
+      "type": "Type",
+      "capacityCubicFt": "Capacity (ft³)",
+      "monthlyCostPounds": "Monthly cost (£)",
+      "motDue": "MOT due",
+      "taxDue": "Road tax due",
+      "insuranceDue": "Insurance due",
+      "nextServiceDue": "Next service due",
+      "complianceAlertsEnabled": "Compliance alerts enabled",
+      "active": "Active"
     }
   }
 }

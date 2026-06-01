@@ -26,6 +26,56 @@ export interface DayCapacity {
 
 const MAX_JOBS = 5000;
 
+export interface JobHoursRow {
+  move_date: string | null;
+  estimated_hours: number | null;
+}
+export interface OverrideRow {
+  date: string;
+  forced_band: string | null;
+}
+
+// Pure assembly: committed hours + overrides → per-day bands across the window.
+// Shared by the user-scoped read (getCapacityCalendar) and the cron recompute.
+export function assembleCapacity(
+  jobRows: readonly JobHoursRow[],
+  overrideRows: readonly OverrideRow[],
+  window: CapacityWindow,
+  maxHours: number,
+): DayCapacity[] {
+  const committed = new Map<string, { hours: number; count: number }>();
+  for (const row of jobRows) {
+    if (!row.move_date) continue;
+    const key = dateKey(row.move_date);
+    const entry = committed.get(key) ?? { hours: 0, count: 0 };
+    entry.hours += row.estimated_hours ?? 0;
+    entry.count += 1;
+    committed.set(key, entry);
+  }
+
+  const overrides = new Map<string, CapacityBand>();
+  for (const row of overrideRows) {
+    if (row.forced_band && isCapacityBand(row.forced_band))
+      overrides.set(row.date, row.forced_band);
+  }
+
+  return enumerateDays(window).map((date) => {
+    const c = committed.get(date) ?? { hours: 0, count: 0 };
+    const derivedBand = deriveBand(c.hours, maxHours);
+    const override = overrides.get(date) ?? null;
+    return {
+      date,
+      committedHours: c.hours,
+      maxHours,
+      utilizationPct: Math.round(utilization(c.hours, maxHours) * 100),
+      jobCount: c.count,
+      derivedBand,
+      override,
+      band: effectiveBand(derivedBand, override),
+    };
+  });
+}
+
 export async function getCapacityCalendar(
   window: CapacityWindow,
   maxHours: number = DEFAULT_DAILY_CAPACITY_HOURS,
@@ -48,38 +98,12 @@ export async function getCapacityCalendar(
       .lt('date', dateKey(window.endIso)),
   ]);
 
-  const committed = new Map<string, { hours: number; count: number }>();
-  for (const row of jobRows ?? []) {
-    const move = row.move_date as string | null;
-    if (!move) continue;
-    const key = dateKey(move);
-    const entry = committed.get(key) ?? { hours: 0, count: 0 };
-    entry.hours += (row.estimated_hours as number | null) ?? 0;
-    entry.count += 1;
-    committed.set(key, entry);
-  }
-
-  const overrides = new Map<string, CapacityBand>();
-  for (const row of overrideRows ?? []) {
-    const forced = row.forced_band as string | null;
-    if (forced && isCapacityBand(forced)) overrides.set(row.date as string, forced);
-  }
-
-  return enumerateDays(window).map((date) => {
-    const c = committed.get(date) ?? { hours: 0, count: 0 };
-    const derivedBand = deriveBand(c.hours, maxHours);
-    const override = overrides.get(date) ?? null;
-    return {
-      date,
-      committedHours: c.hours,
-      maxHours,
-      utilizationPct: Math.round(utilization(c.hours, maxHours) * 100),
-      jobCount: c.count,
-      derivedBand,
-      override,
-      band: effectiveBand(derivedBand, override),
-    };
-  });
+  return assembleCapacity(
+    (jobRows ?? []) as JobHoursRow[],
+    (overrideRows ?? []) as OverrideRow[],
+    window,
+    maxHours,
+  );
 }
 
 export interface ActiveOverride {

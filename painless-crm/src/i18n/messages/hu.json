@@ -1138,6 +1138,21 @@
       "submitted": "",
       "queued": "",
       "hoursRequired": ""
+    },
+    "check": {
+      "openLink": "",
+      "heading": "",
+      "noVehicle": "",
+      "alreadyDone": "",
+      "fuelLevel": "",
+      "mileage": "",
+      "walkAroundClear": "",
+      "defects": "",
+      "defectsRequired": "",
+      "submit": "",
+      "submitting": "",
+      "submitted": "",
+      "queued": ""
     }
   }
 }

@@ -33,7 +33,38 @@
     "sla": "SLA",
     "callbacks": "Call-backs",
     "profit": "Profit",
+    "reports": "Reports",
     "settings": "Settings"
+  },
+  "reports": {
+    "title": "Reports",
+    "rangeWindow": "{start} → {end}",
+    "range": { "month": "This month", "quarter": "This quarter" },
+    "totals": {
+      "enquiries": "Enquiries",
+      "quoted": "Quoted",
+      "won": "Won",
+      "conversion": "Conversion"
+    },
+    "funnelHeading": "Lead funnel",
+    "sourceHeading": "Conversion by source",
+    "empty": "No enquiries in this period yet.",
+    "ofPrev": "{pct} of previous",
+    "steps": {
+      "enquiries": "Enquiries",
+      "contacted": "Contacted",
+      "quoted": "Quoted",
+      "accepted": "Accepted",
+      "won": "Won"
+    },
+    "cols": {
+      "source": "Source",
+      "leads": "Leads",
+      "quoted": "Quoted",
+      "won": "Won",
+      "conversion": "Conv%",
+      "revenue": "Won value"
+    }
   },
   "theme": {
     "switchToLight": "Switch to light mode",

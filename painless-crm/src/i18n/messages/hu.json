@@ -33,7 +33,38 @@
     "sla": "",
     "callbacks": "",
     "profit": "",
+    "reports": "",
     "settings": ""
+  },
+  "reports": {
+    "title": "",
+    "rangeWindow": "",
+    "range": { "month": "", "quarter": "" },
+    "totals": {
+      "enquiries": "",
+      "quoted": "",
+      "won": "",
+      "conversion": ""
+    },
+    "funnelHeading": "",
+    "sourceHeading": "",
+    "empty": "",
+    "ofPrev": "",
+    "steps": {
+      "enquiries": "",
+      "contacted": "",
+      "quoted": "",
+      "accepted": "",
+      "won": ""
+    },
+    "cols": {
+      "source": "",
+      "leads": "",
+      "quoted": "",
+      "won": "",
+      "conversion": "",
+      "revenue": ""
+    }
   },
   "theme": {
     "switchToLight": "",

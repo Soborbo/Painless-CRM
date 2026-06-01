@@ -961,7 +961,6 @@
     "edit": "",
     "delete": "",
     "confirmDeleteContainer": "",
-    "rentalsComingSoon": "",
     "status": {
       "available": "",
       "reserved": "",
@@ -979,7 +978,31 @@
       "sizeCubicFt": "",
       "monthlyRatePounds": "",
       "status": "",
-      "notes": ""
+      "notes": "",
+      "customer": "",
+      "startDate": ""
+    },
+    "rentalsHeading": "",
+    "newRental": "",
+    "noRentals": "",
+    "currentCustomer": "",
+    "since": "",
+    "endDate": "",
+    "rentalStatus": "",
+    "selectCustomer": "",
+    "rentalMode": "",
+    "modeReserve": "",
+    "modeActivate": "",
+    "openRental": "",
+    "activateRental": "",
+    "terminateRental": "",
+    "confirmTerminate": "",
+    "notAvailableToRent": "",
+    "backToContainer": "",
+    "rentalStates": {
+      "pending": "",
+      "active": "",
+      "terminated": ""
     }
   }
 }

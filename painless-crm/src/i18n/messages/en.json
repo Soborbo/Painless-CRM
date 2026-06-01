@@ -961,7 +961,6 @@
     "edit": "Edit",
     "delete": "Delete",
     "confirmDeleteContainer": "Delete this container? It will be hidden but not erased.",
-    "rentalsComingSoon": "Rental history and the current customer will appear here once the storage rental lifecycle ships.",
     "status": {
       "available": "Available",
       "reserved": "Reserved",
@@ -979,7 +978,31 @@
       "sizeCubicFt": "Size (ft³)",
       "monthlyRatePounds": "Monthly rate (£)",
       "status": "Status",
-      "notes": "Notes"
+      "notes": "Notes",
+      "customer": "Customer",
+      "startDate": "Start date"
+    },
+    "rentalsHeading": "Rentals",
+    "newRental": "New rental",
+    "noRentals": "No rentals for this container yet.",
+    "currentCustomer": "Current customer",
+    "since": "since",
+    "endDate": "End date",
+    "rentalStatus": "Status",
+    "selectCustomer": "Select a customer…",
+    "rentalMode": "How should this rental start?",
+    "modeReserve": "Reserve (hold the container, not occupied yet)",
+    "modeActivate": "Occupy now (customer is moving in)",
+    "openRental": "Open rental",
+    "activateRental": "Mark occupied",
+    "terminateRental": "Terminate",
+    "confirmTerminate": "Terminate this rental and free the container?",
+    "notAvailableToRent": "This container is not available to rent — it is reserved, occupied or under maintenance.",
+    "backToContainer": "Back to container",
+    "rentalStates": {
+      "pending": "Reserved",
+      "active": "Active",
+      "terminated": "Terminated"
     }
   }
 }

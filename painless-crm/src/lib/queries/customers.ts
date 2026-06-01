@@ -4,6 +4,7 @@ import {
   type CustomerType,
 } from '@/lib/schemas/customer';
 import { createClient } from '@/lib/supabase/server';
+import { customerDisplayName } from '@/lib/utils/format';
 
 export type CustomerRow = {
   id: string;
@@ -123,6 +124,27 @@ export async function listCustomersForExport(
 
   const { data } = await query;
   return (data ?? []) as CustomerExportRow[];
+}
+
+export type CustomerOption = { id: string; label: string };
+
+// Lightweight {id, label} list for picking a customer in a native <select>
+// (e.g. opening a storage rental). Capped; ordered by most-recent so the
+// likely-relevant customers surface first.
+export const CUSTOMER_OPTIONS_MAX = 1000;
+
+export async function listCustomerOptions(): Promise<CustomerOption[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('customers')
+    .select('id, customer_type, first_name, last_name, company_name, primary_email')
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(CUSTOMER_OPTIONS_MAX);
+  return ((data ?? []) as CustomerRow[]).map((c) => ({
+    id: c.id,
+    label: customerDisplayName(c),
+  }));
 }
 
 export async function getCustomerById(id: string): Promise<CustomerRow | null> {

@@ -288,6 +288,18 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-023 — Storage container status is derived from its rental lifecycle (except maintenance)
+**Date:** 2026-06-01
+**Status:** accepted
+**Context:** Phase 08 §Storage gives `storage_containers` a `status` enum (available/reserved/occupied/maintenance) AND a `storage_rentals` table with its own status (pending/active/terminated). The spec's "Storage occupancy" section says the container status is *derived* from rentals, but the column physically exists, so the two must be reconciled without drift. `maintenance` has no corresponding rental concept — it's an operational flag.
+**Decision:** The container `status` column is the materialised projection of its current rental, written transactionally by the rental actions, never edited by hand once rentals are in play: reserving a rental (pending) sets the container `reserved`; activating it (active) sets `occupied`; terminating it (terminated, `end_date` stamped) returns the container to `available`. `maintenance` stays a manual admin flag set on the container directly (Slice A edit) and is the one status not driven by rentals. A rental may only be reserved against an `available` container — `occupied`/`reserved`/`maintenance` containers are blocked. The allowed rental transitions (pending→active|terminated, active→terminated, terminated→∅) and the rental→container-status mapping live in a pure, tested module (`lib/storage/rental-lifecycle.ts`).
+**Alternatives considered:**
+- Drop the container `status` column and compute occupancy purely from rentals on every read → cleaner in theory, but the column is in the shipped schema, the Slice-A grid already reads it, and a stored projection keeps the grid/occupancy queries single-table and fast.
+- A DB trigger to sync container status from rentals → more "correct" but hides the state machine in SQL; the app-layer action is visible, testable, and matches how the rest of the codebase mutates (Server Actions + optimistic concurrency).
+**Consequences:** The sync is application-enforced, so any future direct writes to `storage_rentals` outside the actions could desync the projection (acceptable: all writes go through the actions today). Maintenance and rentals can conflict — a container flagged `maintenance` mid-rental keeps its rental rows but shows `maintenance`; resolving that interplay (e.g. blocking maintenance while occupied) is deferred. Occupancy (ADR-less, in `lib/storage/occupancy.ts`) continues to count `occupied` containers, so it now reflects active rentals automatically.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

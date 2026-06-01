@@ -34,7 +34,21 @@
     "callbacks": "Call-backs",
     "profit": "Profit",
     "reports": "Reports",
+    "capacity": "Capacity",
     "settings": "Settings"
+  },
+  "capacity": {
+    "title": "Capacity",
+    "subtitle": "Next 6 weeks. Committed move-hours per day drive the traffic light; admin overrides win.",
+    "util": "{pct}%",
+    "jobs": "{count, plural, =0 {no jobs} one {# job} other {# jobs}}",
+    "overridden": "Manually overridden",
+    "bands": {
+      "green": "Plenty of capacity",
+      "yellow": "Filling up",
+      "red": "Near capacity",
+      "closed": "Closed"
+    }
   },
   "reports": {
     "title": "Reports",

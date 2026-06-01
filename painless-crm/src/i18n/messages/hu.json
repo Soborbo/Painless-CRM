@@ -36,7 +36,8 @@
     "reports": "",
     "capacity": "",
     "settings": "",
-    "vehicles": ""
+    "vehicles": "",
+    "storage": ""
   },
   "capacity": {
     "title": "",
@@ -942,6 +943,43 @@
       "nextServiceDue": "",
       "complianceAlertsEnabled": "",
       "active": ""
+    }
+  },
+  "storage": {
+    "title": "",
+    "siteCount": "",
+    "newSite": "",
+    "newSiteSubtitle": "",
+    "createSite": "",
+    "emptySites": "",
+    "emptyContainers": "",
+    "inactiveBadge": "",
+    "occupancyLabel": "",
+    "addressLegend": "",
+    "addContainer": "",
+    "editContainer": "",
+    "edit": "",
+    "delete": "",
+    "confirmDeleteContainer": "",
+    "rentalsComingSoon": "",
+    "status": {
+      "available": "",
+      "reserved": "",
+      "occupied": "",
+      "maintenance": ""
+    },
+    "fields": {
+      "name": "",
+      "line1": "",
+      "line2": "",
+      "city": "",
+      "postcode": "",
+      "totalContainers": "",
+      "containerCode": "",
+      "sizeCubicFt": "",
+      "monthlyRatePounds": "",
+      "status": "",
+      "notes": ""
     }
   }
 }

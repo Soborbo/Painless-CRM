@@ -36,7 +36,8 @@
     "reports": "Reports",
     "capacity": "Capacity",
     "settings": "Settings",
-    "vehicles": "Vehicles"
+    "vehicles": "Vehicles",
+    "storage": "Storage"
   },
   "capacity": {
     "title": "Capacity",
@@ -942,6 +943,43 @@
       "nextServiceDue": "Next service due",
       "complianceAlertsEnabled": "Compliance alerts enabled",
       "active": "Active"
+    }
+  },
+  "storage": {
+    "title": "Storage",
+    "siteCount": "{count, plural, =0 {No sites} one {# site} other {# sites}}",
+    "newSite": "Add site",
+    "newSiteSubtitle": "Register a storage warehouse and its address.",
+    "createSite": "Add site",
+    "emptySites": "No storage sites yet.",
+    "emptyContainers": "No containers at this site yet.",
+    "inactiveBadge": "inactive",
+    "occupancyLabel": "Occupied",
+    "addressLegend": "Address",
+    "addContainer": "Add container",
+    "editContainer": "Edit container",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDeleteContainer": "Delete this container? It will be hidden but not erased.",
+    "rentalsComingSoon": "Rental history and the current customer will appear here once the storage rental lifecycle ships.",
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "occupied": "Occupied",
+      "maintenance": "Maintenance"
+    },
+    "fields": {
+      "name": "Site name",
+      "line1": "Address line 1",
+      "line2": "Address line 2",
+      "city": "City",
+      "postcode": "Postcode",
+      "totalContainers": "Total container capacity",
+      "containerCode": "Container code",
+      "sizeCubicFt": "Size (ft³)",
+      "monthlyRatePounds": "Monthly rate (£)",
+      "status": "Status",
+      "notes": "Notes"
     }
   }
 }

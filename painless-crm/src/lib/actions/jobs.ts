@@ -10,6 +10,7 @@ import {
   getRepLoads,
   listSalesReps,
 } from '@/lib/queries/jobs';
+import { enqueueReviewRequest } from '@/lib/reviews/enqueue';
 import {
   AssignJobSchema,
   CreateJobSchema,
@@ -234,6 +235,11 @@ export async function transitionJobStage(
     changed_by_id: me.id,
     reason: parsed.data.reason,
   });
+
+  // ENTER `paid` → queue the universal review request (Phase 11 §3, ADR-010).
+  if (parsed.data.target_stage === 'paid' && direction === 'forward') {
+    await enqueueReviewRequest(supabase, me.company_id, parsed.data.id);
+  }
 
   revalidatePath(`/dashboard/jobs/${parsed.data.id}`);
   revalidatePath('/dashboard/jobs');

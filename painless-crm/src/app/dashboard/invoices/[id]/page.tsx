@@ -1,11 +1,12 @@
 import { requireRole } from '@/lib/auth/require-role';
 import type { InvoiceStatus } from '@/lib/invoices/status';
 import { isEditable } from '@/lib/invoices/status';
-import { getInvoice } from '@/lib/queries/invoices';
+import { getInvoice, getPaymentsForInvoice } from '@/lib/queries/invoices';
 import { formatDate, formatPence } from '@/lib/utils/format';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { LineEditor } from './line-editor';
+import { PaymentPanel } from './payment-panel';
 import { StatusControl } from './status-control';
 
 const BILLING_ROLES = ['accounts', 'manager', 'admin', 'super_admin'] as const;
@@ -17,8 +18,11 @@ export default async function InvoiceDetailPage({ params }: Props) {
   const { id } = await params;
   const invoice = await getInvoice(id);
   if (!invoice) notFound();
+  const payments = await getPaymentsForInvoice(id);
 
   const status = (invoice.status ?? 'draft') as InvoiceStatus;
+  // Money can be taken once issued and while not void.
+  const canRecordPayment = status !== 'draft' && status !== 'void';
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-8">
@@ -57,6 +61,8 @@ export default async function InvoiceDetailPage({ params }: Props) {
           <Row label="Outstanding" value={formatPence(invoice.amount_outstanding_pence)} bold />
         </dl>
       </section>
+
+      <PaymentPanel invoiceId={invoice.id} payments={payments} canRecord={canRecordPayment} />
     </main>
   );
 }

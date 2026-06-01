@@ -51,3 +51,40 @@ export async function sendQuoteEmail(input: QuoteEmailInput): Promise<void> {
   const resend = new Resend(env.RESEND_API_KEY);
   await resend.emails.send({ from: FROM, to: input.to, subject, text });
 }
+
+// --- Quote accepted confirmation -----------------------------------------
+
+export type QuoteAcceptedEmailInput = {
+  to: string;
+  customerName: string;
+  totalPence: number | null;
+};
+
+export function renderQuoteAcceptedEmail(input: QuoteAcceptedEmailInput): {
+  subject: string;
+  text: string;
+} {
+  const lines = [
+    `Hi ${input.customerName},`,
+    '',
+    'Thanks for accepting your quote — your move is booked in with Painless Removals.',
+  ];
+  if (input.totalPence !== null) {
+    lines.push('', `Agreed total: ${formatPence(input.totalPence)}`);
+  }
+  lines.push('', "We'll be in touch shortly with the next steps.", '', 'Painless Removals');
+  return { subject: 'Your Painless Removals booking is confirmed', text: lines.join('\n') };
+}
+
+export async function sendQuoteAcceptedEmail(input: QuoteAcceptedEmailInput): Promise<void> {
+  const env = serverEnv();
+  const { subject, text } = renderQuoteAcceptedEmail(input);
+
+  if (!env.RESEND_API_KEY) {
+    console.warn('[quote-accepted-email] RESEND_API_KEY missing — would confirm to %s', input.to);
+    return;
+  }
+
+  const resend = new Resend(env.RESEND_API_KEY);
+  await resend.emails.send({ from: FROM, to: input.to, subject, text });
+}

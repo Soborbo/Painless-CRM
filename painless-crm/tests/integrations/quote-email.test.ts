@@ -1,4 +1,8 @@
-import { type QuoteEmailInput, renderQuoteEmail } from '@/lib/integrations/resend/quote';
+import {
+  type QuoteEmailInput,
+  renderQuoteAcceptedEmail,
+  renderQuoteEmail,
+} from '@/lib/integrations/resend/quote';
 import { describe, expect, it } from 'vitest';
 
 const BASE: QuoteEmailInput = {
@@ -34,5 +38,28 @@ describe('renderQuoteEmail', () => {
 
   it('always signs off as Painless Removals', () => {
     expect(renderQuoteEmail(BASE).text.trimEnd().endsWith('Painless Removals')).toBe(true);
+  });
+});
+
+describe('renderQuoteAcceptedEmail', () => {
+  it('confirms the booking and shows the agreed total', () => {
+    const { subject, text } = renderQuoteAcceptedEmail({
+      to: 'mary@example.com',
+      customerName: 'Mary Smith',
+      totalPence: 84_000,
+    });
+    expect(subject).toBe('Your Painless Removals booking is confirmed');
+    expect(text).toContain('Hi Mary Smith,');
+    expect(text).toContain('Agreed total: £840');
+    expect(text.trimEnd().endsWith('Painless Removals')).toBe(true);
+  });
+
+  it('omits the total line when null', () => {
+    const { text } = renderQuoteAcceptedEmail({
+      to: 'x@example.com',
+      customerName: 'X',
+      totalPence: null,
+    });
+    expect(text).not.toContain('Agreed total:');
   });
 });

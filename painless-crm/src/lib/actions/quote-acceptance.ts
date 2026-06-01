@@ -1,6 +1,7 @@
 'use server';
 
 import { serverEnv } from '@/lib/env';
+import { sendQuoteAcceptedEmail } from '@/lib/integrations/resend/quote';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { classifyAcceptable, pickClientIp } from '@/lib/quotes/public-acceptance';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
@@ -164,6 +165,27 @@ export async function acceptQuote(
       to_stage: 'accepted',
       reason: `Customer accepted quote (${parsed.data.full_name.trim()})`,
     });
+  }
+
+  // Best-effort confirmation to the customer. The public quote never exposes
+  // the email, so we look it up via the admin client here. A failure must not
+  // undo the acceptance the customer just completed.
+  try {
+    const { data: cust } = await supabase
+      .from('customers')
+      .select('primary_email')
+      .eq('id', quote.customer.id)
+      .maybeSingle();
+    const email = (cust?.primary_email as string | null) ?? null;
+    if (email) {
+      await sendQuoteAcceptedEmail({
+        to: email,
+        customerName: quote.customer.display_name,
+        totalPence: acceptedTotalPence ?? quote.total_pence,
+      });
+    }
+  } catch {
+    // swallow — confirmation email is best-effort
   }
 
   revalidatePath(`/dashboard/jobs/${quote.job_id}`);

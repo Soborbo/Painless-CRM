@@ -35,6 +35,7 @@
     "profit": "Profit",
     "reports": "Reports",
     "templates": "Templates",
+    "automations": "Automations",
     "invoices": "Invoices",
     "complaints": "Complaints",
     "damages": "Damages",
@@ -932,7 +933,7 @@
     "types": {
       "luton": "Luton",
       "transit": "Transit",
-      "7.5t": "7.5 tonne",
+      "7_5t": "7.5 tonne",
       "18t": "18 tonne",
       "trailer": "Trailer",
       "car": "Car"

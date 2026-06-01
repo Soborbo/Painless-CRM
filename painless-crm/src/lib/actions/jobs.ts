@@ -1,6 +1,7 @@
 'use server';
 
 import { requireRole, requireUser } from '@/lib/auth/require-role';
+import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { pickNextRep } from '@/lib/jobs/routing';
 import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { type JobStage, classifyTransition } from '@/lib/jobs/state-machine';
@@ -239,6 +240,18 @@ export async function transitionJobStage(
   // ENTER `paid` → queue the universal review request (Phase 11 §3, ADR-010).
   if (parsed.data.target_stage === 'paid' && direction === 'forward') {
     await enqueueReviewRequest(supabase, me.company_id, parsed.data.id);
+  }
+
+  // Fire any matching automation rules for this stage change (Phase 13 §5).
+  try {
+    await enqueueStageAutomation({
+      companyId: me.company_id,
+      jobId: parsed.data.id,
+      fromStage,
+      toStage: parsed.data.target_stage,
+    });
+  } catch {
+    // best-effort — automation must never block the transition
   }
 
   revalidatePath(`/dashboard/jobs/${parsed.data.id}`);

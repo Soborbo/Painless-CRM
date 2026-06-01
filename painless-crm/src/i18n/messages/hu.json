@@ -35,6 +35,7 @@
     "profit": "",
     "reports": "",
     "templates": "",
+    "automations": "",
     "invoices": "",
     "complaints": "",
     "damages": "",
@@ -932,7 +933,7 @@
     "types": {
       "luton": "",
       "transit": "",
-      "7.5t": "",
+      "7_5t": "",
       "18t": "",
       "trailer": "",
       "car": ""

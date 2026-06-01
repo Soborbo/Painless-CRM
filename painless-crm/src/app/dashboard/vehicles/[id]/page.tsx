@@ -44,7 +44,7 @@ export default async function VehicleDetailPage({ params }: Props) {
           </p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{vehicle.registration}</h1>
           <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">
-            {vehicle.type ? t(`types.${vehicle.type}`) : '—'}
+            {vehicle.type ? t(`types.${vehicle.type.replace('.', '_')}`) : '—'}
             {!vehicle.active ? ` · ${t('inactiveBadge')}` : ''}
           </p>
         </div>

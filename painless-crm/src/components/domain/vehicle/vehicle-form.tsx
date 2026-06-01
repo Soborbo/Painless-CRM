@@ -71,7 +71,7 @@ export function VehicleForm({
           >
             {VEHICLE_TYPES.map((vt) => (
               <option key={vt} value={vt}>
-                {t(`types.${vt}`)}
+                {t(`types.${vt.replace('.', '_')}`)}
               </option>
             ))}
           </select>

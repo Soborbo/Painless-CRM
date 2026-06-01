@@ -1,5 +1,6 @@
 'use server';
 
+import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { serverEnv } from '@/lib/env';
 import { sendQuoteAcceptedEmail } from '@/lib/integrations/resend/quote';
 import { depositAmountPence, shouldCreateDeposit } from '@/lib/invoices/auto-create';
@@ -167,6 +168,18 @@ export async function acceptQuote(
       to_stage: 'accepted',
       reason: `Customer accepted quote (${parsed.data.full_name.trim()})`,
     });
+
+    // Fire any matching automation rules for quoted/… → accepted (Phase 13 §5).
+    try {
+      await enqueueStageAutomation({
+        companyId: quote.company_id,
+        jobId: quote.job_id,
+        fromStage,
+        toStage: 'accepted',
+      });
+    } catch {
+      // best-effort
+    }
   }
 
   const acceptedTotal = acceptedTotalPence ?? quote.total_pence;

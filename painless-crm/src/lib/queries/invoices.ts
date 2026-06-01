@@ -1,9 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { customerDisplayName } from '@/lib/utils/format';
 
-// Phase 12 — invoice reads + numbering. RLS scopes to the company.
-
-const DEFAULT_PREFIX = 'PR';
+// Phase 12 — invoice reads. RLS scopes to the company.
 
 export interface InvoiceListRow {
   id: string;
@@ -61,41 +59,8 @@ function toListRow(raw: Record<string, unknown>): InvoiceListRow {
   };
 }
 
-// Sequential per company per year: {PREFIX}-{YYYY}-{NNNN}. Prefix from
-// settings.feature_flags.invoice_prefix, else 'PR'. The (company_id,
-// invoice_number) unique index is the real race guard; the action retries once.
-export async function getNextInvoiceNumber(companyId: string): Promise<string> {
-  const supabase = await createClient();
-  const year = new Date().getUTCFullYear();
-
-  const { data: settings } = await supabase
-    .from('settings')
-    .select('feature_flags')
-    .eq('company_id', companyId)
-    .maybeSingle();
-  const flags = (settings as { feature_flags: Record<string, unknown> | null } | null)
-    ?.feature_flags;
-  const prefix =
-    typeof flags?.invoice_prefix === 'string' && flags.invoice_prefix
-      ? flags.invoice_prefix
-      : DEFAULT_PREFIX;
-
-  const { data } = await supabase
-    .from('invoices')
-    .select('invoice_number')
-    .ilike('invoice_number', `${prefix}-${year}-%`)
-    .order('invoice_number', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  let next = 1;
-  const current = (data as { invoice_number: string } | null)?.invoice_number;
-  if (current) {
-    const match = new RegExp(`${prefix}-\\d{4}-(\\d+)`).exec(current);
-    if (match?.[1]) next = Number.parseInt(match[1], 10) + 1;
-  }
-  return `${prefix}-${year}-${String(next).padStart(4, '0')}`;
-}
+// Invoice numbering lives in lib/invoices/create.nextInvoiceNumber (shared with
+// the auto-create hooks, which run on the admin client).
 
 export async function listInvoices(): Promise<InvoiceListRow[]> {
   const supabase = await createClient();

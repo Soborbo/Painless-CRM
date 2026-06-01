@@ -1,8 +1,8 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { nextInvoiceNumber } from '@/lib/invoices/create';
 import { type InvoiceStatus, canTransition } from '@/lib/invoices/status';
-import { getNextInvoiceNumber } from '@/lib/queries/invoices';
 import { InvoiceCreateSchema, InvoiceStatusSchema } from '@/lib/schemas/invoice';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -37,7 +37,7 @@ export async function createInvoice(
   // Two attempts: the (company_id, invoice_number) unique index is the race guard.
   let createdId: string | null = null;
   for (let attempt = 0; attempt < 2 && !createdId; attempt++) {
-    const invoiceNumber = await getNextInvoiceNumber(me.company_id);
+    const invoiceNumber = await nextInvoiceNumber(supabase, me.company_id);
     const { data, error } = await supabase
       .from('invoices')
       .insert({

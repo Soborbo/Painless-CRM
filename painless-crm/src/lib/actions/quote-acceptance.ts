@@ -2,6 +2,8 @@
 
 import { serverEnv } from '@/lib/env';
 import { sendQuoteAcceptedEmail } from '@/lib/integrations/resend/quote';
+import { depositAmountPence, shouldCreateDeposit } from '@/lib/invoices/auto-create';
+import { createInvoiceWithLine, jobHasInvoiceOfType } from '@/lib/invoices/create';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { classifyAcceptable, pickClientIp } from '@/lib/quotes/public-acceptance';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
@@ -167,13 +169,15 @@ export async function acceptQuote(
     });
   }
 
-  // Best-effort confirmation to the customer. The public quote never exposes
-  // the email, so we look it up via the admin client here. A failure must not
-  // undo the acceptance the customer just completed.
+  const acceptedTotal = acceptedTotalPence ?? quote.total_pence;
+
+  // Best-effort confirmation to the customer + deposit invoice. The public quote
+  // never exposes the email/type, so we look them up via the admin client. A
+  // failure here must not undo the acceptance the customer just completed.
   try {
     const { data: cust } = await supabase
       .from('customers')
-      .select('primary_email')
+      .select('primary_email, customer_type')
       .eq('id', quote.customer.id)
       .maybeSingle();
     const email = (cust?.primary_email as string | null) ?? null;
@@ -181,13 +185,57 @@ export async function acceptQuote(
       await sendQuoteAcceptedEmail({
         to: email,
         customerName: quote.customer.display_name,
-        totalPence: acceptedTotalPence ?? quote.total_pence,
+        totalPence: acceptedTotal,
       });
     }
+    await maybeCreateDepositInvoice(supabase, {
+      companyId: quote.company_id,
+      jobId: quote.job_id,
+      customerId: quote.customer.id,
+      customerType: (cust?.customer_type as string | null) ?? null,
+      acceptedTotalPence: acceptedTotal,
+    });
   } catch {
-    // swallow — confirmation email is best-effort
+    // swallow — confirmation email + deposit are best-effort
   }
 
   revalidatePath(`/dashboard/jobs/${quote.job_id}`);
   return { status: 'ok', quote_id: quote.id };
+}
+
+// Phase 12 §2 — draft deposit invoice on acceptance, once per job, for
+// individuals at/above the deposit floor. Deposit % from settings.
+async function maybeCreateDepositInvoice(
+  supabase: ReturnType<typeof createAdminClient>,
+  args: {
+    companyId: string;
+    jobId: string;
+    customerId: string;
+    customerType: string | null;
+    acceptedTotalPence: number;
+  },
+): Promise<void> {
+  if (!shouldCreateDeposit(args.customerType, args.acceptedTotalPence, 1)) return;
+  if (await jobHasInvoiceOfType(supabase, args.jobId, 'deposit')) return;
+
+  const { data: settings } = await supabase
+    .from('settings')
+    .select('default_deposit_percent')
+    .eq('company_id', args.companyId)
+    .maybeSingle();
+  const percent = Number(
+    (settings as { default_deposit_percent: number | null } | null)?.default_deposit_percent ?? 25,
+  );
+  const amount = depositAmountPence(args.acceptedTotalPence, percent);
+  if (amount <= 0) return;
+
+  await createInvoiceWithLine(supabase, {
+    company_id: args.companyId,
+    customer_id: args.customerId,
+    job_id: args.jobId,
+    type: 'deposit',
+    description: `Deposit (${percent}%)`,
+    amount_pence: amount,
+    vat_rate: 0, // quote totals are already gross
+  });
 }

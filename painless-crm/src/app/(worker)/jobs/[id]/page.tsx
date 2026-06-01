@@ -71,7 +71,7 @@ export default async function WorkerJobPage({ params }: Props) {
             {t('alreadyClockedIn')}
           </p>
         ) : (
-          <ClockInButton jobId={job.job_id} />
+          <ClockInButton jobId={job.job_id} jobNumber={job.job_number} />
         )}
       </section>
     </main>

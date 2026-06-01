@@ -1105,6 +1105,13 @@
       "surveyor": ""
     },
     "online": "",
-    "offline": ""
+    "offline": "",
+    "clockInRecorded": "",
+    "clockInQueued": "",
+    "syncNow": "",
+    "syncing": "",
+    "unsynced": "",
+    "syncFailed": "",
+    "syncedAt": ""
   }
 }

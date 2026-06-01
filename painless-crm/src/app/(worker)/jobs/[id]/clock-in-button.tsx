@@ -1,21 +1,23 @@
 'use client';
 
-import { type ClockInState, clockIn } from '@/lib/actions/worker-clock-in';
 import { useTranslations } from 'next-intl';
-import { useActionState, useEffect, useState } from 'react';
-
-const INITIAL: ClockInState = { status: 'idle' };
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSync } from '../../_lib/sync-context';
 
 type Coords = { lat: number; lng: number; acc: number | null };
 
-export function ClockInButton({ jobId }: { jobId: string }) {
+// Clock-in is offline-first (ADR-011): it writes to the durable queue and lets
+// the sync engine replay it (immediately if online). The button never blocks on
+// the network, so a clock-in in a signal black spot is never lost.
+export function ClockInButton({ jobId, jobNumber }: { jobId: string; jobNumber: string }) {
   const t = useTranslations('workerApp');
-  const [state, action, pending] = useActionState(clockIn, INITIAL);
+  const router = useRouter();
+  const { enqueueAction, online } = useSync();
   const [coords, setCoords] = useState<Coords | null>(null);
   const [located, setLocated] = useState<'pending' | 'ok' | 'unavailable'>('pending');
-  // Stable per-attempt id so a retried submit dedups server-side (ADR-011).
+  const [phase, setPhase] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [eventId] = useState(() => globalThis.crypto.randomUUID());
-  const [recordedAt] = useState(() => new Date().toISOString());
 
   useEffect(() => {
     if (!('geolocation' in navigator)) {
@@ -36,23 +38,48 @@ export function ClockInButton({ jobId }: { jobId: string }) {
     );
   }, []);
 
-  return (
-    <form action={action} className="flex flex-col gap-2">
-      <input type="hidden" name="job_id" value={jobId} />
-      <input type="hidden" name="client_event_id" value={eventId} />
-      <input type="hidden" name="client_recorded_at" value={recordedAt} />
-      <input type="hidden" name="gps_lat" value={coords?.lat ?? ''} />
-      <input type="hidden" name="gps_lng" value={coords?.lng ?? ''} />
-      <input type="hidden" name="gps_accuracy_m" value={coords?.acc ?? ''} />
+  async function handleClockIn() {
+    setPhase('saving');
+    await enqueueAction({
+      client_event_id: eventId,
+      type: 'clock_in',
+      endpoint: '/api/worker/clock-in',
+      description: `Clock-in · ${jobNumber}`,
+      attempts: 0,
+      created_at: Date.now(),
+      last_attempt_at: null,
+      payload: {
+        job_id: jobId,
+        client_event_id: eventId,
+        gps_lat: coords?.lat ?? null,
+        gps_lng: coords?.lng ?? null,
+        gps_accuracy_m: coords?.acc ?? null,
+        client_recorded_at: new Date().toISOString(),
+      },
+    });
+    setPhase('saved');
+    // If it synced (online) the server now has the clock-in → refresh to show it.
+    if (online) router.refresh();
+  }
 
+  if (phase === 'saved') {
+    return (
+      <p className="rounded-md bg-[var(--color-success,#16a34a)]/15 px-3 py-2 text-sm text-[var(--color-success,#16a34a)]">
+        {online ? t('clockInRecorded') : t('clockInQueued')}
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
       <button
-        type="submit"
-        disabled={pending}
+        type="button"
+        onClick={handleClockIn}
+        disabled={phase === 'saving'}
         className="rounded-lg bg-[var(--color-primary)] px-4 py-3 text-center font-medium text-[var(--color-primary-foreground)] transition-opacity active:opacity-80 disabled:opacity-50"
       >
-        {pending ? t('clockingIn') : t('clockIn')}
+        {phase === 'saving' ? t('clockingIn') : t('clockIn')}
       </button>
-
       <p className="text-center text-xs text-[var(--color-muted-foreground)]">
         {located === 'pending'
           ? t('locating')
@@ -60,10 +87,6 @@ export function ClockInButton({ jobId }: { jobId: string }) {
             ? t('locationReady')
             : t('locationUnavailable')}
       </p>
-
-      {state.status === 'error' ? (
-        <p className="text-center text-sm text-[var(--color-danger)]">{state.message}</p>
-      ) : null}
-    </form>
+    </div>
   );
 }

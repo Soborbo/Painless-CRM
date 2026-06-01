@@ -1112,6 +1112,16 @@
     "syncing": "Syncing…",
     "unsynced": "{count, plural, one {# item waiting} other {# items waiting}}",
     "syncFailed": "{count, plural, one {# item failed — tap Sync now} other {# items failed — tap Sync now}}",
-    "syncedAt": "Synced {time} ago"
+    "syncedAt": "Synced {time} ago",
+    "progressHeading": "Job progress",
+    "logStep": "Log",
+    "recorded": "Done",
+    "steps": {
+      "load_start": "Start loading",
+      "load_end": "Finished loading",
+      "unload_start": "Start unloading",
+      "unload_end": "Finished unloading",
+      "clock_out": "Clock out (job done)"
+    }
   }
 }

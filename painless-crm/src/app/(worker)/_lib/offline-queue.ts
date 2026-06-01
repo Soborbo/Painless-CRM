@@ -11,7 +11,7 @@ const DB_VERSION = 1;
 
 export interface QueuedAction {
   client_event_id: string; // primary key
-  type: 'clock_in';
+  type: 'clock_in' | 'time_entry';
   endpoint: string;
   payload: Record<string, unknown>;
   description: string; // human-readable, for the queue modal

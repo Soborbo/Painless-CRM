@@ -171,6 +171,25 @@ export async function getWorkerJobDetail(
   };
 }
 
+// Time entries the worker has recorded for a job today (type + when), for the
+// job-progress stepper.
+export async function getRecordedTimeEntries(
+  workerId: string,
+  jobId: string,
+  date: string,
+): Promise<Array<{ type: string | null; occurred_at: string }>> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('time_entries')
+    .select('type, occurred_at')
+    .eq('worker_id', workerId)
+    .eq('job_id', jobId)
+    .gte('occurred_at', `${date}T00:00:00.000Z`)
+    .lte('occurred_at', `${date}T23:59:59.999Z`)
+    .is('deleted_at', null);
+  return (data ?? []) as Array<{ type: string | null; occurred_at: string }>;
+}
+
 // Per-company clock-in distance threshold (metres), from settings.feature_flags,
 // falling back to the default. Admin-scoped read (the action has the company id).
 export async function getGpsThresholdForCompany(companyId: string): Promise<number> {

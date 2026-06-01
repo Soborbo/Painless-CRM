@@ -1112,6 +1112,16 @@
     "syncing": "",
     "unsynced": "",
     "syncFailed": "",
-    "syncedAt": ""
+    "syncedAt": "",
+    "progressHeading": "",
+    "logStep": "",
+    "recorded": "",
+    "steps": {
+      "load_start": "",
+      "load_end": "",
+      "unload_start": "",
+      "unload_end": "",
+      "clock_out": ""
+    }
   }
 }

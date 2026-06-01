@@ -275,6 +275,19 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-022 — Capacity bands: daily granularity, utilisation thresholds, estimated_hours basis
+**Date:** 2026-06-01
+**Status:** accepted
+**Context:** Phase 07 needs a capacity model to drive the traffic-light calendar (and later dynamic pricing). The spec left three things open: daily vs AM/PM granularity, the utilisation→band thresholds, and the committed-hours basis (the schema has `jobs.estimated_hours` but no `crew_size`, despite the spec's `estimated_hours * crew_size`).
+**Decision:** (1) **Daily** granularity for v1 (the spec's own recommendation; AM/PM is Phase 14+). (2) Committed load per day = sum of `estimated_hours` for jobs whose `move_date` falls on that day and whose stage is `confirmed` or `in_progress` — no `crew_size` factor exists yet, so estimated_hours is the man-hours proxy. (3) Bands by utilisation = committed / daily-max: **green** < 60%, **yellow** 60–90%, **red** ≥ 90%; **closed** only via an admin override. The daily-max starts as a module constant (`DEFAULT_DAILY_CAPACITY_HOURS`) and moves to `settings` in a later increment. A `capacity_overrides` row (forced_band) always wins over the derived band.
+**Alternatives considered:**
+- AM/PM split → real but doubles the model and UI; deferred per spec.
+- Crew-weighted man-hours → blocked: no `crew_size` column until Phase 08 resources; estimated_hours is the available signal.
+- Storing the daily max in settings now → settings has no capacity field; adding one is its own increment, so a constant unblocks the calendar first.
+**Consequences:** The band reflects job-hours, not crew-weighted man-hours, until Phase 08 adds crew sizing. Thresholds live in `lib/capacity/band.ts` (pure, tested). KV broadcast, the public availability page, the nightly cron and quote modulation are later Phase-07 increments; this one ships the internal calendar only.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

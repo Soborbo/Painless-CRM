@@ -108,6 +108,12 @@ export default async function JobPage({ params }: Props) {
             {t('viewTimeline')}
           </Link>
           <Link
+            href={`/dashboard/jobs/${id}/surveys`}
+            className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('surveysTab')}
+          </Link>
+          <Link
             href={`/dashboard/jobs/${id}/complaints`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
           >

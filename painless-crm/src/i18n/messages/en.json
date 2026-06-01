@@ -246,6 +246,7 @@
     "exportCsv": "Export CSV",
     "profitReview": "Profit review",
     "viewTimeline": "Timeline",
+    "surveysTab": "Surveys",
     "complaintsTab": "Complaints",
     "damagesTab": "Damages",
     "confirmDelete": "Soft-delete this job? It is hidden from the list but the audit trail stays.",

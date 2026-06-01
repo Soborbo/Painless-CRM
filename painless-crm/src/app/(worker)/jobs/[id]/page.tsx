@@ -1,9 +1,14 @@
 import { requireUser } from '@/lib/auth/require-role';
-import { getWorkerForUser, getWorkerJobDetail } from '@/lib/queries/worker-app';
+import {
+  getRecordedTimeEntries,
+  getWorkerForUser,
+  getWorkerJobDetail,
+} from '@/lib/queries/worker-app';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ClockInButton } from './clock-in-button';
+import { TimeEntrySteps } from './time-entry-steps';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -17,6 +22,7 @@ export default async function WorkerJobPage({ params }: Props) {
   const job = await getWorkerJobDetail(id, worker.id, today);
   if (!job) notFound();
 
+  const recorded = job.clocked_in ? await getRecordedTimeEntries(worker.id, id, today) : [];
   const t = await getTranslations('workerApp');
   const mapsQuery = job.from_address
     ? encodeURIComponent(
@@ -74,6 +80,13 @@ export default async function WorkerJobPage({ params }: Props) {
           <ClockInButton jobId={job.job_id} jobNumber={job.job_number} />
         )}
       </section>
+
+      {job.clocked_in ? (
+        <section className="rounded-lg border p-4">
+          <h2 className="mb-3 font-medium">{t('progressHeading')}</h2>
+          <TimeEntrySteps jobId={job.job_id} jobNumber={job.job_number} recorded={recorded} />
+        </section>
+      ) : null}
     </main>
   );
 }

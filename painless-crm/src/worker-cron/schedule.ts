@@ -27,6 +27,7 @@ export const CRON_SCHEDULE: Record<string, CronJob> = {
   '0 9 * * *': { path: '/api/cron/sla-digest', payload: 'sla-digest' },
   '45 6 * * *': { path: '/api/cron/invoice-dunning', payload: 'invoice-dunning' },
   '15 * * * *': { path: '/api/cron/review-requests', payload: 'review-requests' },
+  '* * * * *': { path: '/api/cron/automation-queue', payload: 'automation-queue' },
   '*/30 * * * *': { path: '/api/cron/stale-clock-in', payload: 'stale-clock-in' },
 };
 

@@ -1,3 +1,4 @@
+import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { finalBalancePence } from '@/lib/invoices/auto-create';
 import { createInvoiceWithLine, jobHasInvoiceOfType } from '@/lib/invoices/create';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
@@ -115,6 +116,18 @@ export async function persistSignoff(
         });
       } catch {
         // swallow — final invoice is best-effort
+      }
+
+      // Fire any matching automation rules for in_progress → completed (Phase 13 §5).
+      try {
+        await enqueueStageAutomation({
+          companyId: actor.company_id,
+          jobId: input.job_id,
+          fromStage: 'in_progress',
+          toStage: 'completed',
+        });
+      } catch {
+        // best-effort
       }
     }
   }

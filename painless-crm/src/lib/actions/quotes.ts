@@ -2,11 +2,13 @@
 
 import { requireRole } from '@/lib/auth/require-role';
 import { serverEnv } from '@/lib/env';
+import { sendQuoteEmail } from '@/lib/integrations/resend/quote';
 import { createQuoteForJob } from '@/lib/jobs/quote-writer';
 import { parseSimulationForm } from '@/lib/pricing/form';
 import { supersedePredecessor } from '@/lib/quotes/revisions';
 import { signQuoteToken } from '@/lib/quotes/share-tokens';
 import { createClient } from '@/lib/supabase/server';
+import { customerDisplayName } from '@/lib/utils/format';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -162,6 +164,48 @@ export async function sendQuote(_prev: SendQuoteState, form: FormData): Promise<
   );
   const shareUrl = `${env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')}/quote/${token}`;
 
+  await emailQuoteToCustomer(supabase, updated.job_id as string, shareUrl, existing.valid_until);
+
   revalidatePath(`/dashboard/jobs/${updated.job_id as string}`);
   return { status: 'ok', quote_id: updated.id as string, share_url: shareUrl };
+}
+
+type QuoteEmailCustomer = {
+  primary_email: string | null;
+  customer_type: string;
+  first_name: string | null;
+  last_name: string | null;
+  company_name: string | null;
+};
+
+// Best-effort: email the customer their quote link right after sending.
+// A send/lookup failure must never fail the action — the rep can re-share.
+async function emailQuoteToCustomer(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  jobId: string,
+  shareUrl: string,
+  validUntil: string | null,
+): Promise<void> {
+  try {
+    const { data } = await supabase
+      .from('jobs')
+      .select(
+        'quote_total_pence, customer:customers (primary_email, customer_type, first_name, last_name, company_name)',
+      )
+      .eq('id', jobId)
+      .maybeSingle();
+    if (!data) return;
+    const raw = (data as { customer?: unknown }).customer;
+    const customer = (Array.isArray(raw) ? raw[0] : raw) as QuoteEmailCustomer | null | undefined;
+    if (!customer?.primary_email) return;
+    await sendQuoteEmail({
+      to: customer.primary_email,
+      customerName: customerDisplayName({ ...customer, primary_email: customer.primary_email }),
+      shareUrl,
+      totalPence: (data as { quote_total_pence: number | null }).quote_total_pence ?? null,
+      validUntil,
+    });
+  } catch {
+    // best-effort: emailing must never fail the send
+  }
 }

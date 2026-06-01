@@ -17,14 +17,33 @@
     sans-serif;
 }
 
+/* Dark palette. Applied two ways:
+   1. Explicitly when the user picks night mode (<html class="dark">).
+   2. By OS preference, but ONLY when the user hasn't made an explicit
+      choice (no .light / .dark class) — so the toggle always wins.
+   The selectors below use :root.dark (specificity beats the @theme :root). */
+:root.dark {
+  --color-background: oklch(0.145 0 0);
+  --color-foreground: oklch(0.985 0 0);
+  --color-muted: oklch(0.205 0 0);
+  --color-muted-foreground: oklch(0.708 0 0);
+  --color-border: oklch(0.269 0 0);
+  color-scheme: dark;
+}
+
 @media (prefers-color-scheme: dark) {
-  @theme inline {
+  :root:not(.light):not(.dark) {
     --color-background: oklch(0.145 0 0);
     --color-foreground: oklch(0.985 0 0);
     --color-muted: oklch(0.205 0 0);
     --color-muted-foreground: oklch(0.708 0 0);
     --color-border: oklch(0.269 0 0);
+    color-scheme: dark;
   }
+}
+
+:root.light {
+  color-scheme: light;
 }
 
 * {

@@ -17,7 +17,18 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Apply the saved theme before first paint to avoid a flash.
+            No stored choice → the CSS media query follows the OS. */}
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: tiny inline theme bootstrap, no user input
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('theme');var c=document.documentElement.classList;if(t==='dark'){c.add('dark')}else if(t==='light'){c.add('light')}}catch(e){}})();",
+          }}
+        />
+      </head>
       <body className="min-h-screen antialiased">
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
       </body>

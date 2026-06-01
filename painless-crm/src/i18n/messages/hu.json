@@ -35,6 +35,10 @@
     "profit": "",
     "settings": ""
   },
+  "theme": {
+    "switchToLight": "",
+    "switchToDark": ""
+  },
   "search": {
     "label": "",
     "placeholder": "",

@@ -1,6 +1,7 @@
 import { RequireRole } from '@/components/auth/require-role';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { GlobalSearch } from '@/components/layout/global-search';
+import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { requireUser } from '@/lib/auth/require-role';
 import { UserProvider } from '@/lib/auth/user-context';
 import { getTranslations } from 'next-intl/server';
@@ -67,6 +68,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <span className="text-[var(--color-muted-foreground)]">
               {profile.full_name} · {profile.role}
             </span>
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </header>

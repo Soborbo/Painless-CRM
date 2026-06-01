@@ -35,6 +35,10 @@
     "profit": "Profit",
     "settings": "Settings"
   },
+  "theme": {
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
   "search": {
     "label": "Search",
     "placeholder": "Search customers, jobs, quotes…",

@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Painless CRM" [ref=e5] [cursor=pointer]:
+          - /url: /dashboard
+        - navigation [ref=e6]:
+          - link "Dashboard" [ref=e7] [cursor=pointer]:
+            - /url: /dashboard
+          - link "Customers" [ref=e8] [cursor=pointer]:
+            - /url: /dashboard/customers
+          - link "Jobs" [ref=e9] [cursor=pointer]:
+            - /url: /dashboard/jobs
+          - link "Quotes" [ref=e10] [cursor=pointer]:
+            - /url: /dashboard/quotes
+          - link "SLA" [ref=e11] [cursor=pointer]:
+            - /url: /dashboard/sla
+          - link "Call-backs" [ref=e12] [cursor=pointer]:
+            - /url: /dashboard/callbacks
+          - link "Profit" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard/profit
+          - link "Reports" [ref=e14] [cursor=pointer]:
+            - /url: /dashboard/reports
+          - link "Pricing" [ref=e15] [cursor=pointer]:
+            - /url: /dashboard/settings/pricing
+          - link "Users" [ref=e16] [cursor=pointer]:
+            - /url: /dashboard/settings/users
+        - searchbox "Search" [ref=e18]
+        - generic [ref=e19]: Marketing Admin · admin
+        - button "Switch to dark mode" [ref=e20]: 🌓
+        - button "Sign out" [ref=e21]
+    - main [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "Reports" [level=1] [ref=e25]
+          - paragraph [ref=e26]: 1 Jun 2026 → 1 Jul 2026
+        - navigation [ref=e27]:
+          - link "This month" [ref=e28] [cursor=pointer]:
+            - /url: /dashboard/reports?range=month
+          - link "This quarter" [ref=e29] [cursor=pointer]:
+            - /url: /dashboard/reports?range=quarter
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - paragraph [ref=e32]: Enquiries
+          - paragraph [ref=e33]: "0"
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: Quoted
+          - paragraph [ref=e36]: "0"
+        - generic [ref=e37]:
+          - paragraph [ref=e38]: Won
+          - paragraph [ref=e39]: "0"
+        - generic [ref=e40]:
+          - paragraph [ref=e41]: Conversion
+          - paragraph [ref=e42]: —
+      - generic [ref=e43]:
+        - heading "Lead funnel" [level=2] [ref=e45]
+        - paragraph [ref=e46]: No enquiries in this period yet.
+      - generic [ref=e47]:
+        - heading "Conversion by source" [level=2] [ref=e49]
+        - paragraph [ref=e50]: No enquiries in this period yet.
+  - button "Open Next.js Dev Tools" [ref=e56] [cursor=pointer]:
+    - img [ref=e57]

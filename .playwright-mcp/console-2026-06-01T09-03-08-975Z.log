@@ -1,0 +1,952 @@
+[     115ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[     431ms] [LOG] [Fast Refresh] done in 424ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[    1229ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[    1251ms] [LOG] [HMR] connected @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696076ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696140ms] [LOG] [Fast Refresh] done in 95ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696149ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696391ms] [LOG] [Fast Refresh] done in 200ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696590ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696652ms] [LOG] [Fast Refresh] done in 166ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696916ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1696920ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1697817ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1697856ms] [LOG] [Fast Refresh] done in 141ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1698503ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1698565ms] [LOG] [Fast Refresh] done in 165ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1698808ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1698836ms] [LOG] [Fast Refresh] done in 138ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1699121ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1699145ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1699441ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1699551ms] [LOG] [Fast Refresh] done in 214ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1699771ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1699828ms] [LOG] [Fast Refresh] done in 168ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701124ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701182ms] [LOG] [Fast Refresh] done in 167ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701374ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701382ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701504ms] [LOG] [Fast Refresh] done in 121ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701837ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1701983ms] [LOG] [Fast Refresh] done in 245ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702090ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702091ms] [LOG] [Fast Refresh] done in 108ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702292ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702292ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702397ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702397ms] [LOG] [Fast Refresh] done in 105ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702775ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702808ms] [LOG] [Fast Refresh] done in 133ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702909ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1702945ms] [LOG] [Fast Refresh] done in 137ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1703286ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1703333ms] [LOG] [Fast Refresh] done in 150ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1703440ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1703518ms] [LOG] [Fast Refresh] done in 183ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1703755ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1704008ms] [LOG] [Fast Refresh] done in 355ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1704280ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1704305ms] [LOG] [Fast Refresh] done in 126ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1704792ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1704984ms] [LOG] [Fast Refresh] done in 294ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1705355ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1705508ms] [LOG] [Fast Refresh] done in 263ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1706586ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1706835ms] [LOG] [Fast Refresh] done in 350ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1707125ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1707236ms] [LOG] [Fast Refresh] done in 218ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1707534ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1707560ms] [LOG] [Fast Refresh] done in 133ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1708949ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1709027ms] [LOG] [Fast Refresh] done in 181ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1709334ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 1709516ms] [LOG] [Fast Refresh] done in 290ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 2839779ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 2839779ms] [LOG] [Fast Refresh] done in 107ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5243355ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5243721ms] [LOG] [Fast Refresh] done in 407ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5243899ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5244025ms] [LOG] [Fast Refresh] done in 229ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5245449ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5245482ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5246029ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5246067ms] [LOG] [Fast Refresh] done in 138ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5246171ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5246283ms] [LOG] [Fast Refresh] done in 217ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5246561ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5246637ms] [LOG] [Fast Refresh] done in 177ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5247132ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5247132ms] [LOG] [Fast Refresh] done in 102ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5247235ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5247252ms] [LOG] [Fast Refresh] done in 119ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5247669ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5247703ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5248474ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5248540ms] [LOG] [Fast Refresh] done in 166ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5248766ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5248773ms] [LOG] [Fast Refresh] done in 114ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5249346ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5249353ms] [LOG] [Fast Refresh] done in 112ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5249735ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250002ms] [LOG] [Fast Refresh] done in 21ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250010ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250138ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250165ms] [LOG] [Fast Refresh] done in 134ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250177ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250178ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250272ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250276ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250318ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250324ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250394ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250479ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250586ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250654ms] [LOG] [Fast Refresh] done in 170ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250690ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250692ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250766ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250772ms] [LOG] [Fast Refresh] done in 117ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5250838ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250844ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5250936ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251015ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251195ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251266ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251313ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251323ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251382ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251457ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251550ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251686ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251748ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251756ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251872ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5251888ms] [LOG] [Fast Refresh] done in 129ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5251900ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5251964ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252093ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252118ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252233ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252240ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252301ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252371ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252484ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5252554ms] [LOG] [Fast Refresh] done in 181ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5252568ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252569ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252682ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5252748ms] [LOG] [Fast Refresh] done in 178ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5252761ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252762ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252847ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5252956ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253064ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5253091ms] [LOG] [Fast Refresh] done in 132ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5253101ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253103ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253248ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253286ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253352ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253460ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5253557ms] [ERROR] %c%s%c background: #e6e6e6;background: light-dark(rgba(0,0,0,0.1), rgba(255,255,255,0.25));color: #000000;color: light-dark(#000000, #ffffff);border-radius: 2px  Server   Error: MISSING_MESSAGE: Could not resolve `nav.capacity` in messages for locale `en`.
+    at DashboardLayout (about://React/Server/D:%5CPainless-CRM%5Cpainless-crm%5C.next%5Cdev%5Cserver%5Cchunks%5Cssr%5Csrc_0iqh~rd._.js?145:499:55)
+    at resolveErrorDev (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1919:105)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1469:28)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1584:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at getOutlinedModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1407:17)
+    at parseModelString (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1639:50)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2522:66)
+    at reviveModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2525:61)
+    at parseModel (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2517:16)
+    at initializeModelChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:1084:25)
+    at resolveConsoleEntry (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2047:96)
+    at processFullStringRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2453:17)
+    at processFullBinaryRow (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2393:9)
+    at processBinaryChunk (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2502:221)
+    at progress (http://localhost:3000/_next/static/chunks/0uew_next_dist_compiled_react-server-dom-turbopack_0q_-9lz._.js:2676:20) @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:3272
+[ 5257704ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5257997ms] [LOG] [Fast Refresh] done in 70ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5258113ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5258152ms] [LOG] [Fast Refresh] done in 145ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5258271ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5258278ms] [LOG] [Fast Refresh] done in 111ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5327341ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431
+[ 5327790ms] [LOG] [Fast Refresh] done in 556ms @ http://localhost:3000/_next/static/chunks/0uew_next_dist_0butn37._.js:2431

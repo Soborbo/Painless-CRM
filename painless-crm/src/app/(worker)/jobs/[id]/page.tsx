@@ -107,6 +107,15 @@ export default async function WorkerJobPage({ params }: Props) {
           {t('sheet.openLink')}
         </Link>
       ) : null}
+
+      {job.clocked_in ? (
+        <Link
+          href={`/jobs/${job.job_id}/signoff`}
+          className="rounded-lg border px-4 py-3 text-center text-sm font-medium active:bg-[var(--color-muted)]/40"
+        >
+          {t('signoff.openLink')}
+        </Link>
+      ) : null}
     </main>
   );
 }

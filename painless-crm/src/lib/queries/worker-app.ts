@@ -247,6 +247,19 @@ export async function hasJobSheet(workerId: string, jobId: string): Promise<bool
   return Boolean(data);
 }
 
+// Whether a customer sign-off already exists for this job (one-per-job).
+export async function hasSignoff(jobId: string): Promise<boolean> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('customer_signoffs')
+    .select('id')
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .limit(1)
+    .maybeSingle();
+  return Boolean(data);
+}
+
 // Per-company clock-in distance threshold (metres), from settings.feature_flags,
 // falling back to the default. Admin-scoped read (the action has the company id).
 export async function getGpsThresholdForCompany(companyId: string): Promise<number> {

@@ -1153,6 +1153,22 @@
       "submitting": "Submitting…",
       "submitted": "Pre-check submitted.",
       "queued": "Saved — will sync when you reconnect."
+    },
+    "signoff": {
+      "openLink": "Customer sign-off",
+      "heading": "Customer sign-off",
+      "alreadySigned": "This job has already been signed off.",
+      "signature": "Customer signature",
+      "clear": "Clear signature",
+      "signatureRequired": "Ask the customer to sign before submitting.",
+      "rating": "Satisfaction (1–5, internal)",
+      "ratingHint": "Internal only — never shown to the customer or sent anywhere.",
+      "feedback": "Anything the customer wanted noted",
+      "emailConfirm": "Customer confirmed their email for the follow-up message",
+      "submit": "Complete sign-off",
+      "submitting": "Submitting…",
+      "submitted": "Signed off — job marked completed.",
+      "queued": "Saved — will sync when you reconnect."
     }
   }
 }

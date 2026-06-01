@@ -1080,5 +1080,29 @@
       "driver": "",
       "surveyor": ""
     }
+  },
+  "workerApp": {
+    "appName": "",
+    "todaysJobs": "",
+    "noWorkerProfile": "",
+    "noJobsToday": "",
+    "clockedIn": "",
+    "noTimeSet": "",
+    "callCustomer": "",
+    "fromAddress": "",
+    "openInMaps": "",
+    "clockInHeading": "",
+    "alreadyClockedIn": "",
+    "clockIn": "",
+    "clockingIn": "",
+    "locating": "",
+    "locationReady": "",
+    "locationUnavailable": "",
+    "roles": {
+      "lead_loader": "",
+      "loader": "",
+      "driver": "",
+      "surveyor": ""
+    }
   }
 }

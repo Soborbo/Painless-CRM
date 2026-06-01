@@ -119,6 +119,40 @@ export async function getInvoicesForJob(jobId: string): Promise<InvoiceListRow[]
   return ((data ?? []) as unknown as Array<Record<string, unknown>>).map(toListRow);
 }
 
+export interface InvoicePaymentRow {
+  id: string;
+  amount_pence: number;
+  method: string | null;
+  occurred_at: string;
+  reference: string | null;
+}
+
+// Payments allocated to an invoice (the payment_to_invoice slice of each).
+export async function getPaymentsForInvoice(invoiceId: string): Promise<InvoicePaymentRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('payment_allocations')
+    .select('amount_pence, payment:payments(id, method, occurred_at, reference)')
+    .eq('invoice_id', invoiceId)
+    .eq('allocation_type', 'payment_to_invoice')
+    .order('allocated_at', { ascending: false });
+  return ((data ?? []) as unknown as Array<Record<string, unknown>>).map((raw) => {
+    const payment = embed<{
+      id: string;
+      method: string | null;
+      occurred_at: string;
+      reference: string | null;
+    }>(raw.payment);
+    return {
+      id: payment?.id ?? '',
+      amount_pence: (raw.amount_pence as number) ?? 0,
+      method: payment?.method ?? null,
+      occurred_at: payment?.occurred_at ?? '',
+      reference: payment?.reference ?? null,
+    };
+  });
+}
+
 export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
   const supabase = await createClient();
   const { data } = await supabase

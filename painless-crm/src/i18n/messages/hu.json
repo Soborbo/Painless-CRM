@@ -35,7 +35,8 @@
     "profit": "",
     "reports": "",
     "capacity": "",
-    "settings": ""
+    "settings": "",
+    "vehicles": ""
   },
   "capacity": {
     "title": "",
@@ -62,7 +63,10 @@
   "reports": {
     "title": "",
     "rangeWindow": "",
-    "range": { "month": "", "quarter": "" },
+    "range": {
+      "month": "",
+      "quarter": ""
+    },
     "totals": {
       "enquiries": "",
       "quoted": "",
@@ -885,6 +889,59 @@
       "pass": "",
       "fail": "",
       "partial": ""
+    }
+  },
+  "vehicles": {
+    "title": "",
+    "totalCount": "",
+    "newVehicle": "",
+    "newSubtitle": "",
+    "emptyList": "",
+    "edit": "",
+    "create": "",
+    "delete": "",
+    "confirmDelete": "",
+    "inactiveBadge": "",
+    "enabled": "",
+    "disabled": "",
+    "filterActive": "",
+    "filterInactive": "",
+    "filterAll": "",
+    "complianceLegend": "",
+    "overdueByDays": "",
+    "inDays": "",
+    "columns": {
+      "registration": "",
+      "type": "",
+      "capacity": "",
+      "monthlyCost": "",
+      "compliance": ""
+    },
+    "types": {
+      "luton": "",
+      "transit": "",
+      "7.5t": "",
+      "18t": "",
+      "trailer": "",
+      "car": ""
+    },
+    "complianceState": {
+      "expired": "",
+      "due-soon": "",
+      "ok": "",
+      "none": ""
+    },
+    "fields": {
+      "registration": "",
+      "type": "",
+      "capacityCubicFt": "",
+      "monthlyCostPounds": "",
+      "motDue": "",
+      "taxDue": "",
+      "insuranceDue": "",
+      "nextServiceDue": "",
+      "complianceAlertsEnabled": "",
+      "active": ""
     }
   }
 }

@@ -1,4 +1,6 @@
+import { dateKey } from '@/lib/capacity/calendar';
 import { buildQuoteSnapshot, classifyDrift } from '@/lib/pricing/snapshot';
+import { getCapacityBandForDate } from '@/lib/queries/capacity';
 import { PricingConfigSchema, type QuoteInput } from '@/lib/schemas/pricing';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -87,10 +89,26 @@ export async function createQuoteForJob(args: CreateQuoteForJobArgs): Promise<Cr
     revisionNumber = (parent.revision_number ?? 1) + 1;
   }
 
+  // Capacity band for the job's move date drives dynamic pricing (Phase 07).
+  // No effect unless the config enables it and the source matches; a 'closed'
+  // day carries no margin delta, so it maps to null (no modulation).
+  const { data: jobRow } = await supabase
+    .from('jobs')
+    .select('move_date')
+    .eq('id', args.jobId)
+    .maybeSingle();
+  const moveDate = (jobRow?.move_date as string | null) ?? null;
+  let capacityBand: 'green' | 'yellow' | 'red' | null = null;
+  if (moveDate) {
+    const band = await getCapacityBandForDate(args.companyId, dateKey(moveDate));
+    capacityBand = band === 'closed' ? null : band;
+  }
+
   const snapshot = buildQuoteSnapshot({
     pricingVersionId: version.id,
     config: version.config,
     input: args.input,
+    capacityBand,
   });
 
   const { data, error } = await supabase

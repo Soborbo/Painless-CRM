@@ -81,6 +81,54 @@ describe('buildQuoteSnapshot', () => {
   });
 });
 
+describe('buildQuoteSnapshot — capacity band threading (Phase 07)', () => {
+  // dynamic pricing off (the smoke default) → band is ignored.
+  const dynamicConfig = { ...SMOKE_PRICING_CONFIG, dynamic_pricing_enabled: true };
+  const calculatorInput: QuoteInput = { ...baseInput, source: 'calculator' };
+
+  it('ignores the band when dynamic pricing is disabled', () => {
+    const snap = buildQuoteSnapshot({
+      pricingVersionId: VERSION_ID,
+      config: SMOKE_PRICING_CONFIG,
+      input: calculatorInput,
+      computedAt: FROZEN_NOW,
+      capacityBand: 'red',
+    });
+    expect(snap.breakdown.margin_modulated).toBe(false);
+  });
+
+  it('threads the band to the engine — a red day lifts the price for a modulated source', () => {
+    const base = buildQuoteSnapshot({
+      pricingVersionId: VERSION_ID,
+      config: dynamicConfig,
+      input: calculatorInput,
+      computedAt: FROZEN_NOW,
+    });
+    const red = buildQuoteSnapshot({
+      pricingVersionId: VERSION_ID,
+      config: dynamicConfig,
+      input: calculatorInput,
+      computedAt: FROZEN_NOW,
+      capacityBand: 'red', // +0.10 margin delta in the fixture
+    });
+    expect(base.breakdown.margin_modulated).toBe(false);
+    expect(red.breakdown.margin_modulated).toBe(true);
+    expect(red.breakdown.capacity_band).toBe('red');
+    expect(red.total_pence).toBeGreaterThan(base.total_pence);
+  });
+
+  it('does not modulate when the source is not in modulation_sources', () => {
+    const snap = buildQuoteSnapshot({
+      pricingVersionId: VERSION_ID,
+      config: dynamicConfig,
+      input: { ...baseInput, source: 'b2b_outreach' },
+      computedAt: FROZEN_NOW,
+      capacityBand: 'red',
+    });
+    expect(snap.breakdown.margin_modulated).toBe(false);
+  });
+});
+
 describe('classifyDrift', () => {
   it('returns "match" when the totals are equal', () => {
     expect(classifyDrift(50000, 50000)).toBe('match');

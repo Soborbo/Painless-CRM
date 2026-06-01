@@ -1,5 +1,5 @@
 import { type QuoteResult, calculateQuote } from '@/lib/pricing/engine';
-import type { PricingConfig, QuoteInput } from '@/lib/schemas/pricing';
+import type { CapacityBand, PricingConfig, QuoteInput } from '@/lib/schemas/pricing';
 
 // Pure snapshot builder. Same input + same config → same DB row payload.
 // The snapshot doubles as the immutable record stored on `quotes.pricing_snapshot`
@@ -27,6 +27,9 @@ export interface BuildQuoteSnapshotArgs {
   config: PricingConfig;
   input: QuoteInput;
   computedAt?: Date;
+  // The day's capacity band (Phase 07). Only modulates the price when the
+  // config enables dynamic pricing and the source matches; null = no change.
+  capacityBand?: CapacityBand | null;
 }
 
 export type DriftLevel = 'match' | 'minor_drift' | 'major_drift';
@@ -41,7 +44,7 @@ export function classifyDrift(expectedPence: number, observedPence: number): Dri
 }
 
 export function buildQuoteSnapshot(args: BuildQuoteSnapshotArgs): QuoteSnapshotPayload {
-  const result = calculateQuote(args.config, args.input);
+  const result = calculateQuote(args.config, args.input, args.capacityBand ?? null);
   const computed = (args.computedAt ?? new Date()).toISOString();
   const validityDays = args.config.quote_validity_days;
   const validUntil = new Date(

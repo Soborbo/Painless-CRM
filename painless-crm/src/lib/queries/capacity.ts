@@ -7,6 +7,7 @@ import {
   utilization,
 } from '@/lib/capacity/band';
 import { type CapacityWindow, dateKey, enumerateDays } from '@/lib/capacity/calendar';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
 // Phase 07 capacity read. Sums committed job-hours per day (confirmed /
@@ -104,6 +105,44 @@ export async function getCapacityCalendar(
     window,
     maxHours,
   );
+}
+
+// The effective band for a single day (used when pricing a quote for a job's
+// move_date). Admin-scoped read so it works from the quote-writer, which has no
+// user; scoped by company_id explicitly. Returns 'green' when the date is empty.
+export async function getCapacityBandForDate(
+  companyId: string,
+  day: string,
+): Promise<CapacityBand> {
+  const start = new Date(`${day}T00:00:00.000Z`);
+  const end = new Date(start);
+  end.setUTCDate(end.getUTCDate() + 1);
+  const window: CapacityWindow = { startIso: start.toISOString(), endIso: end.toISOString() };
+
+  const supabase = createAdminClient();
+  const [{ data: jobRows }, { data: overrideRows }] = await Promise.all([
+    supabase
+      .from('jobs')
+      .select('move_date, estimated_hours')
+      .eq('company_id', companyId)
+      .is('deleted_at', null)
+      .in('stage', ['confirmed', 'in_progress'])
+      .gte('move_date', window.startIso)
+      .lt('move_date', window.endIso),
+    supabase
+      .from('capacity_overrides')
+      .select('date, forced_band')
+      .eq('company_id', companyId)
+      .eq('date', day),
+  ]);
+
+  const [assembled] = assembleCapacity(
+    (jobRows ?? []) as JobHoursRow[],
+    (overrideRows ?? []) as OverrideRow[],
+    window,
+    DEFAULT_DAILY_CAPACITY_HOURS,
+  );
+  return assembled?.band ?? 'green';
 }
 
 export interface ActiveOverride {

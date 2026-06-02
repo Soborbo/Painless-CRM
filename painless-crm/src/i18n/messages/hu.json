@@ -1364,6 +1364,10 @@
       "add": "",
       "disable": "",
       "enable": ""
+    },
+    "portalLink": {
+      "heading": "",
+      "intro": ""
     }
   },
   "payouts": {

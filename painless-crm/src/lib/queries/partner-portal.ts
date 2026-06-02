@@ -29,31 +29,25 @@ export interface PartnerPortalData {
   rows: PartnerCommissionRow[];
 }
 
-export async function getPartnerPortalData(code: string): Promise<PartnerPortalData | null> {
-  if (!isValidPartnerCode(code)) return null;
+// Canonical lookup: by affiliate id (the partner token resolves to this). The
+// affiliate must be active + not deleted. Builds the commission ledger view.
+export async function getPartnerPortalByAffiliateId(
+  affiliateId: string,
+): Promise<PartnerPortalData | null> {
   const supabase = createAdminClient();
 
-  // Resolve the active code → its affiliate (must also be active + not deleted).
-  const { data: codeRow } = await supabase
-    .from('affiliate_codes')
-    .select('affiliate_id, active, affiliate:affiliates!affiliate_codes_affiliate_id_fkey (name, active, deleted_at)')
-    .eq('code', code)
+  const { data: aff } = await supabase
+    .from('affiliates')
+    .select('name, active, deleted_at')
+    .eq('id', affiliateId)
     .maybeSingle();
-  if (!codeRow) return null;
-
-  const row = codeRow as unknown as {
-    affiliate_id: string;
-    active: boolean | null;
-    affiliate: { name: string; active: boolean | null; deleted_at: string | null } | null;
-  };
-  if (row.active === false) return null;
-  const affiliate = Array.isArray(row.affiliate) ? row.affiliate[0] : row.affiliate;
+  const affiliate = aff as { name: string; active: boolean | null; deleted_at: string | null } | null;
   if (!affiliate || affiliate.deleted_at || affiliate.active === false) return null;
 
   const { data: commissionRows } = await supabase
     .from('commission_records')
     .select('id, amount_pence, status, created_at, paid_at, job:jobs!commission_records_job_id_fkey (job_number)')
-    .eq('affiliate_id', row.affiliate_id)
+    .eq('affiliate_id', affiliateId)
     .order('created_at', { ascending: false })
     .limit(500);
 

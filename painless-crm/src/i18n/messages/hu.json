@@ -165,7 +165,20 @@
     "bellLabel": "",
     "markAllRead": "",
     "markRead": "",
-    "empty": ""
+    "settings": "",
+    "empty": "",
+    "prefs": {
+      "title": "",
+      "intro": "",
+      "backToCenter": "",
+      "emailDigest": "",
+      "emailDigestHint": "",
+      "push": "",
+      "pushHint": "",
+      "save": "",
+      "saving": "",
+      "saved": ""
+    }
   },
   "theme": {
     "switchToLight": "",

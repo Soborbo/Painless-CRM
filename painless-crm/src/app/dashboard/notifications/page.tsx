@@ -22,16 +22,24 @@ export default async function NotificationsPage() {
     <main className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-10">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
-        {hasUnread ? (
-          <form action={markAllNotificationsReadForm}>
-            <button
-              type="submit"
-              className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
-            >
-              {t('markAllRead')}
-            </button>
-          </form>
-        ) : null}
+        <div className="flex items-center gap-2">
+          {hasUnread ? (
+            <form action={markAllNotificationsReadForm}>
+              <button
+                type="submit"
+                className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+              >
+                {t('markAllRead')}
+              </button>
+            </form>
+          ) : null}
+          <Link
+            href="/dashboard/settings/notifications"
+            className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('settings')}
+          </Link>
+        </div>
       </header>
 
       {notifications.length === 0 ? (

@@ -165,7 +165,20 @@
     "bellLabel": "{count, plural, =0 {No unread notifications} one {# unread notification} other {# unread notifications}}",
     "markAllRead": "Mark all read",
     "markRead": "Mark read",
-    "empty": "You're all caught up — no notifications yet."
+    "settings": "Settings",
+    "empty": "You're all caught up — no notifications yet.",
+    "prefs": {
+      "title": "Notification settings",
+      "intro": "Choose how you want to hear about activity in the CRM.",
+      "backToCenter": "Notifications",
+      "emailDigest": "Daily email digest",
+      "emailDigestHint": "A weekday-morning email summarising the notifications you received overnight.",
+      "push": "Push notifications",
+      "pushHint": "Browser and mobile push for assignments, mentions and urgent alerts.",
+      "save": "Save preferences",
+      "saving": "Saving…",
+      "saved": "Saved"
+    }
   },
   "theme": {
     "switchToLight": "Switch to light mode",

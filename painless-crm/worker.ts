@@ -17,7 +17,7 @@
 
 // @ts-expect-error — resolved by wrangler/esbuild at build time.
 import openNextWorker from './.open-next/worker.js';
-import { resolveCronJob, signCronPayload } from './src/worker-cron/schedule';
+import { prepareCronDispatch } from './src/worker-cron/dispatch';
 
 // @ts-expect-error — resolved by wrangler/esbuild at build time.
 export { DOQueueHandler } from './.open-next/.build/durable-objects/queue.js';
@@ -42,25 +42,23 @@ interface ExecutionContext {
 export default {
   ...openNextWorker,
   async scheduled(event: ScheduledEvent, env: CronEnv, ctx: ExecutionContext): Promise<void> {
-    const job = resolveCronJob(event.cron);
-    if (!job) return;
-    const secret = env.CRM_WEBHOOK_SECRET;
-    if (!secret) {
-      console.warn('[cron] CRM_WEBHOOK_SECRET unset — skipping %s', event.cron);
+    const dispatch = await prepareCronDispatch(event.cron, env);
+    if (dispatch.kind === 'skip') {
+      if (dispatch.reason === 'no_secret') {
+        console.warn('[cron] CRM_WEBHOOK_SECRET unset — skipping %s', event.cron);
+      }
       return;
     }
-    const base = (env.NEXT_PUBLIC_APP_URL ?? 'https://crm.painlessremovals.com').replace(/\/$/, '');
-    const signature = await signCronPayload(secret, job.payload);
     ctx.waitUntil(
-      fetch(`${base}${job.path}`, {
+      fetch(dispatch.url, {
         method: 'POST',
-        headers: { 'x-cron-signature': signature },
+        headers: { 'x-cron-signature': dispatch.signature },
         body: '',
       })
         .then((res) => {
-          if (!res.ok) console.error('[cron] %s -> %d', job.path, res.status);
+          if (!res.ok) console.error('[cron] %s -> %d', dispatch.url, res.status);
         })
-        .catch((err) => console.error('[cron] %s failed: %o', job.path, err)),
+        .catch((err) => console.error('[cron] %s failed: %o', dispatch.url, err)),
     );
   },
 };

@@ -137,6 +137,26 @@
         "d61_90": "61–90 days overdue",
         "d90_plus": "90+ days overdue"
       }
+    },
+    "storage": {
+      "title": "Storage report",
+      "link": "Storage",
+      "mrr": "MRR",
+      "activeRentals": "Active rentals",
+      "pendingHint": "{count} pending",
+      "avgRate": "Avg rate",
+      "occupancy": "Occupancy",
+      "movementHeading": "Movement this period",
+      "new": "New",
+      "churned": "Churned",
+      "netMrr": "Net MRR change",
+      "churnRate": "Churn rate",
+      "occupancyHeading": "Container occupancy",
+      "containers": "Containers",
+      "occupied": "Occupied",
+      "reserved": "Reserved",
+      "available": "Available",
+      "maintenance": "Maintenance"
     }
   },
   "theme": {

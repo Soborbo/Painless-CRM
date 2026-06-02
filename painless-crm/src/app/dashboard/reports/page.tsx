@@ -82,6 +82,12 @@ export default async function ReportsPage({ searchParams }: Props) {
             {t('financial.link')}
           </Link>
           <Link
+            href="/dashboard/reports/storage"
+            className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
+          >
+            {t('storage.link')}
+          </Link>
+          <Link
             href="/dashboard/reports/team"
             className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
           >

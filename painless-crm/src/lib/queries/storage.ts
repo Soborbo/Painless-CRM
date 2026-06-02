@@ -84,6 +84,18 @@ export async function listStorageSites(): Promise<StorageSiteWithOccupancy[]> {
   }));
 }
 
+// Every container's status across all sites — for the company-wide occupancy
+// figure on the storage report. RLS scopes it to the company.
+export async function listAllContainerStatuses(): Promise<(string | null)[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('storage_containers')
+    .select('status')
+    .is('deleted_at', null)
+    .limit(5000);
+  return ((data ?? []) as Array<{ status: string | null }>).map((r) => r.status);
+}
+
 export async function getStorageSite(id: string): Promise<StorageSiteRow | null> {
   const supabase = await createClient();
   const { data } = await supabase

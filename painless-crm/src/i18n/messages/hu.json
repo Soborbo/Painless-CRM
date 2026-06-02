@@ -116,6 +116,11 @@
         "score": ""
       }
     },
+    "triggers": {
+      "bannerTitle": "",
+      "bannerHint": "",
+      "flag": ""
+    },
     "financial": {
       "title": "",
       "link": "",

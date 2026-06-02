@@ -2,6 +2,7 @@ import { requireRole } from '@/lib/auth/require-role';
 import { type ProfitRange, resolveRange } from '@/lib/jobs/profit-dashboard';
 import { listAttributionJobs } from '@/lib/queries/reports';
 import { buildSourceAttribution } from '@/lib/reports/attribution';
+import { buildTriggerReport } from '@/lib/reports/lead-quality-triggers';
 import { formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -38,6 +39,7 @@ export default async function SourceAttributionPage({ searchParams }: Props) {
   const [rows, t] = await Promise.all([listAttributionJobs(window), getTranslations('reports')]);
 
   const sources = buildSourceAttribution(rows);
+  const { verdicts, underperformers } = buildTriggerReport(sources);
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
@@ -82,6 +84,22 @@ export default async function SourceAttributionPage({ searchParams }: Props) {
 
       <p className="text-sm text-[var(--color-muted-foreground)]">{t('attribution.intro')}</p>
 
+      {underperformers.length > 0 ? (
+        <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="font-medium">
+            {t('triggers.bannerTitle', { count: underperformers.length })}
+          </p>
+          <ul className="mt-1 list-disc pl-5">
+            {underperformers.map((v) => (
+              <li key={v.source}>
+                {humanizeSource(v.source)} — {v.reason}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1 text-xs text-amber-800">{t('triggers.bannerHint')}</p>
+        </div>
+      ) : null}
+
       <section className="overflow-x-auto rounded-md border">
         {sources.length === 0 ? (
           <p className="px-4 py-6 text-sm text-[var(--color-muted-foreground)]">{t('empty')}</p>
@@ -104,7 +122,14 @@ export default async function SourceAttributionPage({ searchParams }: Props) {
             <tbody className="divide-y">
               {sources.map((s) => (
                 <tr key={s.source}>
-                  <td className="px-4 py-2">{humanizeSource(s.source)}</td>
+                  <td className="px-4 py-2">
+                    {humanizeSource(s.source)}
+                    {verdicts.get(s.source)?.underperforming ? (
+                      <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-900">
+                        {t('triggers.flag')}
+                      </span>
+                    ) : null}
+                  </td>
                   <td className="px-4 py-2 text-right tabular-nums">{s.leads}</td>
                   <td className="px-4 py-2 text-right tabular-nums">{s.quoted}</td>
                   <td className="px-4 py-2 text-right tabular-nums">{s.won}</td>

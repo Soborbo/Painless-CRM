@@ -1,0 +1,57 @@
+name: Deploy
+
+# Manual go-live for the Cloudflare Worker. Runs on a Linux runner, which is
+# the supported environment for the OpenNext build (it is NOT supported on
+# native Windows — this workflow is the intended way to build + deploy).
+#
+# Trigger: manual only (workflow_dispatch) — production deploys stay a deliberate
+# human action, not an auto-fire on every push.
+#
+# Required repo secrets:
+#   CLOUDFLARE_API_TOKEN   — Workers deploy permissions
+#   CLOUDFLARE_ACCOUNT_ID  — target account
+#
+# Out of scope here (deliberate, do separately + reviewed):
+#   - Supabase migrations (`pnpm db:push`) — apply schema changes by hand,
+#     including 00000000000043_phase_06b_callback_completion.sql.
+#   - Flipping wrangler `main` to worker.ts to enable Cron firing (see worker.ts
+#     header) — do once a deploy is confirmed healthy.
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: painless-crm
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: painless-crm/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test (pre-deploy gate)
+        run: pnpm test
+
+      - name: Build (OpenNext → Cloudflare)
+        run: pnpm exec opennextjs-cloudflare build
+
+      - name: Deploy (wrangler)
+        run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

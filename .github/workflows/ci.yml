@@ -1,0 +1,45 @@
+name: CI
+
+# Quality gate for the painless-crm app (which lives in the painless-crm/
+# subdirectory of this repo). Runs on every push to main and every PR.
+# NOTE: `pnpm lint` is intentionally NOT a gate here — biome currently reports
+# CRLF/EOL noise repo-wide (a line-ending artifact, not real errors). Re-add it
+# once .gitattributes normalises line endings.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+defaults:
+  run:
+    working-directory: painless-crm
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: painless-crm/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

@@ -1,4 +1,5 @@
 import type { DateRange } from '@/lib/jobs/profit-dashboard';
+import type { AttributionJobRow } from '@/lib/reports/attribution';
 import type { ReportJobRow } from '@/lib/reports/funnel';
 import { createClient } from '@/lib/supabase/server';
 
@@ -21,4 +22,21 @@ export async function listReportJobs(range: DateRange): Promise<ReportJobRow[]> 
     .lt('enquiry_at', range.endIso)
     .limit(REPORT_ROW_CAP);
   return (data ?? []) as ReportJobRow[];
+}
+
+// Source-attribution read (Phase 14 §4/§5): same enquiry cohort plus customer_id
+// so the aggregator can derive repeat rate + LTV per source.
+const ATTRIBUTION_COLUMNS =
+  'acquisition_source, customer_id, quoted_at, paid_at, quote_total_pence';
+
+export async function listAttributionJobs(range: DateRange): Promise<AttributionJobRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('jobs')
+    .select(ATTRIBUTION_COLUMNS)
+    .is('deleted_at', null)
+    .gte('enquiry_at', range.startIso)
+    .lt('enquiry_at', range.endIso)
+    .limit(REPORT_ROW_CAP);
+  return (data ?? []) as AttributionJobRow[];
 }

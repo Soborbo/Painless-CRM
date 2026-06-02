@@ -1,5 +1,7 @@
 import { AffiliateCodes } from '@/components/domain/affiliate/affiliate-codes';
+import { signPartnerToken } from '@/lib/affiliates/portal-tokens';
 import { requireUser } from '@/lib/auth/require-role';
+import { serverEnv } from '@/lib/env';
 import {
   getAffiliateById,
   getAffiliateReferralSummary,
@@ -96,7 +98,34 @@ export default async function AffiliateDetailPage({ params }: Props) {
         <p className="mb-3 text-sm text-[var(--color-muted-foreground)]">{t('codes.intro')}</p>
         <AffiliateCodes affiliateId={affiliate.id} codes={codes} />
       </section>
+
+      <PortalLinkSection affiliateId={affiliate.id} t={t} />
     </main>
+  );
+}
+
+async function PortalLinkSection({
+  affiliateId,
+  t,
+}: {
+  affiliateId: string;
+  t: Awaited<ReturnType<typeof getTranslations>>;
+}) {
+  const env = serverEnv();
+  const secret = env.QUOTE_LINK_SECRET;
+  if (!secret) return null;
+  const token = await signPartnerToken(affiliateId, secret);
+  const url = `${env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')}/partners/p/${token}`;
+  return (
+    <section>
+      <h2 className="mb-1 text-lg font-medium">{t('portalLink.heading')}</h2>
+      <p className="mb-3 text-sm text-[var(--color-muted-foreground)]">{t('portalLink.intro')}</p>
+      <input
+        readOnly
+        value={url}
+        className="w-full select-all rounded-md border bg-[var(--color-muted)] px-3 py-2 font-mono text-xs"
+      />
+    </section>
   );
 }
 

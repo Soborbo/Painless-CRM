@@ -1364,6 +1364,10 @@
       "add": "Add code",
       "disable": "Disable",
       "enable": "Enable"
+    },
+    "portalLink": {
+      "heading": "Partner portal link",
+      "intro": "A private, signed link this partner can use to see their own commissions. Safe to share with them directly — unlike a referral code, it can't be guessed."
     }
   },
   "payouts": {

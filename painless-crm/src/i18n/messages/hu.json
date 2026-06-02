@@ -160,6 +160,23 @@
       "reserved": "",
       "available": "",
       "maintenance": ""
+    },
+    "sla": {
+      "title": "",
+      "link": "",
+      "leads": "",
+      "onTime": "",
+      "breachRate": "",
+      "avgResponse": "",
+      "leaderboard": "",
+      "cols": {
+        "rep": "",
+        "leads": "",
+        "onTime": "",
+        "breached": "",
+        "pending": "",
+        "avgResponse": ""
+      }
     }
   },
   "notifications": {

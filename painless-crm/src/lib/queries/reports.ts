@@ -2,6 +2,7 @@ import type { DateRange } from '@/lib/jobs/profit-dashboard';
 import type { AttributionJobRow } from '@/lib/reports/attribution';
 import type { FinancialInvoiceRow } from '@/lib/reports/financial';
 import type { ReportJobRow } from '@/lib/reports/funnel';
+import type { SlaJobRow } from '@/lib/reports/sla-performance';
 import { createClient } from '@/lib/supabase/server';
 
 // Reporting v0 read. Pulls the lead cohort that *enquired* within the range
@@ -70,4 +71,35 @@ export async function listOutstandingInvoices(): Promise<FinancialInvoiceRow[]> 
     .in('status', ['sent', 'partial', 'overdue'])
     .limit(REPORT_ROW_CAP);
   return (data ?? []) as FinancialInvoiceRow[];
+}
+
+// SLA performance read (Phase 16 §5): the enquiry cohort's first-response
+// timestamps + assigned rep, for response-time / breach analytics.
+const SLA_COLUMNS = `
+  enquiry_at, first_response_due_at, first_response_at, assigned_to_id,
+  assigned_to:users!jobs_assigned_to_id_fkey (full_name)
+`;
+
+export async function listSlaJobs(range: DateRange): Promise<SlaJobRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('jobs')
+    .select(SLA_COLUMNS)
+    .is('deleted_at', null)
+    .gte('enquiry_at', range.startIso)
+    .lt('enquiry_at', range.endIso)
+    .limit(REPORT_ROW_CAP);
+  return ((data ?? []) as Array<Record<string, unknown>>).map((raw) => {
+    const assigned = raw.assigned_to;
+    const name = Array.isArray(assigned)
+      ? (assigned[0] as { full_name: string } | undefined)?.full_name
+      : (assigned as { full_name: string } | null)?.full_name;
+    return {
+      enquiry_at: (raw.enquiry_at as string | null) ?? null,
+      first_response_due_at: (raw.first_response_due_at as string | null) ?? null,
+      first_response_at: (raw.first_response_at as string | null) ?? null,
+      assigned_to_id: (raw.assigned_to_id as string | null) ?? null,
+      assigned_to_name: name ?? null,
+    };
+  });
 }

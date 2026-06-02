@@ -88,6 +88,12 @@ export default async function ReportsPage({ searchParams }: Props) {
             {t('storage.link')}
           </Link>
           <Link
+            href="/dashboard/reports/sla"
+            className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
+          >
+            {t('sla.link')}
+          </Link>
+          <Link
             href="/dashboard/reports/team"
             className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
           >

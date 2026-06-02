@@ -160,6 +160,13 @@
       "maintenance": ""
     }
   },
+  "notifications": {
+    "title": "",
+    "bellLabel": "",
+    "markAllRead": "",
+    "markRead": "",
+    "empty": ""
+  },
   "theme": {
     "switchToLight": "",
     "switchToDark": ""

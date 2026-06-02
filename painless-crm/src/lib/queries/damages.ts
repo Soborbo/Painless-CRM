@@ -12,6 +12,7 @@ export interface DamageRow {
   insurance_claim_ref: string | null;
   reported_by_customer: boolean;
   repeat_claim_flag: boolean;
+  auto_escalated: boolean;
   job_id: string;
   job_number: string | null;
   customer_name: string;
@@ -21,7 +22,7 @@ export interface DamageRow {
 
 const SELECT =
   'id, status, description, estimated_value_pence, payout_pence, insurance_claim_ref, ' +
-  'reported_by_customer, repeat_claim_flag, job_id, created_at, version, ' +
+  'reported_by_customer, repeat_claim_flag, auto_escalated, job_id, created_at, version, ' +
   'job:jobs(job_number, customer:customers(customer_type, first_name, last_name, company_name, primary_email))';
 
 function embed<T>(raw: unknown): T | null {
@@ -41,6 +42,7 @@ function toRow(raw: Record<string, unknown>): DamageRow {
     insurance_claim_ref: (raw.insurance_claim_ref as string | null) ?? null,
     reported_by_customer: Boolean(raw.reported_by_customer),
     repeat_claim_flag: Boolean(raw.repeat_claim_flag),
+    auto_escalated: Boolean(raw.auto_escalated),
     job_id: raw.job_id as string,
     job_number: job?.job_number ?? null,
     customer_name: customer ? customerDisplayName(customer) : 'Unknown customer',

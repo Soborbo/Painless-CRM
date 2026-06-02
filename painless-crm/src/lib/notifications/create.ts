@@ -14,6 +14,7 @@ export const NOTIFICATION_TYPES = [
   'sla_breach',
   'review_arrived',
   'complaint',
+  'damage',
   'system',
 ] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];

@@ -49,6 +49,11 @@ export default async function DamagesPage() {
                       repeat
                     </span>
                   ) : null}
+                  {d.auto_escalated ? (
+                    <span className="ml-2 rounded bg-[var(--color-danger)]/15 px-1.5 py-0.5 text-xs text-[var(--color-danger)]">
+                      escalated
+                    </span>
+                  ) : null}
                 </td>
                 <td className="py-2 capitalize">{d.status}</td>
                 <td className="py-2">{formatPence(d.estimated_value_pence)}</td>

@@ -44,7 +44,9 @@
     "vehicles": "Vehicles",
     "storage": "Storage",
     "workers": "Workers",
-    "rota": "Rota"
+    "rota": "Rota",
+    "affiliates": "Affiliates",
+    "payouts": "Payouts"
   },
   "capacity": {
     "title": "Capacity",
@@ -1277,6 +1279,98 @@
       "submitting": "Submitting…",
       "submitted": "Signed off — job marked completed.",
       "queued": "Saved — will sync when you reconnect."
+    }
+  },
+  "affiliates": {
+    "title": "Affiliates",
+    "totalCount": "{count} affiliates",
+    "newAffiliate": "New affiliate",
+    "newSubtitle": "Add a partner, estate agent or referrer.",
+    "editTitle": "Edit affiliate",
+    "emptyList": "No affiliates yet.",
+    "filter": {
+      "all": "All",
+      "active": "Active",
+      "pending": "Pending approval"
+    },
+    "statusActive": "Active",
+    "statusPending": "Pending",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "contact": "Contact",
+      "status": "Status"
+    },
+    "types": {
+      "estate_agent": "Estate agent",
+      "B2B_partner": "B2B partner",
+      "individual": "Individual",
+      "other": "Other"
+    },
+    "fields": {
+      "name": "Name",
+      "type": "Type",
+      "contactName": "Contact name",
+      "contactEmail": "Contact email",
+      "contactPhone": "Contact phone",
+      "active": "Active"
+    },
+    "commission": {
+      "heading": "Commission",
+      "type": "Commission type",
+      "none": "No commission",
+      "value": "Value",
+      "help": "Percent of revenue for % deals, or £ per won job for flat deals. Tiered rates are set in config.",
+      "percent_revenue": "% of revenue",
+      "flat_per_job": "Flat per job",
+      "tiered": "Tiered",
+      "ofRevenue": "of revenue",
+      "perJob": "per job"
+    },
+    "create": "Create affiliate",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete this affiliate? This cannot be undone.",
+    "approve": "Approve",
+    "pause": "Pause",
+    "referrals": {
+      "heading": "Referrals",
+      "customers": "Customers",
+      "jobs": "Jobs",
+      "won": "Won"
+    },
+    "codes": {
+      "heading": "Referral codes",
+      "intro": "Codes partners share on landing pages (?ref=CODE). Disable to stop new attributions.",
+      "empty": "No codes yet.",
+      "newLabel": "New code",
+      "add": "Add code",
+      "disable": "Disable",
+      "enable": "Enable"
+    }
+  },
+  "payouts": {
+    "title": "Affiliate payouts",
+    "intro": "Commission owed to partners. Approve, then mark paid once settled.",
+    "backToAffiliates": "Back to affiliates",
+    "empty": "No commissions yet.",
+    "filterAll": "All",
+    "approve": "Approve",
+    "cancel": "Cancel",
+    "markPaid": "Mark paid",
+    "statuses": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "paid": "Paid",
+      "cancelled": "Cancelled"
+    },
+    "cols": {
+      "affiliate": "Affiliate",
+      "job": "Job",
+      "amount": "Amount",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions"
     }
   }
 }

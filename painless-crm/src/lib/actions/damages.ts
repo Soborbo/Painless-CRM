@@ -1,6 +1,8 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { shouldAutoEscalate } from '@/lib/damages/escalation';
+import { notifyDamageEscalation } from '@/lib/damages/notify';
 import { type DamageStatus, canTransition, isTerminal } from '@/lib/damages/state-machine';
 import { DamageCreateSchema, DamageUpdateSchema } from '@/lib/schemas/damage';
 import { createClient } from '@/lib/supabase/server';
@@ -97,7 +99,7 @@ export async function updateDamage(
   _prev: DamageActionState,
   form: FormData,
 ): Promise<DamageActionState> {
-  await requireRole(ADMIN_ROLES);
+  const me = await requireRole(ADMIN_ROLES);
 
   const parsed = DamageUpdateSchema.safeParse({
     id: form.get('id'),
@@ -114,13 +116,18 @@ export async function updateDamage(
   const supabase = await createClient();
   const { data: existing } = await supabase
     .from('damage_claims')
-    .select('status, version, job_id')
+    .select('status, version, job_id, auto_escalated')
     .eq('id', parsed.data.id)
     .is('deleted_at', null)
     .maybeSingle();
   if (!existing) return { status: 'error', message: 'Claim not found' };
 
-  const row = existing as { status: DamageStatus; version: number; job_id: string };
+  const row = existing as {
+    status: DamageStatus;
+    version: number;
+    job_id: string;
+    auto_escalated: boolean | null;
+  };
   if (row.version !== parsed.data.version) {
     return { status: 'error', message: 'This claim changed elsewhere. Reload and retry.' };
   }
@@ -129,14 +136,19 @@ export async function updateDamage(
     return { status: 'error', message: `Cannot move a claim from ${row.status} to ${next}` };
   }
 
+  const payoutPence = pence(parsed.data.payout_pounds);
+  // Large payouts auto-escalate to admins (Phase 16 §4), once per claim.
+  const escalate = shouldAutoEscalate(payoutPence, row.auto_escalated ?? false);
+
   const update: Record<string, unknown> = {
     status: next,
     estimated_value_pence: pence(parsed.data.estimated_value_pounds),
-    payout_pence: pence(parsed.data.payout_pounds),
+    payout_pence: payoutPence,
     insurance_claim_ref: parsed.data.insurance_claim_ref ?? null,
     version: parsed.data.version + 1,
   };
   if (isTerminal(next)) update.resolved_at = new Date().toISOString();
+  if (escalate) update.auto_escalated = true;
 
   const { data: saved, error } = await supabase
     .from('damage_claims')
@@ -147,6 +159,20 @@ export async function updateDamage(
     .maybeSingle();
   if (error || !saved) {
     return { status: 'error', message: 'Could not update the claim. Reload and retry.' };
+  }
+
+  if (escalate && payoutPence != null) {
+    const { data: jobRow } = await supabase
+      .from('jobs')
+      .select('job_number')
+      .eq('id', row.job_id)
+      .maybeSingle();
+    await notifyDamageEscalation({
+      companyId: me.company_id,
+      jobId: row.job_id,
+      jobNumber: (jobRow as { job_number: string | number | null } | null)?.job_number ?? null,
+      payoutPence,
+    });
   }
 
   revalidatePath(`/dashboard/jobs/${row.job_id}/damages`);

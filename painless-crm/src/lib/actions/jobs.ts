@@ -1,5 +1,6 @@
 'use server';
 
+import { recordCommissionForPaidJob } from '@/lib/affiliates/record';
 import { requireRole, requireUser } from '@/lib/auth/require-role';
 import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { pickNextRep } from '@/lib/jobs/routing';
@@ -238,9 +239,15 @@ export async function transitionJobStage(
     reason: parsed.data.reason,
   });
 
-  // ENTER `paid` → queue the universal review request (Phase 11 §3, ADR-010).
+  // ENTER `paid` → queue the universal review request (Phase 11 §3, ADR-010)
+  // and record any affiliate commission (Phase 16 §1, idempotent).
   if (parsed.data.target_stage === 'paid' && direction === 'forward') {
     await enqueueReviewRequest(supabase, me.company_id, parsed.data.id);
+    try {
+      await recordCommissionForPaidJob(supabase, me.company_id, parsed.data.id);
+    } catch {
+      // best-effort — commission must never block the transition
+    }
   }
 
   // Fire any matching automation rules for this stage change (Phase 13 §5).

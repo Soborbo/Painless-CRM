@@ -10,7 +10,7 @@ const DIGEST_RECIPIENT_ROLES = ['manager', 'admin'] as const;
 const MAX_OVERDUE_LEADS = 1000;
 
 const OVERDUE_LEAD_COLUMNS = `
-  id, job_number, company_id, acquisition_source, first_response_due_at,
+  id, job_number, company_id, acquisition_source, first_response_due_at, assigned_to_id,
   customer:customers (customer_type, first_name, last_name, company_name, primary_email),
   assigned_to:users!jobs_assigned_to_id_fkey (full_name)
 `;
@@ -63,6 +63,7 @@ export async function fetchOverdueDigestData(now: Date): Promise<OverdueDigestDa
         first_response_due_at: raw.first_response_due_at as string,
         customer_name: customer ? customerDisplayName(customer) : 'Unknown customer',
         assigned_to_name: assigned?.full_name ?? null,
+        assigned_to_id: (raw.assigned_to_id as string | null) ?? null,
       };
     },
   );
@@ -75,4 +76,23 @@ export async function fetchOverdueDigestData(now: Date): Promise<OverdueDigestDa
     .filter((m) => m.email.length > 0);
 
   return { leads, managers };
+}
+
+// Job IDs that already have an SLA-breach notification, for the cron's dedup
+// (Phase 15). Service-role read so it spans tenants like the rest of the cron.
+export async function fetchNotifiedBreachJobIds(
+  jobIds: readonly string[],
+): Promise<Set<string>> {
+  if (jobIds.length === 0) return new Set();
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from('notifications')
+    .select('related_entity_id')
+    .eq('type', 'sla_breach')
+    .in('related_entity_id', jobIds as string[]);
+  return new Set(
+    ((data ?? []) as Array<{ related_entity_id: string | null }>)
+      .map((r) => r.related_entity_id)
+      .filter((id): id is string => !!id),
+  );
 }

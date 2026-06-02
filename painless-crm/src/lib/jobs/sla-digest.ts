@@ -12,6 +12,8 @@ export interface OverdueLeadForDigest {
   first_response_due_at: string;
   customer_name: string;
   assigned_to_name: string | null;
+  /** The assigned rep, for the in-app breach notification (Phase 15). */
+  assigned_to_id?: string | null;
 }
 
 export interface DigestManager {

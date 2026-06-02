@@ -1,10 +1,21 @@
-name = "painless-crm"
+name = "painlesscrm"
 main = ".open-next/worker.js"
 compatibility_date = "2026-04-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Production custom domain. Hoisted to top level so a plain `wrangler deploy`
+# (the Workers Builds default) attaches it — no `--env` needed.
+routes = [
+  { pattern = "crm.painlessremovals.com", custom_domain = true }
+]
+
+# Public (browser-visible) vars. These are also baked into the client bundle at
+# build time via .env.production; here they populate the Worker runtime env
+# (process.env) and survive every `wrangler deploy` (which resets [vars]).
 [vars]
 NEXT_PUBLIC_APP_URL = "https://crm.painlessremovals.com"
+NEXT_PUBLIC_SUPABASE_URL = "https://hlstzddzrsxtjjvlltzh.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhsc3R6ZGR6cnN4dGpqdmxsdHpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNjkzMzUsImV4cCI6MjA5NTg0NTMzNX0.hO8D5ItHtRLmjdKIm9LQJY4O_bKyjh22sUoGiREKn1A"
 
 [assets]
 directory = ".open-next/assets"
@@ -22,19 +33,16 @@ id = "d41c64b23c394381b7717fe3fbe6b2b6"
 preview_id = "1d039bb1999c44e3a34f7f4acf6625a3"
 
 # Rate-limit counters (export caps, webhook overflow — SECURITY_MODEL Gate 5 / T4).
-# Provision via: wrangler kv namespace create RATE_LIMIT_KV
+# Points at the existing account namespace "RATE_LIMIT_KV" / "RATE_LIMIT_KV_preview".
 # The helper degrades open when this binding is absent, so dev is unaffected.
 [[kv_namespaces]]
 binding = "RATE_LIMIT_KV"
-id = "REPLACE_WITH_RATE_LIMIT_KV_ID"
-preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_ID"
+id = "175b3be17523491a8c4d98b806f8181c"
+preview_id = "2b140e77774f414f912ed9f3cc1c064c"
 
-# Secrets — set via: wrangler secret put NAME
-# SUPABASE_SERVICE_ROLE_KEY
-# RESEND_API_KEY
-# SENTRY_AUTH_TOKEN
-# CRM_WEBHOOK_SECRET (HMAC for inbound from painlessremovals.com + cron triggers)
-# ANTHROPIC_API_KEY
+# Secrets — set on the Worker (dashboard or `wrangler secret put NAME`), NOT here:
+#   SUPABASE_SERVICE_ROLE_KEY  RESEND_API_KEY  SENTRY_AUTH_TOKEN
+#   CRM_WEBHOOK_SECRET  QUOTE_LINK_SECRET  ANTHROPIC_API_KEY
 
 # Cloudflare Cron Triggers. Each expression fires the Worker's scheduled()
 # handler, which signs the matching /api/cron/* payload with CRM_WEBHOOK_SECRET
@@ -42,9 +50,9 @@ preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_ID"
 # expressions in lockstep with CRON_SCHEDULE there).
 #
 # ACTIVATION: the scheduled handler lives in worker.ts, which is NOT yet the
-# Worker entry. Until `main` points at worker.ts (after `opennextjs-cloudflare
-# migrate` initialises the build — run from WSL/CI, not native Windows), these
-# triggers fire on the generated worker, which has no scheduled handler (no-op).
+# Worker entry. Until `main` points at a custom worker that re-exports the
+# OpenNext handler and adds scheduled(), these triggers fire on the generated
+# worker (no scheduled handler → no-op). Wiring that entry is the next step.
 [triggers]
 crons = [
   "0 1 * * *",     # recompute-availability — nightly
@@ -58,13 +66,4 @@ crons = [
   "*/30 * * * *",  # stale-clock-in — every 30 min
   "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
   "55 7 * * 1-5",  # daily-digest — weekday 07:55, per-user notification summary
-]
-
-[env.preview]
-name = "painless-crm-preview"
-
-[env.production]
-name = "painless-crm"
-routes = [
-  { pattern = "crm.painlessremovals.com", custom_domain = true }
 ]

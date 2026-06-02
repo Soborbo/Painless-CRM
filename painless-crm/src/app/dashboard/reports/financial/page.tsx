@@ -66,6 +66,12 @@ export default async function FinancialReportPage({ searchParams }: Props) {
               {t(`range.${r}` as never)}
             </Link>
           ))}
+          <a
+            href="/dashboard/reports/financial/export"
+            className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
+          >
+            {t('exportCsv')}
+          </a>
           <Link
             href="/dashboard/reports"
             className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"

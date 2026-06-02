@@ -11,7 +11,14 @@ import { NextResponse } from 'next/server';
 
 export const EXPORT_RATE_LIMIT = { windowSec: 3600, maxRequests: 10 } as const;
 
-export type ExportResource = 'customers' | 'jobs' | 'quotes' | 'profit';
+export type ExportResource =
+  | 'customers'
+  | 'jobs'
+  | 'quotes'
+  | 'profit'
+  | 'report_sources'
+  | 'report_financial'
+  | 'report_storage';
 
 // Returns a 429 Response when the caller is over their hourly export budget,
 // or null when the export may proceed.

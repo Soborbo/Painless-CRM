@@ -102,6 +102,7 @@
       "revenue": "Won value"
     },
     "backToReports": "All reports",
+    "exportCsv": "Export CSV",
     "attribution": {
       "title": "Source attribution",
       "link": "Attribution",

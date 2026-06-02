@@ -56,6 +56,7 @@ crons = [
   "15 * * * *",    # review-requests — hourly (send +24h after paid, follow up +7d/+14d)
   "* * * * *",     # automation-queue — every minute, runs due automation actions
   "*/30 * * * *",  # stale-clock-in — every 30 min
+  "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
 ]
 
 [env.preview]

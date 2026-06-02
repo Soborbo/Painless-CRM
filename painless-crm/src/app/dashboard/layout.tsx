@@ -1,5 +1,6 @@
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { GlobalSearch } from '@/components/layout/global-search';
+import { NotificationBell } from '@/components/layout/notification-bell';
 import { type NavGroup, SidebarNav } from '@/components/layout/sidebar-nav';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 import { requireUser } from '@/lib/auth/require-role';
@@ -130,6 +131,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-center gap-4 border-b border-b-[var(--color-border)] px-6 py-3">
             <GlobalSearch />
+            <div className="ml-auto">
+              <NotificationBell />
+            </div>
           </header>
           {children}
         </div>

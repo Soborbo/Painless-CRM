@@ -5,6 +5,7 @@ import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { pickNextRep } from '@/lib/jobs/routing';
 import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { type JobStage, classifyTransition } from '@/lib/jobs/state-machine';
+import { createNotification } from '@/lib/notifications/create';
 import {
   getLastAssignedRepId,
   getNextJobNumber,
@@ -282,13 +283,27 @@ export async function assignJob(_prev: JobActionState, form: FormData): Promise<
     .eq('id', parsed.data.id)
     .eq('version', parsed.data.version)
     .is('deleted_at', null)
-    .select('id')
+    .select('id, job_number')
     .maybeSingle();
   if (error || !data) {
     return {
       status: 'error',
       message: 'Could not assign job. Reload and try again.',
     };
+  }
+
+  // Notify the assignee — unless they assigned the job to themselves.
+  const assignee = parsed.data.assigned_to_id;
+  if (assignee && assignee !== me.id) {
+    await createNotification({
+      companyId: me.company_id,
+      recipientUserId: assignee,
+      type: 'assignment',
+      title: `You were assigned job ${data.job_number}`,
+      linkUrl: `/dashboard/jobs/${data.id}`,
+      relatedEntityType: 'job',
+      relatedEntityId: data.id,
+    });
   }
 
   revalidatePath(`/dashboard/jobs/${parsed.data.id}`);

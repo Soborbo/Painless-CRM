@@ -112,6 +112,31 @@
         "ltv": "",
         "score": ""
       }
+    },
+    "financial": {
+      "title": "",
+      "link": "",
+      "invoiced": "",
+      "collected": "",
+      "outstanding": "",
+      "collectionRate": "",
+      "agingHeading": "",
+      "asOf": "",
+      "noOutstanding": "",
+      "cols": {
+        "bucket": "",
+        "count": "",
+        "outstanding": "",
+        "share": "",
+        "total": ""
+      },
+      "buckets": {
+        "current": "",
+        "d1_30": "",
+        "d31_60": "",
+        "d61_90": "",
+        "d90_plus": ""
+      }
     }
   },
   "theme": {

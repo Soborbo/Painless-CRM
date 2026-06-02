@@ -1,5 +1,6 @@
 import type { DateRange } from '@/lib/jobs/profit-dashboard';
 import type { AttributionJobRow } from '@/lib/reports/attribution';
+import type { FinancialInvoiceRow } from '@/lib/reports/financial';
 import type { ReportJobRow } from '@/lib/reports/funnel';
 import { createClient } from '@/lib/supabase/server';
 
@@ -39,4 +40,34 @@ export async function listAttributionJobs(range: DateRange): Promise<Attribution
     .lt('enquiry_at', range.endIso)
     .limit(REPORT_ROW_CAP);
   return (data ?? []) as AttributionJobRow[];
+}
+
+// Financial report reads (Phase 14). RLS scopes both to the caller's company.
+const FINANCIAL_COLUMNS =
+  'status, total_pence, amount_paid_pence, amount_outstanding_pence, issued_at, due_at';
+
+// Revenue-summary cohort: invoices *issued* within the range.
+export async function listFinancialInvoices(range: DateRange): Promise<FinancialInvoiceRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('invoices')
+    .select(FINANCIAL_COLUMNS)
+    .is('deleted_at', null)
+    .gte('issued_at', range.startIso)
+    .lt('issued_at', range.endIso)
+    .limit(REPORT_ROW_CAP);
+  return (data ?? []) as FinancialInvoiceRow[];
+}
+
+// AR-aging snapshot: everything still owed *as of now*, regardless of range.
+export async function listOutstandingInvoices(): Promise<FinancialInvoiceRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('invoices')
+    .select(FINANCIAL_COLUMNS)
+    .is('deleted_at', null)
+    .gt('amount_outstanding_pence', 0)
+    .in('status', ['sent', 'partial', 'overdue'])
+    .limit(REPORT_ROW_CAP);
+  return (data ?? []) as FinancialInvoiceRow[];
 }

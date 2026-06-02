@@ -62,6 +62,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
       ],
     },
     {
+      title: 'Growth',
+      links: [
+        ...link('/dashboard/affiliates', t('affiliates'), MANAGER),
+        ...link('/dashboard/affiliates/payouts', t('payouts'), MANAGER),
+      ],
+    },
+    {
       title: 'Settings',
       links: [
         ...link('/dashboard/settings/pricing', tp('navLabel'), MANAGER),

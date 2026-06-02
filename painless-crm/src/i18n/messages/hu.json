@@ -44,7 +44,9 @@
     "vehicles": "",
     "storage": "",
     "workers": "",
-    "rota": ""
+    "rota": "",
+    "affiliates": "",
+    "payouts": ""
   },
   "capacity": {
     "title": "",
@@ -1277,6 +1279,98 @@
       "submitting": "",
       "submitted": "",
       "queued": ""
+    }
+  },
+  "affiliates": {
+    "title": "",
+    "totalCount": "",
+    "newAffiliate": "",
+    "newSubtitle": "",
+    "editTitle": "",
+    "emptyList": "",
+    "filter": {
+      "all": "",
+      "active": "",
+      "pending": ""
+    },
+    "statusActive": "",
+    "statusPending": "",
+    "columns": {
+      "name": "",
+      "type": "",
+      "contact": "",
+      "status": ""
+    },
+    "types": {
+      "estate_agent": "",
+      "B2B_partner": "",
+      "individual": "",
+      "other": ""
+    },
+    "fields": {
+      "name": "",
+      "type": "",
+      "contactName": "",
+      "contactEmail": "",
+      "contactPhone": "",
+      "active": ""
+    },
+    "commission": {
+      "heading": "",
+      "type": "",
+      "none": "",
+      "value": "",
+      "help": "",
+      "percent_revenue": "",
+      "flat_per_job": "",
+      "tiered": "",
+      "ofRevenue": "",
+      "perJob": ""
+    },
+    "create": "",
+    "edit": "",
+    "delete": "",
+    "confirmDelete": "",
+    "approve": "",
+    "pause": "",
+    "referrals": {
+      "heading": "",
+      "customers": "",
+      "jobs": "",
+      "won": ""
+    },
+    "codes": {
+      "heading": "",
+      "intro": "",
+      "empty": "",
+      "newLabel": "",
+      "add": "",
+      "disable": "",
+      "enable": ""
+    }
+  },
+  "payouts": {
+    "title": "",
+    "intro": "",
+    "backToAffiliates": "",
+    "empty": "",
+    "filterAll": "",
+    "approve": "",
+    "cancel": "",
+    "markPaid": "",
+    "statuses": {
+      "pending": "",
+      "approved": "",
+      "paid": "",
+      "cancelled": ""
+    },
+    "cols": {
+      "affiliate": "",
+      "job": "",
+      "amount": "",
+      "status": "",
+      "created": "",
+      "actions": ""
     }
   }
 }

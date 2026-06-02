@@ -10,7 +10,9 @@
 import { serverEnv } from '@/lib/env';
 import { sendSlaDigestEmail } from '@/lib/integrations/resend/sla-digest';
 import { buildCompanyDigests } from '@/lib/jobs/sla-digest';
-import { fetchOverdueDigestData } from '@/lib/queries/sla-overdue';
+import { createNotification } from '@/lib/notifications/create';
+import { selectBreachNotifications } from '@/lib/notifications/sla-breach';
+import { fetchNotifiedBreachJobIds, fetchOverdueDigestData } from '@/lib/queries/sla-overdue';
 import { verifyHmac } from '@/lib/webhooks/handler';
 import { NextResponse } from 'next/server';
 
@@ -42,11 +44,30 @@ export async function POST(req: Request): Promise<Response> {
       emailsSent += 1;
     }
 
+    // In-app breach notifications to the assigned rep — deduped against any
+    // breach notification already sent for that job, so the daily run never
+    // re-notifies the same lead (Phase 15).
+    const alreadyNotified = await fetchNotifiedBreachJobIds(leads.map((l) => l.job_id));
+    const breaches = selectBreachNotifications(leads, alreadyNotified);
+    for (const b of breaches) {
+      await createNotification({
+        companyId: b.companyId,
+        recipientUserId: b.recipientUserId,
+        type: 'sla_breach',
+        title: `Lead ${b.jobNumber} is past its first-response SLA`,
+        linkUrl: '/dashboard/sla',
+        relatedEntityType: 'job',
+        relatedEntityId: b.jobId,
+        priority: 'urgent',
+      });
+    }
+
     return NextResponse.json({
       ok: true,
       overdueLeads: leads.length,
       companiesNotified: digests.length,
       emailsSent,
+      breachNotifications: breaches.length,
     });
   } catch (err) {
     return NextResponse.json(

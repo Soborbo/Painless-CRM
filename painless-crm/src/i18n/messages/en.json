@@ -160,6 +160,23 @@
       "reserved": "Reserved",
       "available": "Available",
       "maintenance": "Maintenance"
+    },
+    "sla": {
+      "title": "SLA performance",
+      "link": "SLA",
+      "leads": "Leads",
+      "onTime": "On time",
+      "breachRate": "Breach rate",
+      "avgResponse": "Avg response",
+      "leaderboard": "Rep leaderboard",
+      "cols": {
+        "rep": "Rep",
+        "leads": "Leads",
+        "onTime": "On time",
+        "breached": "Breached",
+        "pending": "Pending",
+        "avgResponse": "Avg response"
+      }
     }
   },
   "notifications": {

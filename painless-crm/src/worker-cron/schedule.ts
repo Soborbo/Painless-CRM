@@ -30,6 +30,7 @@ export const CRON_SCHEDULE: Record<string, CronJob> = {
   '* * * * *': { path: '/api/cron/automation-queue', payload: 'automation-queue' },
   '*/30 * * * *': { path: '/api/cron/stale-clock-in', payload: 'stale-clock-in' },
   '0 7 * * 1': { path: '/api/cron/weekly-digest', payload: 'weekly-digest' },
+  '55 7 * * 1-5': { path: '/api/cron/daily-digest', payload: 'daily-digest' },
 };
 
 export function resolveCronJob(cron: string): CronJob | null {

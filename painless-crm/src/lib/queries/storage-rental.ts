@@ -1,3 +1,4 @@
+import type { StorageRentalRow } from '@/lib/reports/storage';
 import { createClient } from '@/lib/supabase/server';
 import { customerDisplayName } from '@/lib/utils/format';
 
@@ -44,6 +45,19 @@ function mapRental(raw: Record<string, unknown>): RentalRow {
     created_at: raw.created_at as string,
     version: raw.version as number,
   };
+}
+
+// Storage report read (Phase 14). Every non-deleted rental with just the
+// columns the MRR/churn aggregator needs; RLS scopes it to the company. The
+// snapshot fields (status) give live MRR; start/end dates drive movement.
+export async function listRentalsForReport(): Promise<StorageRentalRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('storage_rentals')
+    .select('status, monthly_rate_pence, start_date, end_date')
+    .is('deleted_at', null)
+    .limit(5000);
+  return (data ?? []) as StorageRentalRow[];
 }
 
 // All rentals for a container, newest first. Used on the container detail page

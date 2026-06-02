@@ -137,6 +137,26 @@
         "d61_90": "",
         "d90_plus": ""
       }
+    },
+    "storage": {
+      "title": "",
+      "link": "",
+      "mrr": "",
+      "activeRentals": "",
+      "pendingHint": "",
+      "avgRate": "",
+      "occupancy": "",
+      "movementHeading": "",
+      "new": "",
+      "churned": "",
+      "netMrr": "",
+      "churnRate": "",
+      "occupancyHeading": "",
+      "containers": "",
+      "occupied": "",
+      "reserved": "",
+      "available": "",
+      "maintenance": ""
     }
   },
   "theme": {

@@ -57,6 +57,7 @@ crons = [
   "* * * * *",     # automation-queue — every minute, runs due automation actions
   "*/30 * * * *",  # stale-clock-in — every 30 min
   "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
+  "55 7 * * 1-5",  # daily-digest — weekday 07:55, per-user notification summary
 ]
 
 [env.preview]

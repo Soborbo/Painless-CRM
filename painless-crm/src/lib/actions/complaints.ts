@@ -2,6 +2,7 @@
 
 import { requireRole } from '@/lib/auth/require-role';
 import { type ComplaintStatus, canTransition } from '@/lib/complaints/state-machine';
+import { createNotification } from '@/lib/notifications/create';
 import { ComplaintUpdateSchema } from '@/lib/schemas/complaint';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -38,7 +39,7 @@ export async function updateComplaint(
   const supabase = await createClient();
   const { data: existing } = await supabase
     .from('complaints')
-    .select('status, version, sla_first_response_at')
+    .select('status, version, sla_first_response_at, assigned_to_id')
     .eq('id', parsed.data.id)
     .is('deleted_at', null)
     .maybeSingle();
@@ -48,6 +49,7 @@ export async function updateComplaint(
     status: ComplaintStatus;
     version: number;
     sla_first_response_at: string | null;
+    assigned_to_id: string | null;
   };
   if (row.version !== parsed.data.version) {
     return { status: 'error', message: 'This complaint changed elsewhere. Reload and retry.' };
@@ -75,13 +77,36 @@ export async function updateComplaint(
     .update(update)
     .eq('id', parsed.data.id)
     .eq('version', parsed.data.version)
-    .select('id, job_id')
+    .select('id, job_id, job:jobs(job_number)')
     .maybeSingle();
   if (error || !saved) {
     return { status: 'error', message: 'Could not update the complaint. Reload and retry.' };
   }
 
+  const savedRow = saved as {
+    id: string;
+    job_id: string;
+    job: { job_number: string } | { job_number: string }[] | null;
+  };
+
+  // Notify a newly-assigned handler (not on self-assignment or no change).
+  const assignee = parsed.data.assigned_to_id ?? null;
+  if (assignee && assignee !== row.assigned_to_id && assignee !== me.id) {
+    const job = Array.isArray(savedRow.job) ? savedRow.job[0] : savedRow.job;
+    const jobNumber = job?.job_number ?? '';
+    await createNotification({
+      companyId: me.company_id,
+      recipientUserId: assignee,
+      type: 'complaint',
+      title: `You were assigned a complaint on job ${jobNumber}`,
+      linkUrl: `/dashboard/jobs/${savedRow.job_id}/complaints`,
+      relatedEntityType: 'complaint',
+      relatedEntityId: savedRow.id,
+      priority: 'high',
+    });
+  }
+
   revalidatePath('/dashboard/complaints');
-  revalidatePath(`/dashboard/jobs/${(saved as { job_id: string }).job_id}/complaints`);
+  revalidatePath(`/dashboard/jobs/${savedRow.job_id}/complaints`);
   return { status: 'ok' };
 }

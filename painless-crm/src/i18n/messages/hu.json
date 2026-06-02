@@ -184,6 +184,26 @@
     "title": "",
     "today": "",
     "signedInAs": "",
+    "kpi": {
+      "heading": "",
+      "period": {
+        "day": "",
+        "week": "",
+        "month": ""
+      },
+      "vs": {
+        "day": "",
+        "week": "",
+        "month": ""
+      },
+      "metric": {
+        "leads": "",
+        "quotesSent": "",
+        "quotesAccepted": "",
+        "won": "",
+        "revenuePence": ""
+      }
+    },
     "emptyTitle": "",
     "emptyBody": "",
     "newLeads": "",

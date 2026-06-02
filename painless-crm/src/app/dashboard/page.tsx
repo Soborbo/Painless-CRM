@@ -1,16 +1,29 @@
 import { requireUser } from '@/lib/auth/require-role';
+import { KpiTiles } from '@/components/domain/KpiTiles';
+import { getKpiCounts } from '@/lib/queries/kpi';
 import { type TodayMoveRow, getHomeSnapshot } from '@/lib/queries/home-snapshot';
+import { type KpiPeriod, buildKpiMetrics, isKpiPeriod, kpiWindows } from '@/lib/reports/kpi';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-export default async function DashboardPage() {
+type Props = { searchParams: Promise<{ period?: string }> };
+
+export default async function DashboardPage({ searchParams }: Props) {
   const profile = await requireUser();
   const now = new Date();
-  const snapshot = await getHomeSnapshot(now);
-  const t = await getTranslations('dashboard');
+  const { period: periodParam } = await searchParams;
+  const period: KpiPeriod = isKpiPeriod(periodParam) ? periodParam : 'week';
+  const windows = kpiWindows(now, period);
+  const [snapshot, kpiCurrent, kpiPrevious, t] = await Promise.all([
+    getHomeSnapshot(now),
+    getKpiCounts(windows.current),
+    getKpiCounts(windows.previous),
+    getTranslations('dashboard'),
+  ]);
+  const kpiMetrics = buildKpiMetrics(kpiCurrent, kpiPrevious);
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-10">
@@ -22,6 +35,8 @@ export default async function DashboardPage() {
           {t('signedInAs', { name: profile.full_name, role: profile.role })}
         </p>
       </header>
+
+      <KpiTiles metrics={kpiMetrics} period={period} />
 
       <section className="grid gap-3 sm:grid-cols-3">
         <Tile label={t('newLeads')} value={snapshot.newLeadsCount} hint={t('last24h')} />

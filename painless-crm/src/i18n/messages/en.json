@@ -184,6 +184,26 @@
     "title": "Dashboard",
     "today": "Today, {date}",
     "signedInAs": "Signed in as {name} · {role}",
+    "kpi": {
+      "heading": "Performance",
+      "period": {
+        "day": "24h",
+        "week": "7d",
+        "month": "30d"
+      },
+      "vs": {
+        "day": "vs prev. day",
+        "week": "vs prev. week",
+        "month": "vs prev. month"
+      },
+      "metric": {
+        "leads": "Leads",
+        "quotesSent": "Quotes sent",
+        "quotesAccepted": "Quotes accepted",
+        "won": "Jobs won",
+        "revenuePence": "Revenue won"
+      }
+    },
     "emptyTitle": "Empty state",
     "emptyBody": "Domain UI lands in phases 03 and onwards.",
     "newLeads": "New leads",

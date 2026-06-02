@@ -1,6 +1,8 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { resolveMentions } from '@/lib/notes/mentions';
+import { createNotifications } from '@/lib/notifications/create';
 import { AddJobNoteSchema, SoftDeleteNoteSchema } from '@/lib/schemas/note';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -39,11 +41,18 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
   const supabase = await createClient();
   const { data: job } = await supabase
     .from('jobs')
-    .select('id')
+    .select('id, job_number')
     .eq('id', parsed.data.job_id)
     .is('deleted_at', null)
     .maybeSingle();
   if (!job) return { status: 'error', message: 'Job not found' };
+
+  // Resolve @mentions against active company users (RLS scopes the read).
+  const { data: users } = await supabase
+    .from('users')
+    .select('id, full_name')
+    .eq('active', true);
+  const mentions = resolveMentions(parsed.data.body, users ?? []);
 
   const { data, error } = await supabase
     .from('notes')
@@ -52,6 +61,7 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
       parent_type: 'job',
       parent_id: job.id,
       body: parsed.data.body,
+      mentions: mentions.length > 0 ? mentions : null,
       is_customer_visible: parsed.data.is_customer_visible,
       category: parsed.data.is_customer_visible ? 'customer_visible' : 'admin',
       created_by_id: me.id,
@@ -59,6 +69,21 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
     .select('id')
     .single();
   if (error || !data) return { status: 'error', message: 'Could not save note' };
+
+  // Notify the mentioned users (never the author). Best-effort; runs on the
+  // admin client inside the helper.
+  await createNotifications(
+    mentions.filter((id) => id !== me.id),
+    {
+      companyId: me.company_id,
+      type: 'mention',
+      title: `${me.full_name} mentioned you on job ${job.job_number}`,
+      body: parsed.data.body,
+      linkUrl: `/dashboard/jobs/${job.id}`,
+      relatedEntityType: 'job',
+      relatedEntityId: job.id,
+    },
+  );
 
   revalidatePath(`/dashboard/jobs/${parsed.data.job_id}`);
   return { status: 'ok', note_id: data.id as string };

@@ -100,6 +100,18 @@
       "won": "Won",
       "conversion": "Conv%",
       "revenue": "Won value"
+    },
+    "backToReports": "All reports",
+    "attribution": {
+      "title": "Source attribution",
+      "link": "Attribution",
+      "intro": "Lead quality by acquisition source — conversion, value, repeat business and a composite score. Higher score = a source worth more spend.",
+      "cols": {
+        "avgValue": "Avg value",
+        "repeat": "Repeat",
+        "ltv": "LTV",
+        "score": "Score"
+      }
     }
   },
   "theme": {

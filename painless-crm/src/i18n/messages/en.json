@@ -116,6 +116,11 @@
         "score": "Score"
       }
     },
+    "triggers": {
+      "bannerTitle": "{count, plural, one {# paid source is underperforming} other {# paid sources are underperforming}}",
+      "bannerHint": "Consider pausing or reworking these campaigns. Automatic ad-platform pausing is not yet enabled.",
+      "flag": "Review spend"
+    },
     "financial": {
       "title": "Financial report",
       "link": "Financial",

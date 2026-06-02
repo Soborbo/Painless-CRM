@@ -112,6 +112,31 @@
         "ltv": "LTV",
         "score": "Score"
       }
+    },
+    "financial": {
+      "title": "Financial report",
+      "link": "Financial",
+      "invoiced": "Invoiced",
+      "collected": "Collected",
+      "outstanding": "Outstanding",
+      "collectionRate": "Collection rate",
+      "agingHeading": "Accounts receivable aging",
+      "asOf": "As of {date}",
+      "noOutstanding": "Nothing outstanding — all invoices are settled.",
+      "cols": {
+        "bucket": "Age",
+        "count": "Invoices",
+        "outstanding": "Outstanding",
+        "share": "Share",
+        "total": "Total"
+      },
+      "buckets": {
+        "current": "Current (not yet due)",
+        "d1_30": "1–30 days overdue",
+        "d31_60": "31–60 days overdue",
+        "d61_90": "61–90 days overdue",
+        "d90_plus": "90+ days overdue"
+      }
     }
   },
   "theme": {

@@ -51,10 +51,21 @@ export const JOBS_CSV_HEADER = [
 ] as const;
 
 const NEEDS_QUOTING = /[",\r\n]/;
+// Spreadsheet (CSV) formula injection: Excel/Sheets execute a TEXT cell that
+// begins with one of these as a formula (e.g. =HYPERLINK(...), +, -, @, or a
+// leading tab/CR). User-controlled fields (customer names, notes, tags) flow
+// straight into exports, so neutralise such values with a leading apostrophe
+// per OWASP. Numbers are never formulas, so we only guard string values — this
+// avoids mangling legitimate negative numbers like "-500".
+const FORMULA_TRIGGER = /^[=+\-@\t\r]/;
 
 export function csvField(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return '';
-  const str = typeof value === 'number' ? String(value) : value;
+  if (typeof value === 'number') {
+    const num = String(value);
+    return NEEDS_QUOTING.test(num) ? `"${num.replace(/"/g, '""')}"` : num;
+  }
+  const str = FORMULA_TRIGGER.test(value) ? `'${value}` : value;
   if (!NEEDS_QUOTING.test(str)) return str;
   return `"${str.replace(/"/g, '""')}"`;
 }

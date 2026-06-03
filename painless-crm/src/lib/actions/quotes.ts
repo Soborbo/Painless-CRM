@@ -88,6 +88,7 @@ export async function buildManualQuote(
     return { status: 'error', message: 'No active pricing version. Seed one first.' };
   }
 
+  let quoteId: string;
   try {
     const result = await createQuoteForJob({
       companyId: me.company_id,
@@ -96,14 +97,18 @@ export async function buildManualQuote(
       input: { ...inputResult.input, source: inputResult.input.source ?? 'manual' },
       revisedFromId,
     });
-    revalidatePath(`/dashboard/jobs/${jobId}`);
-    redirect(`/dashboard/jobs/${jobId}?quote=${result.quote_id}`);
+    quoteId = result.quote_id;
   } catch (err) {
     return {
       status: 'error',
       message: err instanceof Error ? err.message : 'Could not create quote',
     };
   }
+  // redirect() works by THROWING a NEXT_REDIRECT control-flow error, so it must
+  // stay OUTSIDE the try above — otherwise the blanket catch swallows a
+  // successful create and renders the redirect digest as an error (audit H5).
+  revalidatePath(`/dashboard/jobs/${jobId}`);
+  redirect(`/dashboard/jobs/${jobId}?quote=${quoteId}`);
 }
 
 export async function sendQuote(_prev: SendQuoteState, form: FormData): Promise<SendQuoteState> {

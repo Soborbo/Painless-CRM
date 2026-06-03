@@ -50,6 +50,7 @@ painless-crm-spec/
 ├── RENOVATE.md                       ← dependency update strategy (v2.1)
 ├── MIGRATION_MAPPING.md              ← iMVE → painless-crm field mapping (skeleton)
 ├── DATA_DICTIONARY.md                ← every field with explanation (skeleton)
+├── GAP_ANALYSIS.md                   ← iMVE vs painless-crm parity audit + Phase 18+ roadmap (2026-06)
 ├── phases/
 │   ├── 00-foundation.md              ← v0.1 GATE — Cloudflare smoke test
 │   ├── 01-auth-multitenant.md        ← v0.1 BUILD SPEC

@@ -59,29 +59,43 @@ export async function createJob(_prev: JobActionState, form: FormData): Promise<
   }
 
   const supabase = await createClient();
-  const jobNumber = await getNextJobNumber();
   const enquiryAt = new Date().toISOString();
   const firstResponseDueAt = computeFirstResponseDueAt(enquiryAt, parsed.data.acquisition_source);
 
-  const { data, error } = await supabase
-    .from('jobs')
-    .insert({
-      job_number: jobNumber,
-      customer_id: parsed.data.customer_id,
-      stage: 'lead',
-      acquisition_source: parsed.data.acquisition_source,
-      assigned_to_id: assignedTo,
-      move_date: parsed.data.move_date,
-      notes: parsed.data.notes,
-      enquiry_at: enquiryAt,
-      first_response_due_at: firstResponseDueAt,
-      company_id: me.company_id,
-      created_by_id: me.id,
-      updated_by_id: me.id,
-    })
-    .select('id')
-    .single();
-  if (error || !data) return { status: 'error', message: 'Could not create job' };
+  // getNextJobNumber is a read-max-then-insert; concurrent creates can collide on
+  // the unique (company_id, job_number). Retry on 23505 (re-reading the next
+  // number) instead of surfacing a spurious failure — mirrors createInvoiceWithLine
+  // (audit).
+  let data: { id: string } | null = null;
+  for (let attempt = 0; attempt < 3 && !data; attempt += 1) {
+    const jobNumber = await getNextJobNumber();
+    const res = await supabase
+      .from('jobs')
+      .insert({
+        job_number: jobNumber,
+        customer_id: parsed.data.customer_id,
+        stage: 'lead',
+        acquisition_source: parsed.data.acquisition_source,
+        assigned_to_id: assignedTo,
+        move_date: parsed.data.move_date,
+        notes: parsed.data.notes,
+        enquiry_at: enquiryAt,
+        first_response_due_at: firstResponseDueAt,
+        company_id: me.company_id,
+        created_by_id: me.id,
+        updated_by_id: me.id,
+      })
+      .select('id')
+      .single();
+    if (!res.error && res.data) {
+      data = res.data as { id: string };
+      break;
+    }
+    if (res.error && res.error.code !== '23505') {
+      return { status: 'error', message: 'Could not create job' };
+    }
+  }
+  if (!data) return { status: 'error', message: 'Could not create job' };
 
   await supabase.from('job_status_history').insert({
     company_id: me.company_id,

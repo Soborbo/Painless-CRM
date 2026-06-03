@@ -21,10 +21,12 @@ export function last24hWindow(now: Date): DayWindow {
 }
 
 export function todayWindow(now: Date): DayWindow {
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
+  // Compute the day boundary in UTC, matching how move_date / next_action_due_at
+  // are stored (UTC midnight). setHours() uses the runtime-local zone, which on a
+  // non-UTC host selects the wrong day's rows (audit, timezone).
+  const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  end.setUTCDate(end.getUTCDate() + 1);
   return { startIso: start.toISOString(), endIso: end.toISOString() };
 }
 

@@ -10,7 +10,12 @@ import { createClient } from '@/lib/supabase/server';
 // LIKE plan which is fine at Painless's scale (<5k jobs). Bigger
 // indexes can land later without changing this contract.
 
-const ILIKE_ESCAPE = /[%_,]/g;
+// Strip LIKE wildcards (% _) and PostgREST .or() control chars. The comma
+// separates .or() conditions; parentheses group them and a double-quote quotes a
+// value — leaving any of these in a user term could break out of the filter
+// (audit). RLS still bounds results to the tenant, so the worst case without this
+// is a malformed query, but we strip them so search is robust and unambiguous.
+const ILIKE_ESCAPE = /[%_,()"]/g;
 
 export function sanitizeIlikePattern(input: string): string {
   return input.replace(ILIKE_ESCAPE, ' ').trim();

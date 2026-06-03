@@ -46,7 +46,8 @@ export async function POST(req: Request, { params }: Params): Promise<Response> 
 
   const result = await persistFeedback(token, parsed.data);
   if (!result.ok) {
-    const status = result.reason === 'not_found' ? 404 : 500;
+    const status =
+      result.reason === 'not_found' ? 404 : result.reason === 'already_submitted' ? 409 : 500;
     return NextResponse.json({ error: result.reason }, { status });
   }
 

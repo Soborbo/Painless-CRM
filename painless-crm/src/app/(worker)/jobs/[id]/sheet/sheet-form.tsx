@@ -1,5 +1,6 @@
 'use client';
 
+import type { CustomFieldDef } from '@/lib/custom-fields/defs';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -7,7 +8,17 @@ import { useSync } from '../../../_lib/sync-context';
 
 // End-of-job sheet, offline-first via the shared queue (type 'job_sheet').
 // Reads the form fields into the queued payload, then enqueues + syncs.
-export function SheetForm({ jobId, jobNumber }: { jobId: string; jobNumber: string }) {
+export function SheetForm({
+  jobId,
+  jobNumber,
+  customFieldDefs = [],
+  suggestedCubicFt = null,
+}: {
+  jobId: string;
+  jobNumber: string;
+  customFieldDefs?: CustomFieldDef[];
+  suggestedCubicFt?: number | null;
+}) {
   const t = useTranslations('workerApp');
   const router = useRouter();
   const { enqueueAction, online } = useSync();
@@ -26,6 +37,10 @@ export function SheetForm({ jobId, jobNumber }: { jobId: string; jobNumber: stri
     setError(null);
     setPhase('saving');
     const clientEventId = globalThis.crypto.randomUUID();
+    const customFields: Record<string, string> = {};
+    for (const def of customFieldDefs) {
+      customFields[def.key] = String(fd.get(`cf_${def.key}`) ?? '');
+    }
     await enqueueAction({
       client_event_id: clientEventId,
       type: 'job_sheet',
@@ -43,6 +58,7 @@ export function SheetForm({ jobId, jobNumber }: { jobId: string; jobNumber: stri
         damage_reported: damage,
         damage_details: String(fd.get('damage_details') ?? ''),
         customer_satisfaction_score: String(fd.get('customer_satisfaction_score') ?? ''),
+        custom_fields: customFields,
         client_recorded_at: new Date().toISOString(),
       },
     });
@@ -68,13 +84,22 @@ export function SheetForm({ jobId, jobNumber }: { jobId: string; jobNumber: stri
         min={0}
         required
       />
-      <Field
-        label={t('sheet.actualCubicFt')}
-        name="actual_cubic_ft"
-        type="number"
-        step="any"
-        min={0}
-      />
+      <label className="flex flex-col gap-1 text-sm">
+        <span>{t('sheet.actualCubicFt')}</span>
+        <input
+          type="number"
+          name="actual_cubic_ft"
+          step="any"
+          min={0}
+          defaultValue={suggestedCubicFt ?? ''}
+          className="rounded-md border px-3 py-2"
+        />
+        {suggestedCubicFt != null ? (
+          <span className="text-xs text-[var(--color-muted-foreground)]">
+            {t('sheet.cubicFtSuggested', { value: suggestedCubicFt })}
+          </span>
+        ) : null}
+      </label>
 
       <label className="flex flex-col gap-1 text-sm">
         {t('sheet.complications')}
@@ -100,6 +125,10 @@ export function SheetForm({ jobId, jobNumber }: { jobId: string; jobNumber: stri
           ))}
         </select>
       </label>
+
+      {customFieldDefs.map((def) => (
+        <CustomField key={def.key} def={def} />
+      ))}
 
       <label className="flex items-center gap-2 text-sm">
         <input
@@ -127,6 +156,55 @@ export function SheetForm({ jobId, jobNumber }: { jobId: string; jobNumber: stri
         {phase === 'saving' ? t('sheet.submitting') : t('sheet.submit')}
       </button>
     </form>
+  );
+}
+
+// A tenant-configured extra field (Phase 25, ADR-036). Uncontrolled — read from
+// FormData on submit by its cf_<key> name.
+function CustomField({ def }: { def: CustomFieldDef }) {
+  const name = `cf_${def.key}`;
+  const label = (
+    <span>
+      {def.label}
+      {def.required ? <span className="text-[var(--color-danger)]"> *</span> : null}
+    </span>
+  );
+
+  if (def.type === 'checkbox') {
+    return (
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" name={name} className="h-4 w-4" />
+        {label}
+      </label>
+    );
+  }
+
+  if (def.type === 'select') {
+    return (
+      <label className="flex flex-col gap-1 text-sm">
+        {label}
+        <select name={name} defaultValue="" className="rounded-md border bg-transparent px-3 py-2">
+          <option value="">—</option>
+          {def.options?.map((o) => (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
+
+  return (
+    <label className="flex flex-col gap-1 text-sm">
+      {label}
+      <input
+        type={def.type === 'number' ? 'number' : 'text'}
+        name={name}
+        required={def.required}
+        className="rounded-md border px-3 py-2"
+      />
+    </label>
   );
 }
 

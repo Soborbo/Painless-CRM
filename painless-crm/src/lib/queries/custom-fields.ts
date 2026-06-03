@@ -31,3 +31,22 @@ export async function getJobCustomFields(
     .maybeSingle();
   return readValues((data as { custom_fields: unknown } | null)?.custom_fields);
 }
+
+// Phase 25 — Job Sheet customisation reuses the same engine over a separate
+// settings column (settings.job_sheet_fields). See ADR-036.
+export async function getJobSheetFieldDefsForCompany(
+  companyId: string,
+): Promise<CustomFieldDef[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('settings')
+    .select('job_sheet_fields')
+    .eq('company_id', companyId)
+    .maybeSingle();
+  return parseDefs((data as { job_sheet_fields: unknown } | null)?.job_sheet_fields);
+}
+
+export async function getJobSheetFieldDefs(): Promise<CustomFieldDef[]> {
+  const me = await requireUser();
+  return getJobSheetFieldDefsForCompany(me.company_id);
+}

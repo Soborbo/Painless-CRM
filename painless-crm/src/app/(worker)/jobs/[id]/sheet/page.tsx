@@ -1,4 +1,6 @@
 import { requireUser } from '@/lib/auth/require-role';
+import { getJobSheetFieldDefsForCompany } from '@/lib/queries/custom-fields';
+import { getJobCubicEstimate } from '@/lib/queries/surveys';
 import { getWorkerForUser, getWorkerJobDetail, hasJobSheet } from '@/lib/queries/worker-app';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -17,8 +19,12 @@ export default async function JobSheetPage({ params }: Props) {
   const job = await getWorkerJobDetail(id, worker.id, today);
   if (!job) notFound();
 
-  const alreadySubmitted = await hasJobSheet(worker.id, id);
-  const t = await getTranslations('workerApp');
+  const [alreadySubmitted, customFieldDefs, suggestedCubicFt, t] = await Promise.all([
+    hasJobSheet(worker.id, id),
+    getJobSheetFieldDefsForCompany(worker.company_id),
+    getJobCubicEstimate(id),
+    getTranslations('workerApp'),
+  ]);
 
   return (
     <main className="flex flex-col gap-5">
@@ -36,7 +42,12 @@ export default async function JobSheetPage({ params }: Props) {
           {t('sheet.alreadySubmitted')}
         </p>
       ) : (
-        <SheetForm jobId={id} jobNumber={job.job_number} />
+        <SheetForm
+          jobId={id}
+          jobNumber={job.job_number}
+          customFieldDefs={customFieldDefs}
+          suggestedCubicFt={suggestedCubicFt}
+        />
       )}
     </main>
   );

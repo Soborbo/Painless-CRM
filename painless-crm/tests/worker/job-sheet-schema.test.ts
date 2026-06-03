@@ -45,4 +45,19 @@ describe('JobSheetSchema', () => {
         .success,
     ).toBe(true);
   });
+
+  it('accepts an optional custom_fields string map (Phase 25)', () => {
+    const r = JobSheetSchema.safeParse({
+      ...base,
+      custom_fields: { parking_permit: 'A12', lift_used: 'on' },
+    });
+    expect(r.success).toBe(true);
+    if (r.success) expect(r.data.custom_fields).toEqual({ parking_permit: 'A12', lift_used: 'on' });
+  });
+
+  it('is valid with no custom_fields at all', () => {
+    const r = JobSheetSchema.safeParse(base);
+    expect(r.success).toBe(true);
+    if (r.success) expect(r.data.custom_fields).toBeUndefined();
+  });
 });

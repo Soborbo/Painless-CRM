@@ -1,4 +1,4 @@
-import { type CubicSummary, summariseCubicSheet } from '@/lib/jobs/cubic';
+import { type CubicSummary, pickCubicEstimate, summariseCubicSheet } from '@/lib/jobs/cubic';
 import { createClient } from '@/lib/supabase/server';
 
 // Phase 10 §2/§3 — survey + cubic-sheet reads. RLS scopes to the company.
@@ -74,6 +74,32 @@ export async function getSurveysForJob(jobId: string): Promise<SurveyRow[]> {
     .is('deleted_at', null)
     .order('created_at', { ascending: false });
   return ((data ?? []) as unknown as Array<Record<string, unknown>>).map(toSurvey);
+}
+
+// Phase 09 — the cubic-ft estimate to pre-fill the end-of-job sheet. Prefers the
+// most recent survey's surveyor estimate, falling back to its itemised cubic
+// total. Null when the job has no usable estimate.
+export async function getJobCubicEstimate(jobId: string): Promise<number | null> {
+  const supabase = await createClient();
+  const { data: survey } = await supabase
+    .from('surveys')
+    .select('id, cubic_ft_estimate')
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!survey) return null;
+
+  const direct = (survey as { cubic_ft_estimate: number | null }).cubic_ft_estimate;
+  if (typeof direct === 'number' && direct > 0) return pickCubicEstimate([direct]);
+
+  const { data: itemRows } = await supabase
+    .from('cubic_sheet_items')
+    .select('quantity, cubic_ft_each, cubic_ft_total, fragile, dismantle_required')
+    .eq('survey_id', (survey as { id: string }).id);
+  const summary = summariseCubicSheet((itemRows ?? []) as CubicItem[]);
+  return pickCubicEstimate([summary.totalCubicFt]);
 }
 
 export async function getSurvey(

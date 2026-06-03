@@ -39,6 +39,9 @@ export const JobSheetSchema = z
       .datetime({ offset: true })
       .optional()
       .or(z.literal('').transform(() => undefined)),
+    // Phase 25 — raw values for any tenant-configured job-sheet fields; coerced
+    // against the defs in persistJobSheet (unknown keys ignored). See ADR-036.
+    custom_fields: z.record(z.string(), z.string()).optional(),
   })
   .refine((v) => !v.damage_reported || (v.damage_details && v.damage_details.length > 0), {
     message: 'Describe the damage you reported',

@@ -54,7 +54,8 @@
     "leadProviders": "Lead providers",
     "integrations": "Integrations",
     "affiliates": "Affiliates",
-    "payouts": "Payouts"
+    "payouts": "Payouts",
+    "vehicleChecks": "Vehicle checks"
   },
   "capacity": {
     "title": "Capacity",
@@ -1314,7 +1315,8 @@
       "submitting": "Submitting…",
       "submitted": "Sheet submitted.",
       "queued": "Saved — will sync when you reconnect.",
-      "hoursRequired": "Enter the actual hours worked."
+      "hoursRequired": "Enter the actual hours worked.",
+      "cubicFtSuggested": "Suggested from survey: {value} cu ft"
     },
     "check": {
       "openLink": "Vehicle pre-check",
@@ -1674,5 +1676,43 @@
     "save": "Save changes",
     "saving": "Saving…",
     "saved": "Saved."
+  },
+  "jobSheetFields": {
+    "navLabel": "Job sheet fields",
+    "title": "Job sheet fields",
+    "subtitle": "Add extra fields workers fill in on the end-of-job sheet. Stored as configuration — no code change.",
+    "current": "Current fields",
+    "none": "No job sheet fields yet.",
+    "required": "required",
+    "remove": "Remove",
+    "addHeading": "Add a field",
+    "label": "Label",
+    "key": "Key",
+    "type": "Type",
+    "options": "Options",
+    "optionsHint": "comma,separated (for select)",
+    "requiredToggle": "Required",
+    "addField": "Add field",
+    "saving": "Saving…",
+    "type_text": "Text",
+    "type_number": "Number",
+    "type_select": "Select",
+    "type_checkbox": "Checkbox"
+  },
+  "vehicleChecks": {
+    "title": "Vehicle checks",
+    "subtitle": "Pre-use vehicle checks submitted by workers. Rows needing attention are highlighted.",
+    "none": "No vehicle checks recorded yet.",
+    "attentionCount": "{count} need attention",
+    "colSubmitted": "Submitted",
+    "colVehicle": "Vehicle",
+    "colWorker": "Worker",
+    "colJob": "Job",
+    "colFuel": "Fuel",
+    "colMileage": "Mileage",
+    "colStatus": "Status",
+    "statusClear": "Clear",
+    "statusDefects": "Defects",
+    "statusLowFuel": "Low fuel"
   }
 }

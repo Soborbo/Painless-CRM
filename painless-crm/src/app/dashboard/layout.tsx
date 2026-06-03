@@ -21,6 +21,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const te = await getTranslations('exports');
   const tc = await getTranslations('companySettings');
   const tcf = await getTranslations('customFields');
+  const tjs = await getTranslations('jobSheetFields');
 
   // Server-side role filtering — only links this role can open are rendered.
   const can = (roles?: string[]) => !roles || roles.includes(profile.role);
@@ -53,6 +54,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         ...link('/dashboard/calendar', t('calendar'), MANAGER),
         ...link('/dashboard/rota', t('rota'), MANAGER),
         ...link('/dashboard/vehicles', t('vehicles'), MANAGER),
+        ...link('/dashboard/vehicle-checks', t('vehicleChecks'), MANAGER),
         ...link('/dashboard/storage', t('storage'), MANAGER),
         ...link('/dashboard/workers', t('workers'), MANAGER),
         ...link('/dashboard/capacity', t('capacity'), MANAGER),
@@ -86,6 +88,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       links: [
         ...link('/dashboard/settings/company', tc('navLabel'), MANAGER),
         ...link('/dashboard/settings/custom-fields', tcf('navLabel'), ADMIN),
+        ...link('/dashboard/settings/job-sheet-fields', tjs('navLabel'), ADMIN),
         ...link('/dashboard/settings/document-text', t('documentText'), ADMIN),
         ...link('/dashboard/settings/cubic-presets', t('cubicPresets'), MANAGER),
         ...link('/dashboard/settings/pricing', tp('navLabel'), MANAGER),

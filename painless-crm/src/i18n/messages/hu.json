@@ -54,7 +54,8 @@
     "leadProviders": "",
     "integrations": "",
     "affiliates": "",
-    "payouts": ""
+    "payouts": "",
+    "vehicleChecks": ""
   },
   "capacity": {
     "title": "",
@@ -1314,7 +1315,8 @@
       "submitting": "",
       "submitted": "",
       "queued": "",
-      "hoursRequired": ""
+      "hoursRequired": "",
+      "cubicFtSuggested": ""
     },
     "check": {
       "openLink": "",
@@ -1674,5 +1676,43 @@
     "save": "",
     "saving": "",
     "saved": ""
+  },
+  "jobSheetFields": {
+    "navLabel": "",
+    "title": "",
+    "subtitle": "",
+    "current": "",
+    "none": "",
+    "required": "",
+    "remove": "",
+    "addHeading": "",
+    "label": "",
+    "key": "",
+    "type": "",
+    "options": "",
+    "optionsHint": "",
+    "requiredToggle": "",
+    "addField": "",
+    "saving": "",
+    "type_text": "",
+    "type_number": "",
+    "type_select": "",
+    "type_checkbox": ""
+  },
+  "vehicleChecks": {
+    "title": "",
+    "subtitle": "",
+    "none": "",
+    "attentionCount": "",
+    "colSubmitted": "",
+    "colVehicle": "",
+    "colWorker": "",
+    "colJob": "",
+    "colFuel": "",
+    "colMileage": "",
+    "colStatus": "",
+    "statusClear": "",
+    "statusDefects": "",
+    "statusLowFuel": ""
   }
 }

@@ -1,5 +1,20 @@
-import { summariseCubicSheet } from '@/lib/jobs/cubic';
+import { pickCubicEstimate, summariseCubicSheet } from '@/lib/jobs/cubic';
 import { describe, expect, it } from 'vitest';
+
+describe('pickCubicEstimate', () => {
+  it('returns the first positive finite candidate', () => {
+    expect(pickCubicEstimate([null, 0, 42, 99])).toBe(42);
+  });
+
+  it('skips zero, negatives, NaN and nullish', () => {
+    expect(pickCubicEstimate([null, undefined, 0, -5, Number.NaN, 12])).toBe(12);
+  });
+
+  it('returns null when nothing is usable', () => {
+    expect(pickCubicEstimate([null, 0, -1])).toBeNull();
+    expect(pickCubicEstimate([])).toBeNull();
+  });
+});
 
 describe('summariseCubicSheet', () => {
   it('sums quantities, cubic ft and flags', () => {

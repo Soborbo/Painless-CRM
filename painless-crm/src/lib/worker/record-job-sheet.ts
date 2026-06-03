@@ -1,3 +1,5 @@
+import { validateValues } from '@/lib/custom-fields/defs';
+import { getJobSheetFieldDefsForCompany } from '@/lib/queries/custom-fields';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { JobSheetInput } from '@/lib/schemas/job-sheet';
 import { createClient } from '@/lib/supabase/server';
@@ -16,6 +18,13 @@ export async function persistJobSheet(
   if (!detail) return 'not_assigned';
 
   const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+
+  // Phase 25 — coerce any tenant-configured job-sheet fields against the defs.
+  // Resilient: keeps valid values, drops unknown/invalid (required-enforcement
+  // lives in the form), so an offline replay never hard-fails on this.
+  const defs = await getJobSheetFieldDefsForCompany(worker.company_id);
+  const { values: customFields } = validateValues(defs, input.custom_fields ?? {});
+
   const supabase = await createClient();
   const { error } = await supabase.from('job_sheets').insert({
     company_id: worker.company_id,
@@ -27,6 +36,7 @@ export async function persistJobSheet(
     damage_reported: input.damage_reported,
     damage_details: input.damage_details ?? null,
     customer_satisfaction_score: input.customer_satisfaction_score,
+    custom_fields: customFields,
     client_event_id: input.client_event_id,
     client_recorded_at: recordedAt,
   });

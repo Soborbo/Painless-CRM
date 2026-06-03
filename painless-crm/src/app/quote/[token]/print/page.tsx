@@ -1,7 +1,9 @@
 import { serverEnv } from '@/lib/env';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { listPublicVariantsForQuote } from '@/lib/queries/quote-variants';
+import { getBrandingByCompanyId } from '@/lib/queries/settings';
 import { extractPublicBreakdown } from '@/lib/quotes/public-breakdown';
+import { resolveBranding } from '@/lib/settings/branding';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
 import { formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
@@ -32,11 +34,23 @@ export default async function PrintQuotePage({ params }: Props) {
   const details = extractPublicBreakdown(quote.breakdown);
   const variants = await listPublicVariantsForQuote(quote.id);
   const sizeLabel = details.size_label ?? quote.size_code ?? '—';
+  const branding = resolveBranding(
+    await getBrandingByCompanyId(quote.company_id),
+    quote.company.name,
+  );
 
   return (
     <main className="mx-auto flex max-w-2xl flex-col gap-6 px-8 py-10 print:px-0 print:py-0">
+      {/* Brand tick: a 2px rule in the tenant's brand colour. */}
+      <div className="h-0.5 w-full" style={{ backgroundColor: branding.brandColor }} aria-hidden />
       <header className="border-b pb-4">
-        <p className="text-xs uppercase tracking-wide text-zinc-500">{quote.company.name}</p>
+        <div className="flex items-center gap-3">
+          {branding.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element -- arbitrary tenant logo URL, not a bundled asset
+            <img src={branding.logoUrl} alt={branding.companyName} className="h-9 w-auto" />
+          ) : null}
+          <p className="text-xs uppercase tracking-wide text-zinc-500">{branding.companyName}</p>
+        </div>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight">{tp('title')}</h1>
         <p className="mt-1 text-sm text-zinc-600">
           {tp('subhead', {

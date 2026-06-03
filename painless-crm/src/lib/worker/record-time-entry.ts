@@ -1,3 +1,4 @@
+import { boundedClientTimestamp } from './client-timestamp';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { TimeEntryInput } from '@/lib/schemas/time-entry';
 import { createClient } from '@/lib/supabase/server';
@@ -16,7 +17,7 @@ export async function persistTimeEntry(
   const detail = await getWorkerJobDetail(input.job_id, worker.id, today);
   if (!detail) return 'not_assigned';
 
-  const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+  const recordedAt = boundedClientTimestamp(input.client_recorded_at);
   const supabase = await createClient();
   const { error } = await supabase.from('time_entries').insert({
     company_id: worker.company_id,

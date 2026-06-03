@@ -1,3 +1,4 @@
+import { boundedClientTimestamp } from './client-timestamp';
 import { getGpsThresholdForCompany, getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { ClockInInput } from '@/lib/schemas/clock-in';
 import { createClient } from '@/lib/supabase/server';
@@ -27,7 +28,7 @@ export async function persistClockIn(
     thresholdM: threshold,
   });
 
-  const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+  const recordedAt = boundedClientTimestamp(input.client_recorded_at);
   const supabase = await createClient();
   const { error } = await supabase.from('time_entries').insert({
     company_id: worker.company_id,

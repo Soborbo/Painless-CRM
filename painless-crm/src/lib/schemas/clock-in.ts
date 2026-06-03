@@ -6,7 +6,9 @@ import { z } from 'zod';
 // true timestamp.
 
 const optionalCoord = z
-  .union([z.literal(''), z.coerce.number()])
+  // .finite() rejects NaN/Infinity (a bare coerce.number() lets a non-numeric
+  // string through as NaN) so a junk GPS value can't reach the DB (audit).
+  .union([z.literal(''), z.coerce.number().finite()])
   .transform((v) => (v === '' ? null : v))
   .nullable()
   .optional()

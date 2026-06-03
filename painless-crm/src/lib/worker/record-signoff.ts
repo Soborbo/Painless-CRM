@@ -1,3 +1,4 @@
+import { boundedClientTimestamp } from './client-timestamp';
 import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { finalBalancePence } from '@/lib/invoices/auto-create';
 import { createInvoiceWithLine, jobHasInvoiceOfType } from '@/lib/invoices/create';
@@ -37,7 +38,7 @@ export async function persistSignoff(
     .maybeSingle();
   if (!job) return 'not_assigned';
 
-  const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+  const recordedAt = boundedClientTimestamp(input.client_recorded_at);
   const now = new Date().toISOString();
 
   // 1) Capture the sign-off (idempotent on replay).
@@ -71,6 +72,21 @@ export async function persistSignoff(
       .eq('client_event_id', input.client_event_id)
       .maybeSingle();
     signoffId = existing?.id;
+    // The 23505 may instead be the one-sign-off-per-job constraint (a second
+    // sign-off for an already-signed job — e.g. a two-person crew each
+    // submitting with a fresh client_event_id). Fall back to the existing live
+    // sign-off for the job so the offline queue clears it instead of retrying to
+    // a permanent dead-letter (audit M1). The stage transition below is guarded,
+    // so re-signing a completed job is a no-op.
+    if (!signoffId) {
+      const { data: jobSignoff } = await supabase
+        .from('customer_signoffs')
+        .select('id')
+        .eq('job_id', input.job_id)
+        .is('deleted_at', null)
+        .maybeSingle();
+      signoffId = jobSignoff?.id;
+    }
   }
   if (!signoffId) return 'error';
 
@@ -155,6 +171,7 @@ async function maybeCreateFinalInvoice(
     .select('total_pence')
     .eq('job_id', args.jobId)
     .neq('status', 'void')
+    .neq('type', 'credit_note') // a credit note is money OUT, not prior billing (audit)
     .is('deleted_at', null);
   const invoiced = ((existing ?? []) as Array<{ total_pence: number }>).reduce(
     (sum, r) => sum + (r.total_pence ?? 0),

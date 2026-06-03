@@ -1,3 +1,4 @@
+import { boundedClientTimestamp } from './client-timestamp';
 import { validateValues } from '@/lib/custom-fields/defs';
 import { getJobSheetFieldDefsForCompany } from '@/lib/queries/custom-fields';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
@@ -17,7 +18,7 @@ export async function persistJobSheet(
   const detail = await getWorkerJobDetail(input.job_id, worker.id, today);
   if (!detail) return 'not_assigned';
 
-  const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+  const recordedAt = boundedClientTimestamp(input.client_recorded_at);
 
   // Phase 25 — coerce any tenant-configured job-sheet fields against the defs.
   // Resilient: keeps valid values, drops unknown/invalid (required-enforcement

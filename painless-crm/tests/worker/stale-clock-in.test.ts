@@ -60,4 +60,23 @@ describe('findStaleClockIns', () => {
     );
     expect(stale.map((s) => s.worker_id)).toEqual(['w1']);
   });
+
+  it('keys freshness per (worker, job): a clock-out on job B does not clear an open clock-in on job A', () => {
+    // Audit: one worker, open clock-in on job A, closed out on a different job B.
+    // Job A must still be flagged stale.
+    const stale = findStaleClockIns(
+      [
+        entry({ worker_id: 'w1', job_id: 'A', occurred_at: '2026-06-10T08:00:00.000Z' }),
+        entry({ worker_id: 'w1', job_id: 'B', occurred_at: '2026-06-10T08:05:00.000Z' }),
+        entry({
+          worker_id: 'w1',
+          job_id: 'B',
+          type: 'clock_out',
+          occurred_at: '2026-06-10T11:00:00.000Z',
+        }),
+      ],
+      NOW,
+    );
+    expect(stale.map((s) => s.job_id)).toEqual(['A']);
+  });
 });

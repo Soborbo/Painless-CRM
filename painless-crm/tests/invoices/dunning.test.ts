@@ -13,15 +13,27 @@ describe('daysOverdue', () => {
   });
 });
 
-describe('dunningStage — fires only on exact marks', () => {
-  it('maps the cadence and stays silent between marks', () => {
+describe('dunningStage — highest mark reached (miss-resilient)', () => {
+  it('maps each cadence mark', () => {
     expect(dunningStage(3)).toBe('reminder1');
     expect(dunningStage(7)).toBe('reminder2');
     expect(dunningStage(14)).toBe('urgent');
     expect(dunningStage(30)).toBe('admin');
-    expect(dunningStage(4)).toBe('none');
-    expect(dunningStage(15)).toBe('none');
+  });
+
+  it('stays silent before the first mark', () => {
     expect(dunningStage(0)).toBe('none');
+    expect(dunningStage(2)).toBe('none');
+  });
+
+  it('returns the highest mark passed, so a missed cron day still triggers', () => {
+    // Audit M4: a boundary skipped (e.g. cron down on day 3/7/14/30) must still
+    // fire on the next run. The dunning_log ledger keeps delivery exactly-once.
+    expect(dunningStage(4)).toBe('reminder1');
+    expect(dunningStage(6)).toBe('reminder1');
+    expect(dunningStage(13)).toBe('reminder2');
+    expect(dunningStage(15)).toBe('urgent');
+    expect(dunningStage(45)).toBe('admin');
   });
 });
 

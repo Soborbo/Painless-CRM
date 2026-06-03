@@ -42,6 +42,22 @@ function embed<T>(raw: unknown): T | null {
   return (raw as T) ?? null;
 }
 
+// Idempotency ledger (audit M4): claim (invoice, stage) before sending. Returns
+// true only for the first claim — the unique(invoice_id, stage) index turns a
+// repeat into a 23505, so a same-day re-run or a missed-then-caught-up day never
+// re-sends. On any other DB error we DON'T send (safer than risking a dupe).
+async function claimDunningStage(
+  supabase: ReturnType<typeof createAdminClient>,
+  companyId: string,
+  invoiceId: string,
+  stage: DunningStage,
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('dunning_log')
+    .insert({ company_id: companyId, invoice_id: invoiceId, stage });
+  return !error;
+}
+
 export async function runDunningSweep(now: Date = new Date()): Promise<DunningResult> {
   const supabase = createAdminClient();
   const result: DunningResult = { scanned: 0, markedOverdue: 0, remindersSent: 0, escalated: 0 };
@@ -77,10 +93,20 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
     const stage = dunningStage(days);
     if (stage === 'none') continue;
     if (stage === 'admin') {
-      escalateByCompany.set(
+      // Claim per-invoice so a company is only escalated once per overdue
+      // invoice, not re-counted on every daily run.
+      const claimed = await claimDunningStage(
+        supabase,
         inv.company_id as string,
-        (escalateByCompany.get(inv.company_id as string) ?? 0) + 1,
+        inv.id as string,
+        'admin',
       );
+      if (claimed) {
+        escalateByCompany.set(
+          inv.company_id as string,
+          (escalateByCompany.get(inv.company_id as string) ?? 0) + 1,
+        );
+      }
       continue;
     }
 
@@ -89,6 +115,14 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
     >(inv.customer);
     const email = customer?.primary_email;
     if (!email) continue;
+    // Claim this stage before emailing — skips if already sent (audit M4).
+    const claimed = await claimDunningStage(
+      supabase,
+      inv.company_id as string,
+      inv.id as string,
+      stage,
+    );
+    if (!claimed) continue;
     const copy = COPY[stage];
     await sendDunningEmail({
       to: email,

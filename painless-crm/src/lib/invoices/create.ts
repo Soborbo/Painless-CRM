@@ -24,22 +24,27 @@ export async function nextInvoiceNumber(supabase: AnyClient, companyId: string):
       ? flags.invoice_prefix
       : DEFAULT_PREFIX;
 
+  // Compute the next sequence as a NUMERIC max, not a string sort. Ordering
+  // invoice_number DESC lexicographically put 'PR-2026-9999' above
+  // 'PR-2026-10000', so a company past 9999/year jammed on a duplicate-number
+  // retry loop (audit). Fetch the year's numbers and max their trailing integer.
   const { data } = await supabase
     .from('invoices')
     .select('invoice_number')
     .eq('company_id', companyId)
-    .ilike('invoice_number', `${prefix}-${year}-%`)
-    .order('invoice_number', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .ilike('invoice_number', `${prefix}-${year}-%`);
 
-  let next = 1;
-  const current = (data as { invoice_number: string } | null)?.invoice_number;
-  if (current) {
-    const match = new RegExp(`${prefix}-\\d{4}-(\\d+)`).exec(current);
-    if (match?.[1]) next = Number.parseInt(match[1], 10) + 1;
+  const escapedPrefix = prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`^${escapedPrefix}-\\d{4}-(\\d+)$`);
+  let maxSeq = 0;
+  for (const row of (data ?? []) as Array<{ invoice_number: string }>) {
+    const match = re.exec(row.invoice_number);
+    if (match?.[1]) {
+      const seq = Number.parseInt(match[1], 10);
+      if (seq > maxSeq) maxSeq = seq;
+    }
   }
-  return `${prefix}-${year}-${String(next).padStart(4, '0')}`;
+  return `${prefix}-${year}-${String(maxSeq + 1).padStart(4, '0')}`;
 }
 
 export interface CreateInvoiceParams {

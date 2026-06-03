@@ -1,6 +1,8 @@
 import { requireRole } from '@/lib/auth/require-role';
+import { holidayCoversDate } from '@/lib/calendar/grid';
 import { type LaneType, assembleBoard } from '@/lib/dispatch/board';
 import { getDispatchBoardData } from '@/lib/queries/dispatch-board';
+import { listStaffHolidays } from '@/lib/queries/appointments';
 import { addDaysYmd, enumerateDates, isValidYmd, todayYmd } from '@/lib/rota/dates';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -31,6 +33,16 @@ export default async function DispatchPage({ searchParams }: Props) {
   const lanes = view === 'staff' ? data.staffLanes : data.vehicleLanes;
   const board = assembleBoard(data.assignments, lanes, dates, view);
   const t = await getTranslations('dispatch');
+
+  // Staff lanes overlay holidays: a worker off that day shows an "off" marker.
+  const holidays =
+    view === 'staff'
+      ? await listStaffHolidays(dates[0] as string, dates[dates.length - 1] as string)
+      : [];
+  const offKey = new Set<string>();
+  for (const h of holidays) {
+    for (const d of dates) if (holidayCoversDate(h, d)) offKey.add(`${h.worker_id}|${d}`);
+  }
 
   const href = (next: Partial<{ view: string; start: string; weeks: number }>) => {
     const p = new URLSearchParams({
@@ -92,6 +104,11 @@ export default async function DispatchPage({ searchParams }: Props) {
                 {lane.cells.map((cell) => (
                   <div key={cell.date} className="min-h-14 border-l p-1.5">
                     <div className="flex flex-col gap-1">
+                      {offKey.has(`${lane.laneId}|${cell.date}`) ? (
+                        <span className="rounded bg-rose-100 px-1 py-0.5 text-[10px] font-medium text-rose-900">
+                          {t('off')}
+                        </span>
+                      ) : null}
                       {cell.slots.map((slot) => (
                         <Link
                           key={`${slot.job_id}-${slot.role ?? ''}`}

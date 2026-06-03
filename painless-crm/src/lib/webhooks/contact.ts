@@ -31,14 +31,19 @@ function buildNotes(payload: IncomingContact): string | null {
   return parts.join('\n');
 }
 
-export async function ingestContact(payload: IncomingContact): Promise<IngestContactResult> {
+export async function ingestContact(
+  payload: IncomingContact,
+  trustedCompanyId?: string | null,
+): Promise<IngestContactResult> {
+  // Prefer the server-resolved tenant over the request body (audit H2).
+  const companyId = trustedCompanyId ?? payload.company_id;
   const customerId = await findOrCreateCustomer({
-    companyId: payload.company_id,
+    companyId,
     contact: payload.customer,
     source: payload.source,
   });
   const jobId = await createLeadJob({
-    companyId: payload.company_id,
+    companyId,
     customerId,
     source: payload.source,
     notes: buildNotes(payload),

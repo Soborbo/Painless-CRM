@@ -8,9 +8,9 @@ export const POST = createWebhookHandler({
   source: 'partner_register',
   schema: IncomingPartnerRegisterSchema,
   eventIdPath: (payload) => payload.event_id,
-  handler: async ({ parsed }) => {
+  handler: async ({ parsed, companyId }) => {
     try {
-      await ingestPartnerRegister(parsed);
+      await ingestPartnerRegister(parsed, companyId);
       return { ok: true };
     } catch (err) {
       return { ok: false, reason: err instanceof Error ? err.message : 'ingest_failed' };

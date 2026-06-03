@@ -42,7 +42,7 @@ interface ExecutionContext {
 export default {
   ...openNextWorker,
   async scheduled(event: ScheduledEvent, env: CronEnv, ctx: ExecutionContext): Promise<void> {
-    const dispatch = await prepareCronDispatch(event.cron, env);
+    const dispatch = await prepareCronDispatch(event.cron, env, Date.now());
     if (dispatch.kind === 'skip') {
       if (dispatch.reason === 'no_secret') {
         console.warn('[cron] CRM_WEBHOOK_SECRET unset — skipping %s', event.cron);
@@ -52,7 +52,10 @@ export default {
     ctx.waitUntil(
       fetch(dispatch.url, {
         method: 'POST',
-        headers: { 'x-cron-signature': dispatch.signature },
+        headers: {
+          'x-cron-signature': dispatch.signature,
+          'x-cron-timestamp': dispatch.timestamp,
+        },
         body: '',
       })
         .then((res) => {

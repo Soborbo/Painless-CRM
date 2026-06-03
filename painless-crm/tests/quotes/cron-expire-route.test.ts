@@ -61,15 +61,31 @@ describe('POST /api/cron/expire-quotes', () => {
     expect(res.status).toBe(401);
   });
 
-  it('runs the sweep on a valid signature and returns the count', async () => {
+  it('rejects a valid signature with a stale timestamp (replay protection)', async () => {
     envMock.serverEnv.mockReturnValue({ CRM_WEBHOOK_SECRET: SECRET });
-    expiryMock.expireOverdueQuotes.mockResolvedValueOnce({ expired_count: 4 });
-    const sig = await hmacHex(SECRET, 'expire-quotes');
+    const staleTs = String(Math.floor(Date.now() / 1000) - 600); // 10 min old
+    const sig = await hmacHex(SECRET, `${staleTs}.expire-quotes`);
     const { POST } = await import('@/app/api/cron/expire-quotes/route');
     const res = await POST(
       new Request('https://x/api/cron/expire-quotes', {
         method: 'POST',
-        headers: { 'x-cron-signature': sig },
+        headers: { 'x-cron-signature': sig, 'x-cron-timestamp': staleTs },
+      }),
+    );
+    expect(res.status).toBe(401);
+    expect(expiryMock.expireOverdueQuotes).not.toHaveBeenCalled();
+  });
+
+  it('runs the sweep on a valid timestamped signature and returns the count', async () => {
+    envMock.serverEnv.mockReturnValue({ CRM_WEBHOOK_SECRET: SECRET });
+    expiryMock.expireOverdueQuotes.mockResolvedValueOnce({ expired_count: 4 });
+    const ts = String(Math.floor(Date.now() / 1000));
+    const sig = await hmacHex(SECRET, `${ts}.expire-quotes`);
+    const { POST } = await import('@/app/api/cron/expire-quotes/route');
+    const res = await POST(
+      new Request('https://x/api/cron/expire-quotes', {
+        method: 'POST',
+        headers: { 'x-cron-signature': sig, 'x-cron-timestamp': ts },
       }),
     );
     expect(res.status).toBe(200);
@@ -80,12 +96,13 @@ describe('POST /api/cron/expire-quotes', () => {
   it('returns 500 when the sweep throws', async () => {
     envMock.serverEnv.mockReturnValue({ CRM_WEBHOOK_SECRET: SECRET });
     expiryMock.expireOverdueQuotes.mockRejectedValueOnce(new Error('db down'));
-    const sig = await hmacHex(SECRET, 'expire-quotes');
+    const ts = String(Math.floor(Date.now() / 1000));
+    const sig = await hmacHex(SECRET, `${ts}.expire-quotes`);
     const { POST } = await import('@/app/api/cron/expire-quotes/route');
     const res = await POST(
       new Request('https://x/api/cron/expire-quotes', {
         method: 'POST',
-        headers: { 'x-cron-signature': sig },
+        headers: { 'x-cron-signature': sig, 'x-cron-timestamp': ts },
       }),
     );
     expect(res.status).toBe(500);

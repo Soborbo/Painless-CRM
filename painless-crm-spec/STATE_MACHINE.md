@@ -151,6 +151,29 @@ These are the canonical hooks. The automation engine (Phase 13) attaches behavio
 | ENTER `declined` | Schedule "win-back" email at +30 days | yes |
 | ENTER `dead` | No automation by default | yes |
 
+### 5a. Non-stage automation events (ADR-024)
+
+Not every automation hook is a stage transition. The engine also fires on these **events**, enqueued
+best-effort from the relevant mutation (a failure never breaks the mutation). They flow through the same
+`automation_queue` + per-minute cron as stage rules; rules subscribe via `automation_rules.trigger_event`.
+
+| Event (`trigger_event`) | Enqueued from | Typical use |
+|---|---|---|
+| `job.created` | job-create path (`lib/actions/jobs.ts`) | Welcome email on new enquiry |
+| `invoice.created` | `lib/actions/invoices.ts` `createInvoice` (`action_config`/payload carries `kind`) | Deposit / final invoice email |
+| `payment.recorded` | `lib/actions/payments.ts` `recordPayment` (payload carries `kind: deposit\|final`) | Deposit / move receipt email |
+
+The quote service line (`removal` vs `waste_clearance`) is matched via `trigger_filters.service_type`
+(ADR-025), so ENTER `quoted` sends the right quote template.
+
+### 5b. Dwell-guarded follow-ups (ADR-024)
+
+The ENTER `quoted` follow-up cadence (above) is implemented as delayed `job.stage_changed` rules carrying
+`action_config.requires_stage: 'quoted'`. When a queued follow-up comes due, the cron re-checks the job's
+**current** stage: if it is no longer `quoted` (the customer replied, accepted, or the job was declined),
+the row is finished as `skipped` / `superseded` and no email is sent. This auto-cancels the chain with no
+separate cancellation path. `requires_stage` is the general contract for any "send unless superseded" rule.
+
 ---
 
 ## 6. Sub-status field

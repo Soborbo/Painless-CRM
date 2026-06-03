@@ -189,6 +189,32 @@ This is the recommended scope for OD-4 (migration scope).
 
 ---
 
+## 11. Email template migration
+
+Jay's 21 iMVE transactional email templates are catalogued in `EMAIL_TEMPLATES.md` (canonical `{{…}}`
+form + per-template trigger). They migrate into painless-crm as:
+
+- **`email_templates` rows** — one per template (duplicates deduped; the review template is stored
+  `active=false` because Phase 11 owns review sends — ADR-010 / rule 17). Bodies converted from iMVE
+  `%field%` to painless-crm `{{field}}` placeholders.
+- **`automation_rules` rows** — the clean stage transitions, the `service_type`-filtered quote pair
+  (ADR-025), the `invoice.created` / `payment.recorded` / `job.created` event rules, and the delayed
+  quote follow-up chain with `action_config.requires_stage:'quoted'` (ADR-024, STATE_MACHINE.md §5a/§5b).
+
+**Merge-field mapping (iMVE `%token%` → painless-crm `{{token}}`):** see `EMAIL_TEMPLATES.md` §1. Notable:
+`%job_no%`→`{{job_number}}`; `%company_name%` is the **sender** company (`companies.name`), not the
+customer; `%booked_date/time%` derive from `jobs.survey_at`; `%current/new_address%` from `job_addresses`
+(from/to); `%move_time%` from the new `jobs.arrival_window` (ADR-026).
+
+**Where it lands.** For local/dev the templates + rules are seeded in `supabase/seed.sql` against the
+demo tenant. For production the same insert set is applied as a Phase-17 cutover step (templates are
+config, not historical data, so they ship with the deployment rather than the data export).
+
+**Out of scope:** PDF attachments (Browser Rendering infra-gated — invoice/receipt emails send text +
+portal link for now) and the storage-invoice billing cron.
+
+---
+
 ## TODO before Phase 17
 
 - [ ] Get full iMVE status list from Jay

@@ -1,6 +1,7 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { enqueueEventAutomation } from '@/lib/comms/automation-enqueue';
 import { deriveInvoiceStatus, splitPayment } from '@/lib/invoices/payment';
 import type { InvoiceStatus } from '@/lib/invoices/status';
 import { RecordPaymentSchema } from '@/lib/schemas/payment';
@@ -39,7 +40,7 @@ export async function recordPayment(
   const supabase = await createClient();
   const { data: invoice } = await supabase
     .from('invoices')
-    .select('id, customer_id, total_pence, amount_outstanding_pence, status, version, job_id')
+    .select('id, customer_id, total_pence, amount_outstanding_pence, status, version, job_id, type')
     .eq('id', parsed.data.invoice_id)
     .is('deleted_at', null)
     .maybeSingle();
@@ -53,6 +54,7 @@ export async function recordPayment(
     status: InvoiceStatus;
     version: number;
     job_id: string | null;
+    type: string;
   };
   if (inv.status === 'void') return { status: 'error', message: 'Cannot pay a void invoice' };
 
@@ -119,6 +121,19 @@ export async function recordPayment(
     })
     .eq('id', inv.id)
     .eq('version', inv.version);
+
+  // Fire payment.recorded automation (Phase 13b / ADR-024). Best-effort. `kind`
+  // carries the invoice type so the receipt rules target deposit vs final.
+  try {
+    await enqueueEventAutomation({
+      companyId: me.company_id,
+      event: 'payment.recorded',
+      jobId: inv.job_id,
+      context: { kind: inv.type },
+    });
+  } catch {
+    // swallow — automation is never on the critical path
+  }
 
   revalidatePath(`/dashboard/invoices/${inv.id}`);
   revalidatePath('/dashboard/invoices');

@@ -300,6 +300,43 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-024 — Comms automation: event triggers + dwell-guarded no-response follow-ups
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Migrating Jay's iMVE transactional email templates (`EMAIL_TEMPLATES.md`) into the Phase 13 Comms Hub. The engine only fires on `job.stage_changed`, but several templates are event-driven (deposit/final invoice + receipt) or time-delayed "no reply yet" follow-ups (the quote follow-up chain), neither of which is a stage change. The automation tables are already schemaless on intent: `automation_rules.trigger_event` is free text and `trigger_filters`/`action_config` are `jsonb`.
+**Decision:** Generalise the engine rather than add columns. (1) **New `trigger_event` values** — `invoice.created`, `payment.recorded`, `job.created` — enqueued best-effort from the existing Phase 12 mutations and the job-create path, mirroring `enqueueStageAutomation` (a failure here never breaks the mutation, per the existing pattern). (2) The matcher generalises from `matchStageRules` to `matchRules(rules, event, ctx)`, checking every key present in `trigger_filters` (now including `service_type` — see ADR-025) against a context object. (3) **No-response follow-ups** reuse `job.stage_changed` (to=`quoted`) with `delay_seconds`, plus a send-time **dwell-guard**: `action_config.requires_stage` is re-checked against the job's *current* stage when the queued row comes due; if the job has moved on (customer replied/accepted/declined), the row is finished as `skipped` with reason `superseded`. This auto-cancels the chain without a separate cancellation mechanism.
+**Alternatives considered:**
+- A dedicated `scheduled_followups` table with explicit cancel → more moving parts; the dwell-guard reuses `automation_queue` and the per-minute cron already in place.
+- New typed columns on `automation_rules` for event/filter kinds → the `jsonb` columns already carry this; typing them is churn without payoff at single-tenant scale.
+- A new cron for follow-ups → unnecessary; `automation-queue` (`* * * * *`) already drains due rows.
+**Consequences:** Trigger semantics live in `action_config`/`trigger_filters` conventions, not the schema, so they must be documented (STATE_MACHINE.md §automation hooks) and enforced in the pure matcher + cron guard. The dwell-guard makes "send unless superseded" the contract for any delayed rule. Attachments are still out of scope (PDF generation infra-gated) — invoice/receipt emails send text + portal link until Browser Rendering lands.
+
+---
+
+## ADR-025 — `jobs.service_type` discriminates removals / waste-clearance / storage
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Both the removals "Quotation" and the "Waste Clearance quote" templates fire on the `quoted` stage, but the job row has no field distinguishing the service line, so the engine can't pick the right copy. Waste clearance is a genuinely different product (ethical-disposal messaging, different signature).
+**Decision:** Add `jobs.service_type text not null default 'removal' check (service_type in ('removal','waste_clearance','storage'))` (migration `00000000000044`). It becomes a `trigger_filters.service_type` key the generalised matcher (ADR-024) checks, so `quoted` sends the removals quote for `removal` jobs and the clearance quote for `waste_clearance` jobs. `storage` is included for completeness (storage-only engagements) though storage billing remains its own flow.
+**Alternatives considered:**
+- Reuse `acquisition_source` or a tag → overloads an unrelated field; service line is a first-class attribute of the job.
+- A separate `job_types` lookup table → over-engineered for three fixed values at single-tenant scale; an enum-style check constraint mirrors how the codebase models other small closed sets.
+**Consequences:** A spine-table (`jobs`) column, so `database.types.ts` regenerates and existing job-create paths default to `removal`. Future service lines extend the check constraint via migration. The kanban/job UI gains an optional service-type selector in a later pass (not required for the automation wiring).
+
+---
+
+## ADR-026 — `jobs.arrival_window` free-text crew arrival slot
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** The "Removal confirmation" template renders `{{move_time}}` ("our team will aim to be with you for …"), but `jobs.move_date` is a single `timestamptz` representing the move day, not a customer-facing arrival window, and Painless quotes a *range* ("8:00–9:00") rather than an exact time.
+**Decision:** Add `jobs.arrival_window text` (nullable) holding the human arrival slot as entered by the office (e.g. "8:00–9:00", "AM"). `{{move_time}}` renders this field; when blank it renders empty (the sentence degrades gracefully). Kept as free text deliberately — it's display copy, not a scheduling primitive.
+**Alternatives considered:**
+- Derive a time from `move_date`'s timestamp → `move_date` carries the day, not a committed arrival time; deriving would surface a misleading exact minute.
+- Structured `arrival_from`/`arrival_to` times → premature; the value is purely presentational today and ranges/format vary ("AM", "first drop").
+**Consequences:** A nullable spine-table column (`database.types.ts` regenerates). `{{move_time}}` is empty until the office fills the window. If arrival windows later drive scheduling/capacity, this migrates to structured fields via a follow-up ADR.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

@@ -1,11 +1,19 @@
 'use client';
 
 import { type AutomationRuleActionState, saveAutomationRule } from '@/lib/actions/automation-rules';
+import {
+  INVOICE_KINDS,
+  TRIGGER_EVENTS,
+  TRIGGER_EVENT_LABELS,
+  type TriggerEvent,
+} from '@/lib/comms/automation';
 import { JOB_STAGES } from '@/lib/jobs/state-machine';
 import type { AutomationRuleRow } from '@/lib/queries/automation-rules';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 
 const INITIAL: AutomationRuleActionState = { status: 'idle' };
+const SERVICE_TYPES = ['removal', 'waste_clearance', 'storage'] as const;
+const labelStage = (s: string) => s.replace(/_/g, ' ');
 
 export function AutomationForm({
   rule,
@@ -15,6 +23,16 @@ export function AutomationForm({
   templates: { id: string; name: string }[];
 }) {
   const [state, action, pending] = useActionState(saveAutomationRule, INITIAL);
+  const [event, setEvent] = useState<TriggerEvent>(
+    (rule?.trigger_event as TriggerEvent) ?? 'job.stage_changed',
+  );
+  const isStage = event === 'job.stage_changed';
+  const isInvoiceOrPayment = event === 'invoice.created' || event === 'payment.recorded';
+  const stageOptions = JOB_STAGES.map((s) => (
+    <option key={s} value={s}>
+      {labelStage(s)}
+    </option>
+  ));
 
   return (
     <form action={action} className="flex max-w-lg flex-col gap-4">
@@ -30,43 +48,96 @@ export function AutomationForm({
         />
       </label>
 
-      <p className="text-sm text-[var(--color-muted-foreground)]">
-        When a job moves between these stages (blank = any), send the chosen email template after
-        the delay.
-      </p>
+      <label className="flex flex-col gap-1 text-sm">
+        <span>When this happens *</span>
+        <select
+          name="trigger_event"
+          value={event}
+          onChange={(e) => setEvent(e.target.value as TriggerEvent)}
+          className="rounded-md border bg-transparent px-3 py-2"
+        >
+          {TRIGGER_EVENTS.map((ev) => (
+            <option key={ev} value={ev}>
+              {TRIGGER_EVENT_LABELS[ev]}
+            </option>
+          ))}
+        </select>
+      </label>
 
-      <div className="grid grid-cols-2 gap-3">
+      {isStage ? (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="flex flex-col gap-1 text-sm">
+              <span>From stage</span>
+              <select
+                name="from_stage"
+                defaultValue={rule?.from_stage ?? ''}
+                className="rounded-md border bg-transparent px-3 py-2"
+              >
+                <option value="">Any</option>
+                {stageOptions}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span>To stage</span>
+              <select
+                name="to_stage"
+                defaultValue={rule?.to_stage ?? ''}
+                className="rounded-md border bg-transparent px-3 py-2"
+              >
+                <option value="">Any</option>
+                {stageOptions}
+              </select>
+            </label>
+          </div>
+
+          <label className="flex flex-col gap-1 text-sm">
+            <span>Only for service type</span>
+            <select
+              name="service_type"
+              defaultValue={rule?.service_type ?? ''}
+              className="rounded-md border bg-transparent px-3 py-2"
+            >
+              <option value="">Any</option>
+              {SERVICE_TYPES.map((s) => (
+                <option key={s} value={s}>
+                  {labelStage(s)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1 text-sm">
+            <span>Only send if still in stage (auto-cancel follow-ups)</span>
+            <select
+              name="requires_stage"
+              defaultValue={rule?.requires_stage ?? ''}
+              className="rounded-md border bg-transparent px-3 py-2"
+            >
+              <option value="">Always send</option>
+              {stageOptions}
+            </select>
+          </label>
+        </>
+      ) : null}
+
+      {isInvoiceOrPayment ? (
         <label className="flex flex-col gap-1 text-sm">
-          <span>From stage</span>
+          <span>Only for invoice type</span>
           <select
-            name="from_stage"
-            defaultValue={rule?.from_stage ?? ''}
+            name="kind"
+            defaultValue={rule?.kind ?? ''}
             className="rounded-md border bg-transparent px-3 py-2"
           >
             <option value="">Any</option>
-            {JOB_STAGES.map((s) => (
-              <option key={s} value={s}>
-                {s}
+            {INVOICE_KINDS.map((k) => (
+              <option key={k} value={k}>
+                {labelStage(k)}
               </option>
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>To stage</span>
-          <select
-            name="to_stage"
-            defaultValue={rule?.to_stage ?? ''}
-            className="rounded-md border bg-transparent px-3 py-2"
-          >
-            <option value="">Any</option>
-            {JOB_STAGES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
+      ) : null}
 
       <label className="flex flex-col gap-1 text-sm">
         <span>Delay (minutes)</span>

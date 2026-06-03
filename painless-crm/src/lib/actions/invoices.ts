@@ -1,6 +1,7 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { enqueueEventAutomation } from '@/lib/comms/automation-enqueue';
 import { nextInvoiceNumber } from '@/lib/invoices/create';
 import { type InvoiceStatus, canTransition } from '@/lib/invoices/status';
 import { InvoiceCreateSchema, InvoiceStatusSchema } from '@/lib/schemas/invoice';
@@ -64,6 +65,20 @@ export async function createInvoice(
     }
   }
   if (!createdId) return { status: 'error', message: 'Could not allocate an invoice number' };
+
+  // Fire invoice.created automation (Phase 13b / ADR-024). Best-effort — must
+  // never block invoice creation. `kind` lets rules target a specific type
+  // (e.g. the deposit-invoice email filters kind = 'deposit').
+  try {
+    await enqueueEventAutomation({
+      companyId: me.company_id,
+      event: 'invoice.created',
+      jobId: parsed.data.job_id ?? null,
+      context: { kind: parsed.data.type },
+    });
+  } catch {
+    // swallow — automation is never on the critical path
+  }
 
   revalidatePath('/dashboard/invoices');
   redirect(`/dashboard/invoices/${createdId}`);

@@ -2067,6 +2067,7 @@ export type Database = {
           actual_crew_cost_pence: number | null
           actual_van_cost_pence: number | null
           affiliate_id: string | null
+          arrival_window: string | null
           assigned_to_id: string | null
           cancellation_reason: string | null
           cancelled_at: string | null
@@ -2103,6 +2104,7 @@ export type Database = {
           profit_review_status: string
           quote_total_pence: number | null
           quoted_at: string | null
+          service_type: string
           stage: Database["public"]["Enums"]["job_stage"]
           sub_status: string | null
           survey_at: string | null
@@ -2117,6 +2119,7 @@ export type Database = {
           actual_crew_cost_pence?: number | null
           actual_van_cost_pence?: number | null
           affiliate_id?: string | null
+          arrival_window?: string | null
           assigned_to_id?: string | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
@@ -2153,6 +2156,7 @@ export type Database = {
           profit_review_status?: string
           quote_total_pence?: number | null
           quoted_at?: string | null
+          service_type?: string
           stage?: Database["public"]["Enums"]["job_stage"]
           sub_status?: string | null
           survey_at?: string | null
@@ -2167,6 +2171,7 @@ export type Database = {
           actual_crew_cost_pence?: number | null
           actual_van_cost_pence?: number | null
           affiliate_id?: string | null
+          arrival_window?: string | null
           assigned_to_id?: string | null
           cancellation_reason?: string | null
           cancelled_at?: string | null
@@ -2203,6 +2208,7 @@ export type Database = {
           profit_review_status?: string
           quote_total_pence?: number | null
           quoted_at?: string | null
+          service_type?: string
           stage?: Database["public"]["Enums"]["job_stage"]
           sub_status?: string | null
           survey_at?: string | null

@@ -1,3 +1,4 @@
+import type { AnalyticsJobRow } from '@/lib/reports/analytics';
 import type { DateRange } from '@/lib/jobs/profit-dashboard';
 import type { AttributionJobRow } from '@/lib/reports/attribution';
 import type { FinancialInvoiceRow } from '@/lib/reports/financial';
@@ -41,6 +42,40 @@ export async function listAttributionJobs(range: DateRange): Promise<Attribution
     .lt('enquiry_at', range.endIso)
     .limit(REPORT_ROW_CAP);
   return (data ?? []) as AttributionJobRow[];
+}
+
+// Visual analytics read (Phase 21): the enquiry cohort with the columns the
+// dashboard breakdowns and projected-revenue need, plus the assigned rep name.
+const ANALYTICS_COLUMNS = `
+  stage, service_type, acquisition_source, assigned_to_id, quoted_at, paid_at, quote_total_pence,
+  assigned_to:users!jobs_assigned_to_id_fkey (full_name)
+`;
+
+export async function listAnalyticsJobs(range: DateRange): Promise<AnalyticsJobRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('jobs')
+    .select(ANALYTICS_COLUMNS)
+    .is('deleted_at', null)
+    .gte('enquiry_at', range.startIso)
+    .lt('enquiry_at', range.endIso)
+    .limit(REPORT_ROW_CAP);
+  return ((data ?? []) as Array<Record<string, unknown>>).map((raw) => {
+    const assigned = raw.assigned_to;
+    const name = Array.isArray(assigned)
+      ? (assigned[0] as { full_name: string } | undefined)?.full_name
+      : (assigned as { full_name: string } | null)?.full_name;
+    return {
+      stage: (raw.stage as string | null) ?? 'lead',
+      service_type: (raw.service_type as string | null) ?? null,
+      acquisition_source: (raw.acquisition_source as string | null) ?? null,
+      assigned_to_id: (raw.assigned_to_id as string | null) ?? null,
+      assigned_to_name: name ?? null,
+      quoted_at: (raw.quoted_at as string | null) ?? null,
+      paid_at: (raw.paid_at as string | null) ?? null,
+      quote_total_pence: (raw.quote_total_pence as number | null) ?? null,
+    } satisfies AnalyticsJobRow;
+  });
 }
 
 // Financial report reads (Phase 14). RLS scopes both to the caller's company.

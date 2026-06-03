@@ -86,9 +86,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
       links: [
         ...link('/dashboard/settings/company', tc('navLabel'), MANAGER),
         ...link('/dashboard/settings/custom-fields', tcf('navLabel'), ADMIN),
+        ...link('/dashboard/settings/document-text', t('documentText'), ADMIN),
+        ...link('/dashboard/settings/cubic-presets', t('cubicPresets'), MANAGER),
         ...link('/dashboard/settings/pricing', tp('navLabel'), MANAGER),
         ...link('/dashboard/settings/templates', t('templates'), MANAGER),
         ...link('/dashboard/settings/automations', t('automations'), MANAGER),
+        ...link('/dashboard/settings/lead-providers', t('leadProviders'), ADMIN),
+        ...link('/dashboard/settings/integrations', t('integrations'), ADMIN),
         ...link('/dashboard/settings/exports', te('navLabel'), ADMIN),
         ...link('/dashboard/settings/users', tu('navLabel'), ADMIN),
       ],

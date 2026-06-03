@@ -20,6 +20,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const tp = await getTranslations('pricing');
   const te = await getTranslations('exports');
   const tc = await getTranslations('companySettings');
+  const tcf = await getTranslations('customFields');
 
   // Server-side role filtering — only links this role can open are rendered.
   const can = (roles?: string[]) => !roles || roles.includes(profile.role);
@@ -84,6 +85,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       title: 'Settings',
       links: [
         ...link('/dashboard/settings/company', tc('navLabel'), MANAGER),
+        ...link('/dashboard/settings/custom-fields', tcf('navLabel'), ADMIN),
         ...link('/dashboard/settings/pricing', tp('navLabel'), MANAGER),
         ...link('/dashboard/settings/templates', t('templates'), MANAGER),
         ...link('/dashboard/settings/automations', t('automations'), MANAGER),

@@ -9,6 +9,12 @@ Sentry.init({
   beforeSend(event) {
     if (event.request?.data) event.request.data = stripPII(event.request.data);
     if (event.extra) event.extra = stripPII(event.extra);
+    if (event.contexts) event.contexts = stripPII(event.contexts);
+    if (event.breadcrumbs) {
+      event.breadcrumbs = event.breadcrumbs.map((b) =>
+        b.data ? { ...b, data: stripPII(b.data) } : b,
+      );
+    }
     if (event.user) event.user = { id: event.user.id };
     return event;
   },

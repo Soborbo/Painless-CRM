@@ -18,6 +18,11 @@ describe('sanitizeIlikePattern', () => {
     expect(sanitizeIlikePattern('a,b')).toBe('a b');
   });
 
+  it('strips PostgREST .or() control chars (parens, quotes) — audit', () => {
+    expect(sanitizeIlikePattern('a)or(1)')).toBe('a or 1');
+    expect(sanitizeIlikePattern('x"y')).toBe('x y');
+  });
+
   it('trims surrounding whitespace', () => {
     expect(sanitizeIlikePattern('   Smith  ')).toBe('Smith');
   });

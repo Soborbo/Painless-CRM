@@ -96,12 +96,26 @@ export async function acceptInvitation(_prev: ActionState, form: FormData): Prom
     return { ok: false, message: 'Invitation expired. Ask for a new one.' };
   }
 
+  // Atomically CLAIM the invitation before provisioning so two concurrent
+  // accepts of the same token can't both proceed (audit, TOCTOU). Mirrors the
+  // atomic `.is('accepted_at', null)` pattern revokeInvitation already uses. We
+  // release the claim below if provisioning fails so a genuine retry can succeed.
+  const { data: claimed } = await admin
+    .from('user_invitations')
+    .update({ accepted_at: new Date().toISOString() })
+    .eq('id', invite.id)
+    .is('accepted_at', null)
+    .select('id')
+    .maybeSingle();
+  if (!claimed) return { ok: false, message: 'Invitation already used' };
+
   const { data: created, error: createError } = await admin.auth.admin.createUser({
     email: invite.email,
     password: parsed.data.password,
     email_confirm: true,
   });
   if (createError || !created.user) {
+    await admin.from('user_invitations').update({ accepted_at: null }).eq('id', invite.id);
     return { ok: false, message: 'Could not create user' };
   }
 
@@ -113,15 +127,14 @@ export async function acceptInvitation(_prev: ActionState, form: FormData): Prom
     role: invite.role,
   });
   if (profileError) {
-    // Best-effort cleanup: delete the auth user we just created.
+    // Best-effort cleanup: delete the auth user we just created and release the
+    // claim so the invitation can be retried.
     await admin.auth.admin.deleteUser(created.user.id);
+    await admin.from('user_invitations').update({ accepted_at: null }).eq('id', invite.id);
     return { ok: false, message: 'Could not create profile' };
   }
 
-  await admin
-    .from('user_invitations')
-    .update({ accepted_at: new Date().toISOString() })
-    .eq('id', invite.id);
+  // Invitation was already claimed (accepted_at set) atomically above.
 
   // Sign the new user in via the SSR client so cookies are set.
   const supabase = await createClient();

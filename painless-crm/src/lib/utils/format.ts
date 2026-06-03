@@ -9,8 +9,16 @@ export function formatPence(pence: number | null | undefined): string {
   return GBP.format(pence / 100);
 }
 
-const DATE = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
-const DATE_TIME = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+// timeZone:'UTC' so a date-only DATE column (stored at UTC midnight) renders the
+// same calendar day on any runtime — without it, a non-UTC host shows the prior
+// day (audit, timezone). Matches the explicit UTC formatters used elsewhere
+// (dispatch/calendar/rota). The codebase stores/compares dates in UTC.
+const DATE = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeZone: 'UTC' });
+const DATE_TIME = new Intl.DateTimeFormat('en-GB', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'UTC',
+});
 
 export function formatDate(value: string | Date | null | undefined): string {
   if (!value) return '—';

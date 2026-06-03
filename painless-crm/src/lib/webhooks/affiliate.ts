@@ -40,22 +40,28 @@ function buildNotes(payload: IncomingAffiliate, resolved: boolean): string {
   return parts.join('\n');
 }
 
-export async function ingestAffiliate(payload: IncomingAffiliate): Promise<IngestAffiliateResult> {
+export async function ingestAffiliate(
+  payload: IncomingAffiliate,
+  trustedCompanyId?: string | null,
+): Promise<IngestAffiliateResult> {
+  // Prefer the server-resolved tenant; never let the request body pick the
+  // company when the handler has resolved one (audit H2 — cross-tenant inject).
+  const companyId = trustedCompanyId ?? payload.company_id;
   const customerId = await findOrCreateCustomer({
-    companyId: payload.company_id,
+    companyId,
     contact: payload.customer,
     source: payload.source,
   });
-  const affiliateId = await lookupAffiliateIdByCode(payload.company_id, payload.affiliate_code);
+  const affiliateId = await lookupAffiliateIdByCode(companyId, payload.affiliate_code);
   if (affiliateId) {
     await attachAffiliateToCustomer({
-      companyId: payload.company_id,
+      companyId,
       customerId,
       affiliateId,
     });
   }
   const jobId = await createLeadJob({
-    companyId: payload.company_id,
+    companyId,
     customerId,
     source: payload.source,
     notes: buildNotes(payload, affiliateId !== null),
@@ -63,13 +69,13 @@ export async function ingestAffiliate(payload: IncomingAffiliate): Promise<Inges
   });
   if (affiliateId) {
     await attachAffiliateToJob({
-      companyId: payload.company_id,
+      companyId,
       jobId,
       affiliateId,
     });
   }
   await writeAttributionRow({
-    companyId: payload.company_id,
+    companyId,
     jobId,
     customerId,
     affiliateId,

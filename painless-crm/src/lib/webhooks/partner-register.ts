@@ -59,16 +59,19 @@ async function findExistingAffiliate(companyId: string, email: string): Promise<
 
 export async function ingestPartnerRegister(
   payload: IncomingPartnerRegister,
+  trustedCompanyId?: string | null,
 ): Promise<IngestPartnerRegisterResult> {
+  // Prefer the server-resolved tenant over the request body (audit H2).
+  const companyId = trustedCompanyId ?? payload.company_id;
   const supabase = createAdminClient();
-  const existing = await findExistingAffiliate(payload.company_id, payload.partner.contact_email);
+  const existing = await findExistingAffiliate(companyId, payload.partner.contact_email);
   if (existing) return { affiliate_id: existing, duplicate: true };
 
   const commission = payload.proposed_commission;
   const { data, error } = await supabase
     .from('affiliates')
     .insert({
-      company_id: payload.company_id,
+      company_id: companyId,
       name: payload.partner.name,
       type: payload.partner.type,
       contact_name: payload.partner.contact_name,

@@ -55,17 +55,18 @@ describe('flattenCallbackRow', () => {
 });
 
 describe('isCallbackOverdue', () => {
-  // Local-time dates so the comparison against local midnight is timezone-safe.
-  const now = new Date(2026, 4, 31, 12, 0, 0); // 31 May, noon
+  // The day boundary is computed in UTC (matches todayWindow and the CF Workers
+  // runtime), so the fixtures are UTC-explicit rather than runtime-local.
+  const now = new Date('2026-05-31T12:00:00.000Z'); // 31 May, noon UTC
 
   it('flags a follow-up due on an earlier day as overdue', () => {
-    expect(isCallbackOverdue(new Date(2026, 4, 29, 10, 0, 0).toISOString(), now)).toBe(true);
-    expect(isCallbackOverdue(new Date(2026, 4, 30, 23, 0, 0).toISOString(), now)).toBe(true);
+    expect(isCallbackOverdue('2026-05-29T10:00:00.000Z', now)).toBe(true);
+    expect(isCallbackOverdue('2026-05-30T23:00:00.000Z', now)).toBe(true);
   });
 
   it('does not flag a follow-up still due today', () => {
-    expect(isCallbackOverdue(new Date(2026, 4, 31, 0, 0, 0).toISOString(), now)).toBe(false);
-    expect(isCallbackOverdue(new Date(2026, 4, 31, 18, 0, 0).toISOString(), now)).toBe(false);
+    expect(isCallbackOverdue('2026-05-31T00:00:00.000Z', now)).toBe(false);
+    expect(isCallbackOverdue('2026-05-31T18:00:00.000Z', now)).toBe(false);
   });
 });
 

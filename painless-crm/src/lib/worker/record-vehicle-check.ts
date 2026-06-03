@@ -1,3 +1,4 @@
+import { boundedClientTimestamp } from './client-timestamp';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { VehicleCheckInput } from '@/lib/schemas/vehicle-check';
 import { createClient } from '@/lib/supabase/server';
@@ -16,8 +17,21 @@ export async function persistVehicleCheck(
   const detail = await getWorkerJobDetail(input.job_id, worker.id, today);
   if (!detail) return 'not_assigned';
 
-  const recordedAt = input.client_recorded_at ?? new Date().toISOString();
+  const recordedAt = boundedClientTimestamp(input.client_recorded_at);
   const supabase = await createClient();
+
+  // vehicle_id is client-supplied and only UUID-validated; the vehicle_checks
+  // RLS WITH CHECK constrains company_id + worker_id but NOT vehicle_id, and the
+  // FK only enforces existence. Confirm the vehicle is visible under RLS (i.e.
+  // belongs to the worker's company) so a forged/cross-tenant vehicle_id can't
+  // be stamped onto a check row (audit M2).
+  const { data: vehicle } = await supabase
+    .from('vehicles')
+    .select('id')
+    .eq('id', input.vehicle_id)
+    .maybeSingle();
+  if (!vehicle) return 'not_assigned';
+
   const { error } = await supabase.from('vehicle_checks').insert({
     company_id: worker.company_id,
     vehicle_id: input.vehicle_id,

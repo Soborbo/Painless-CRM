@@ -9,7 +9,7 @@ import { firstResponseDueAt, severityFromSelfAssessed } from './state-machine';
 
 export type FeedbackResult =
   | { ok: true; complaintId: string; companyId: string }
-  | { ok: false; reason: 'not_found' | 'error' };
+  | { ok: false; reason: 'not_found' | 'already_submitted' | 'error' };
 
 function composeDescription(input: PublicFeedbackInput): string {
   const parts = [input.description];
@@ -44,6 +44,24 @@ export async function persistFeedback(
   const signoff = Array.isArray(req.signoff) ? req.signoff[0] : req.signoff;
   if (!signoff?.job_id) return { ok: false, reason: 'error' };
 
+  // Single-use claim BEFORE inserting: atomically mark the request responded and
+  // proceed only if WE were the one to flip it from null. This turns the public
+  // endpoint from "insert a complaint on every POST" (a spam vector — audit M8)
+  // into one-complaint-per-token. A concurrent/repeat submission gets no row
+  // back and is treated as already-submitted.
+  const { data: claimed } = await supabase
+    .from('review_requests')
+    .update({
+      complaints_link_clicked_at: now.toISOString(),
+      responded_at: now.toISOString(),
+      status: 'clicked',
+    })
+    .eq('id', req.id)
+    .is('responded_at', null)
+    .select('id')
+    .maybeSingle();
+  if (!claimed) return { ok: false, reason: 'already_submitted' };
+
   const { data: inserted, error } = await supabase
     .from('complaints')
     .insert({
@@ -59,17 +77,14 @@ export async function persistFeedback(
     })
     .select('id')
     .single();
-  if (error || !inserted) return { ok: false, reason: 'error' };
-
-  // Mark the review request responded → stops review follow-ups (acceptance #5).
-  await supabase
-    .from('review_requests')
-    .update({
-      complaints_link_clicked_at: now.toISOString(),
-      responded_at: req.responded_at ?? now.toISOString(),
-      status: 'clicked',
-    })
-    .eq('id', req.id);
+  if (error || !inserted) {
+    // Release the claim so a genuine submission can be retried after a failure.
+    await supabase
+      .from('review_requests')
+      .update({ responded_at: null })
+      .eq('id', req.id);
+    return { ok: false, reason: 'error' };
+  }
 
   return { ok: true, complaintId: (inserted as { id: string }).id, companyId: req.company_id };
 }

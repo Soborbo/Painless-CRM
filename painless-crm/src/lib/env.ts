@@ -10,6 +10,11 @@ const ServerEnv = z.object({
   SENTRY_DSN: z.string().url().optional(),
   SENTRY_AUTH_TOKEN: z.string().min(1).optional(),
   CRM_WEBHOOK_SECRET: z.string().min(32).optional(),
+  // The tenant that inbound webhooks belong to. When set, the webhook handler
+  // uses THIS company_id instead of the attacker-controllable body value,
+  // closing the cross-tenant injection in audit H2. Single-tenant today; a
+  // (source -> company) mapping table is the multi-tenant evolution (ADR-038).
+  WEBHOOK_COMPANY_ID: z.string().uuid().optional(),
   QUOTE_LINK_SECRET: z.string().min(32).optional(),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
 });

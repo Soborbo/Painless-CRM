@@ -2,6 +2,7 @@
 
 import type { StorageActionState } from '@/lib/actions/storage';
 import { requireRole } from '@/lib/auth/require-role';
+import { poundsToPence } from '@/lib/money/pounds';
 import { StorageIdSchema, StorageVersionSchema } from '@/lib/schemas/storage';
 import {
   CreateRentalSchema,
@@ -26,13 +27,13 @@ function pathFor(siteId: string, containerId: string) {
   return `/dashboard/storage/${siteId}/${containerId}`;
 }
 
-// Monthly rate is entered in pounds; the column stores integer pence.
+// Monthly rate is entered in pounds; the column stores integer pence. Blank
+// stays '' (optional); a non-money token passes through so the schema rejects it.
 function penceFromPounds(value: FormDataEntryValue | null): string {
   const raw = typeof value === 'string' ? value.trim() : '';
   if (raw === '') return '';
-  const pounds = Number(raw);
-  if (!Number.isFinite(pounds)) return raw;
-  return String(Math.round(pounds * 100));
+  const pence = poundsToPence(raw);
+  return pence === null ? raw : String(pence);
 }
 
 export async function createRental(

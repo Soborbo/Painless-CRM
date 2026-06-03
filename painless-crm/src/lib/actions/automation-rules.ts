@@ -68,6 +68,20 @@ export async function saveAutomationRule(
   }
 
   const supabase = await createClient();
+
+  // Validate the chosen template belongs to the caller's company. action_config
+  // is jsonb with no FK, and the cron resolves it with the RLS-bypassing admin
+  // client, so an unowned template_id must be rejected at save time (audit M3).
+  // This RLS-scoped read returns nothing for a foreign or non-existent id.
+  const { data: ownedTemplate } = await supabase
+    .from('email_templates')
+    .select('id')
+    .eq('id', parsed.data.template_id)
+    .maybeSingle();
+  if (!ownedTemplate) {
+    return { status: 'error', message: 'Select a valid email template' };
+  }
+
   const fields = {
     name: parsed.data.name,
     trigger_event: parsed.data.trigger_event,

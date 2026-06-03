@@ -1,6 +1,7 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { poundsToPence } from '@/lib/money/pounds';
 import { WorkerIdSchema, WorkerSchema, WorkerVersionSchema } from '@/lib/schemas/worker';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -16,13 +17,13 @@ export type WorkerActionState =
 
 const IDLE: WorkerActionState = { status: 'idle' };
 
-// Hourly rate is entered in pounds; the column stores integer pence.
+// Hourly rate is entered in pounds; the column stores integer pence. Blank stays
+// '' (optional); a non-money token passes through so the schema rejects it.
 function penceFromPounds(value: FormDataEntryValue | null): string {
   const raw = typeof value === 'string' ? value.trim() : '';
   if (raw === '') return '';
-  const pounds = Number(raw);
-  if (!Number.isFinite(pounds)) return raw;
-  return String(Math.round(pounds * 100));
+  const pence = poundsToPence(raw);
+  return pence === null ? raw : String(pence);
 }
 
 function readPayload(form: FormData) {

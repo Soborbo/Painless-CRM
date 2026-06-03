@@ -9,9 +9,9 @@
 
 import { serverEnv } from '@/lib/env';
 import { sendDailyDigestEmail } from '@/lib/integrations/resend/daily-digest';
-import { fetchDailyDigestData } from '@/lib/queries/daily-digest';
 import { buildDailyDigests } from '@/lib/notifications/daily-digest';
-import { verifyHmac } from '@/lib/webhooks/handler';
+import { fetchDailyDigestData } from '@/lib/queries/daily-digest';
+import { isFreshTimestamp, verifyHmac } from '@/lib/webhooks/handler';
 import { NextResponse } from 'next/server';
 
 const CRON_PAYLOAD = 'daily-digest';
@@ -23,7 +23,11 @@ export async function POST(req: Request): Promise<Response> {
   if (!secret) {
     return NextResponse.json({ error: 'cron_disabled' }, { status: 503 });
   }
-  const valid = await verifyHmac(secret, CRON_PAYLOAD, req.headers.get('x-cron-signature'));
+  const ts = req.headers.get('x-cron-timestamp');
+  if (!isFreshTimestamp(ts, Date.now())) {
+    return NextResponse.json({ error: 'stale_timestamp' }, { status: 401 });
+  }
+  const valid = await verifyHmac(secret, `${ts}.${CRON_PAYLOAD}`, req.headers.get('x-cron-signature'));
   if (!valid) {
     return NextResponse.json({ error: 'invalid_signature' }, { status: 401 });
   }

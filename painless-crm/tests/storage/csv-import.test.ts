@@ -60,7 +60,10 @@ describe('buildContainerImport', () => {
   });
 
   it('flags bad rows by line number and keeps the good ones', () => {
-    const r = buildContainerImport(`${HEADER}\nA-1,160,95,available,ok\nB-2,160,,available,no-rate`, []);
+    const r = buildContainerImport(
+      `${HEADER}\nA-1,160,95,available,ok\nB-2,160,,available,no-rate`,
+      [],
+    );
     expect(r.valid.map((c) => c.container_code)).toEqual(['A-1']);
     expect(r.errors).toHaveLength(1);
     expect(r.errors[0]?.line).toBe(3); // header is line 1
@@ -90,5 +93,33 @@ describe('buildContainerImport', () => {
 
   it('reports an empty file', () => {
     expect(buildContainerImport('', []).errors[0]?.message).toMatch(/empty/i);
+  });
+
+  // Audit M5 — the reported line must be the TRUE physical file line even when a
+  // blank line or a multi-line quoted field precedes the offending row.
+  it('reports the physical line when a blank line precedes a bad row', () => {
+    // line 1 header, line 2 blank, line 3 good, line 4 bad (no rate)
+    const r = buildContainerImport(
+      `${HEADER}\n\nA-1,160,95,available,ok\nB-2,160,,available,no-rate`,
+      [],
+    );
+    expect(r.errors).toHaveLength(1);
+    expect(r.errors[0]?.line).toBe(4);
+  });
+
+  it('counts embedded newlines in a quoted field toward the physical line', () => {
+    // The A-1 notes field spans physical lines 2-3, so B-2 (bad) is line 4.
+    const r = buildContainerImport(
+      `${HEADER}\nA-1,160,95,available,"multi\nline note"\nB-2,160,,available,no-rate`,
+      [],
+    );
+    expect(r.errors).toHaveLength(1);
+    expect(r.errors[0]?.line).toBe(4);
+    expect(r.valid[0]?.notes).toBe('multi\nline note');
+  });
+
+  it('strips a stray CR inside a quoted multi-line field (CRLF source)', () => {
+    const r = buildContainerImport(`${HEADER}\r\nA-1,160,95,available,"a\r\nb"\r\n`, []);
+    expect(r.valid[0]?.notes).toBe('a\nb');
   });
 });

@@ -29,6 +29,7 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
   const parsed = AddJobNoteSchema.safeParse({
     job_id: form.get('job_id'),
     body: form.get('body'),
+    category: form.get('category') || undefined,
     is_customer_visible: form.get('is_customer_visible'),
   });
   if (!parsed.success) {
@@ -37,6 +38,13 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
       message: parsed.error.issues[0]?.message ?? 'Invalid input',
     };
   }
+
+  // Category is the source of truth when the author picked one (Phase 19);
+  // otherwise fall back to the legacy boolean. is_customer_visible stays in
+  // sync so existing readers keep working.
+  const category =
+    parsed.data.category ?? (parsed.data.is_customer_visible ? 'customer_visible' : 'admin');
+  const isCustomerVisible = category === 'customer_visible';
 
   const supabase = await createClient();
   const { data: job } = await supabase
@@ -62,8 +70,8 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
       parent_id: job.id,
       body: parsed.data.body,
       mentions: mentions.length > 0 ? mentions : null,
-      is_customer_visible: parsed.data.is_customer_visible,
-      category: parsed.data.is_customer_visible ? 'customer_visible' : 'admin',
+      is_customer_visible: isCustomerVisible,
+      category,
       created_by_id: me.id,
     })
     .select('id')

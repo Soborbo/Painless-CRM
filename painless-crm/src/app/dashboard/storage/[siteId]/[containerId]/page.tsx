@@ -13,6 +13,7 @@ import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DeleteContainerButton } from './delete-button';
+import { DuplicateContainerButton } from './duplicate-button';
 import { ActivateRentalButton, TerminateRentalButton } from './rental-actions';
 
 type Props = { params: Promise<{ siteId: string; containerId: string }> };
@@ -62,6 +63,7 @@ export default async function ContainerDetailPage({ params }: Props) {
           >
             {t('edit')}
           </Link>
+          <DuplicateContainerButton id={container.id} siteId={siteId} />
           {isAdmin ? (
             <DeleteContainerButton id={container.id} siteId={siteId} version={container.version} />
           ) : null}

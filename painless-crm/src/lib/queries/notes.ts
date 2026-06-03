@@ -1,8 +1,10 @@
+import { type NoteCategory, normaliseCategory } from '@/lib/notes/group';
 import { createClient } from '@/lib/supabase/server';
 
 export interface NoteRow {
   id: string;
   body: string;
+  category: NoteCategory;
   is_customer_visible: boolean;
   pinned: boolean;
   created_at: string;
@@ -11,7 +13,7 @@ export interface NoteRow {
 }
 
 const COLUMNS = `
-  id, body, is_customer_visible, pinned, created_at, edited_at,
+  id, body, category, is_customer_visible, pinned, created_at, edited_at,
   created_by:users!notes_created_by_id_fkey (id, full_name)
 `;
 
@@ -23,6 +25,7 @@ function flatten(raw: Record<string, unknown>): NoteRow {
   return {
     id: raw.id as string,
     body: raw.body as string,
+    category: normaliseCategory(raw.category as string | null),
     is_customer_visible: Boolean(raw.is_customer_visible),
     pinned: Boolean(raw.pinned),
     created_at: raw.created_at as string,

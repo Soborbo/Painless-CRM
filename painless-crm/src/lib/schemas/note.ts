@@ -13,6 +13,10 @@ const NOTE_BODY_MAX = 8000;
 export const AddJobNoteSchema = z.object({
   job_id: z.string().uuid(),
   body: z.string().trim().min(1, 'Note cannot be empty').max(NOTE_BODY_MAX),
+  // Phase 19: the author picks an audience timeline directly. Optional and
+  // backward-compatible — when absent, the legacy is_customer_visible toggle
+  // still decides between the admin and customer_visible categories.
+  category: z.enum(['admin', 'staff', 'customer_visible']).optional(),
   is_customer_visible: z
     .union([z.literal('on'), z.literal('true'), z.literal('false'), z.literal('off'), z.null()])
     .optional()

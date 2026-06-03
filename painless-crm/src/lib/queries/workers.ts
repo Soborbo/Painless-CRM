@@ -23,6 +23,24 @@ export type WorkerListResult = {
   pageSize: number;
 };
 
+export type WorkerOption = { id: string; label: string };
+
+// Lightweight {id, label} list of active workers for native <select> pickers
+// (holiday form, appointment assignee). RLS scopes to the tenant.
+export async function listWorkerOptions(): Promise<WorkerOption[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('workers')
+    .select('id, full_name')
+    .is('deleted_at', null)
+    .eq('active', true)
+    .order('full_name', { ascending: true });
+  return ((data ?? []) as Array<{ id: string; full_name: string }>).map((w) => ({
+    id: w.id,
+    label: w.full_name,
+  }));
+}
+
 const COLUMNS =
   'id, full_name, phone, email, hourly_rate_pence, skills, active, notes, created_at, updated_at, version';
 

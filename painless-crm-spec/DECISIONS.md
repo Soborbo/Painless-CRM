@@ -337,6 +337,109 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-027 — Branding source of truth is the `settings` row, merged at render
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 18 introduces customer-facing branding (company name, brand colour, logo) that must appear on documents like the quote print-out, and later on invoices/receipts/storage docs. The values must be tenant-editable, not baked into env or the deploy.
+**Decision:** The per-tenant `settings` row (already has `brand_color`, `logo_url`) plus `companies.name` are the single source of truth. A pure `resolveBranding()` helper (`src/lib/settings/branding.ts`) merges a possibly-absent source with safe defaults (`DEFAULT_BRAND_COLOR`, `DEFAULT_COMPANY_NAME`) at render time; document pages read it via `getBrandingByCompanyId()` (admin client for anonymous/token-gated pages). No new columns — Phase 18 edits existing ones only. The settings update uses optimistic concurrency on `settings.version`; a `version=0` form value is the "no row yet" sentinel that inserts at version 1.
+**Alternatives considered:**
+- Branding in env / build-time config → not tenant-editable, breaks multi-tenancy and forces a deploy to change a logo.
+- New `branding` table → unnecessary; `settings` already carries `brand_color`/`logo_url` and is 1:1 with the tenant.
+- Storing company name on `settings` too → duplicates `companies.name`; the tenant display name already lives there.
+**Consequences:** Document headers depend on a resolve step rather than raw row values, so a malformed/blank brand colour degrades to the default instead of rendering broken markup. Company name edits touch the `companies` spine table (no `version` column there — last-write-wins on name only; settings keep the optimistic lock). The same helper is the seam the PDF-render work (🔒 Browser Rendering binding) and future document designers (Phase 25) build on.
+
+---
+
+## ADR-028 — Job tasks are a flat, lightweight checklist; notes split via existing `category`
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 19 brings the job page closer to the iMVE "Workflow" view, which has a Task Management checklist plus separate Admin / Staff note timelines. We must decide how rich tasks are, and how to model the notes split.
+**Decision:** Two parts. (1) **Tasks** are a new `job_tasks` table (migration 45) but a *flat* checklist — title, done, optional due date, optional assignee, `sort_order` — with **no dependencies, sub-tasks, or assignment workflow**. Mutations are add / toggle / delete; pure helpers (`completeness`, `nextSortOrder`) hold the logic. (2) **Notes split** needs **no schema change**: the existing `notes.category` (admin/staff/customer_visible, Phase 02) becomes the author-chosen audience. `AddJobNoteSchema` gains an optional `category` (backward-compatible with the legacy `is_customer_visible` toggle, which stays in sync); the panel groups by category via a pure `groupNotesByCategory`. Soft-deleted task rows follow the same RLS Pattern-1 (admin-only visibility) as the rest of the spine.
+**Alternatives considered:**
+- Rich tasks (deps, recurring, per-task assignment workflow) → over-scoped vs iMVE; defer until a real need.
+- A new `note_audience` column or separate staff-notes table → duplicates `category`, which already has exactly the three buckets.
+- Drop `is_customer_visible` and make `category` the sole truth now → would touch the public acceptance read and Phase 06b/13b code; kept both in sync instead for a non-breaking change.
+**Consequences:** `job_tasks` adds one tenant table + its RLS policy (replicated inline since the migration-03 Section E loop predates it) and a `set_updated_at` trigger (the first table to actually attach it — elsewhere `updated_at` is set in app code). `sort_order`/`assigned_to_id`/`due_date` columns exist but their reorder/assignment UIs are deferred (no dead code: add/toggle/delete only). Notes now show three timelines; legacy rows with null/old category normalise to 'admin'.
+
+---
+
+## ADR-029 — Dispatcher board is read-only over a pure assembler
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 20 rebuilds the iMVE per-staff / per-vehicle daily swimlane board. The data already exists in `job_assignments` (worker_id, vehicle_id, date, role, times). The open questions: is the board editable, and where does the grid logic live.
+**Decision:** The board is **read-only in v1** — it visualises existing assignments; all edits stay on the job page / rota (which already have the assign form + conflict checks). The grid is built by a **pure assembler** `src/lib/dispatch/board.ts` (`assembleBoard`) that takes a flat assignment list + lane options + a date window and returns staff-or-vehicle swimlanes, fully unit-tested with no I/O. Empty lanes from the option list are preserved; a lane that exists only in the data (e.g. a now-inactive worker with a live assignment) is backfilled so nothing is silently dropped. The follow-up-call / awaiting-payment badges derive **purely from job stage** (`deriveBadges`: quoted → follow-up; completed|invoiced → awaiting payment), so no extra query.
+**Alternatives considered:**
+- Drag-to-reassign in v1 → needs the rota's conflict/capacity checks replicated in a DnD client; deferred to a later phase (backlog).
+- Assemble in the query / page → not unit-testable; the swimlane grouping + windowing is exactly the kind of logic that belongs in a pure module (cf. `rota/conflicts`, `worker-cron/dispatch`).
+**Consequences:** A new read-only route `/dashboard/dispatch` (manager+) with no migration. Badge semantics are a documented stage map — if Painless wants different triggers (e.g. follow-up from a callbacks table), it changes one constant set. Drag-to-reassign and per-task vehicle reallocation remain backlog items.
+
+---
+
+## ADR-030 — Visual analytics: dependency-free inline SVG, stage-weighted projected revenue
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 21 rebuilds the iMVE Performance screen as a consolidated visual dashboard (jobs by type/status/source, quote conversion by staff, revenue + projected revenue). Two questions: how to render charts, and how to define "projected revenue".
+**Decision:** (1) **No chart library.** Charts are dependency-free presentational server components — a donut via SVG `stroke-dasharray` (`components/charts/donut.tsx`, fixed `CHART_COLORS` palette) and horizontal bars via CSS widths (`components/charts/bar.tsx`). Zero new deps, no client JS, consistent with the existing text-only report pages. (2) **Projected revenue** = expected value of the open pipeline: each non-terminal, unpaid job's quote value × a stage win-probability from a documented constant map `WIN_PROBABILITY_BY_STAGE` (lead 0.05 → invoiced 0.99; paid + terminal stages absent → contribute nothing, since paid is already realised and terminal is lost). Aggregators are pure (`lib/reports/analytics.ts`), reading one `listAnalyticsJobs` cohort. The page reuses the existing `buildStorageReport` for the Storage toggle.
+**Alternatives considered:**
+- A chart library (Recharts/Chart.js) → new dependency + client bundle for what is a handful of static shapes; rejected per the project's lean-deps stance.
+- Projected revenue = sum of all open quote values (unweighted) → overstates; a quoted lead is not worth the same as an accepted one.
+- Probability from historical per-stage conversion → better long-term, but needs a trained baseline; the constant map is the documented v1 that can be swapped for a data-driven one later.
+**Consequences:** Charts are intentionally simple (no tooltips/animation). The projection is only as good as the constant weights — they live in one exported map so Painless can tune them, and a future phase can replace them with measured conversion rates without touching the page. New route `/dashboard/reports/analytics` (manager+), no migration, no deps.
+
+---
+
+## ADR-031 — Appointments are a thin diary overlay, distinct from assignments and capacity
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 22 adds the iMVE Calendar Overview (general appointments + staff holidays). The system already has `job_assignments` (crew/vehicle ops scheduling) and capacity bands (availability). The risk is conflating these three.
+**Decision:** A new `appointments` table is a **thin diary entry** — title, category, start/end, optional links to a job/customer/assignee — explicitly *not* a scheduling primitive: it does not allocate crew or consume capacity. `staff_holidays` is a separate worker-time-off table. Both follow the standard spine (RLS Pattern-1 inline, `set_updated_at`, soft delete, version). The calendar UI is month/week/day over a **pure window+grouping module** `lib/calendar/grid.ts` (`viewDays`, `groupAppointmentsByDay`, `holidayCoversDate`, `appointmentsOverlap`), fully unit-tested. Holidays are surfaced read-only on the dispatcher board (staff lanes show an "off" marker); deeper capacity integration is deferred.
+**Alternatives considered:**
+- Reuse `job_assignments` for appointments → pollutes ops scheduling with non-crew diary items and forces a fake worker/job on every entry.
+- Model holidays as `worker_availability` rows → that table is the capacity-planning surface; holidays are a distinct, reason-bearing concept and belong on their own table that *feeds* availability.
+- Hour-grid week/day rendering → deferred; the agenda-list week/day view is lean and faithful enough for v1.
+**Consequences:** Three scheduling-ish surfaces now coexist with clear roles (appointments = diary, assignments = ops, capacity = availability). Holidays are shown on the dispatcher board but do **not yet** subtract from capacity bands — a documented follow-up. Appointment create/delete only in v1 (edit deferred); week/day are agenda lists, not hour grids.
+
+---
+
+## ADR-032 — Message inbox is read-only over stored messages; threading by thread_id
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 23 adds the iMVE Messages nav. The `messages` table already records every email/SMS/WhatsApp (channel, direction, thread_id, in_reply_to, subject/body, sent/opened/replied timestamps), but there is no inbound ingestion or manual-compose send yet (both infra-gated, Phase 13 parts).
+**Decision:** The inbox is **read-only v1** — it lists and threads what is already stored; it does not compose or receive. Threading is by `thread_id`, falling back to the message's own id (a singleton) when unthreaded — most rows today are unthreaded outbound automation sends. Grouping/sorting/preview live in a pure module `lib/messages/thread.ts` (`groupThreads`, `sortThreadMessages`, `threadKey`), unit-tested. The detail view reloads a thread from a representative message's `thread_id`. `messages` has no `deleted_at`, so reads carry no soft-delete filter.
+**Alternatives considered:**
+- Group by customer instead of thread_id → over-merges distinct conversations; thread_id is the table's intended key and inbound ingestion will populate it.
+- Build compose/reply now → depends on channel send infra (Resend inbound, Tamar/WhatsApp) that is gated; replies stay on the job page / automation for now.
+- Wait for inbound infra before shipping any inbox → the stored history is already useful read-only (audit of what went out, per-customer/job linkage).
+**Consequences:** Today the inbox reads mostly as a flat, recency-sorted list of outbound sends (few threads, no inbound), which is honest given the data. When inbound ingestion lands and sets `thread_id`/`direction='inbound'`, the same pure grouping produces real two-sided threads with the "needs reply" badge — no rework. Compose/live reply remain a later infra-gated phase.
+
+---
+
+## ADR-033 — Storage CSV import is validate-then-commit with a preview; no silent row drops
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 24 adds the iMVE storage "Import CSV" and container "Duplicate". The office prepares container lists in a spreadsheet; importing them must be safe and predictable, and there is no CSV-parsing code yet (the export module is write-only).
+**Decision:** A hand-rolled RFC-4180 parser (`lib/storage/csv-import.ts`, the inverse of the export module's `csvField`) feeds a pure `buildContainerImport` that validates every data row against the existing `StorageContainerSchema`. The flow is **preview then commit**: the same Server Action runs in `preview` mode (returns valid count + per-line errors + skipped duplicates) and `commit` mode (inserts the valid rows). **No silent drops** — rejected rows are reported by line number, and duplicates (existing site codes or repeats within the file) are listed, not dropped quietly. A blank monthly rate is an error, not a coerced 0. Duplicate-container clones the source as a fresh `available` unit with a `-COPY` code suffix.
+**Alternatives considered:**
+- A CSV library (papaparse) → unnecessary dependency for a small, well-specified format; the export module already hand-rolls the write side.
+- Direct import without preview → unsafe; the office can't see what a paste will do before it commits.
+- Silently skipping bad/duplicate rows → hides data-entry mistakes; explicit per-line reporting is the point.
+**Consequences:** Import is paste-CSV (textarea), not file-upload — adequate and avoids the storage-bucket dependency. The parser is reused-validation, so import rules can never drift from the create form. Site-plan image upload stays 🔒 (needs a storage bucket). `-COPY` collisions surface a rename prompt rather than auto-incrementing.
+
+---
+
+## ADR-034 — Customisation is config-as-data (jsonb), validated by zod at read; no per-tenant code
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 25 is the iMVE "Customisation" family (custom job fields, statuses, job sheet, sign-off templates, email builder). It must let each tenant reshape parts of the app without us shipping per-tenant code or branching the schema per customer. Phase 25a delivers the first slice — custom job fields — and sets the pattern for the rest.
+**Decision:** Customisation is **config-as-data**: the definitions live in jsonb (`settings.custom_field_defs`), the per-entity values live in jsonb on the entity (`jobs.custom_fields`), and a pure engine (`lib/custom-fields/defs.ts`) validates both with zod **at read** — `parseDefs` keeps individually-valid defs and drops malformed ones (a bad stored config degrades to fewer fields, never a crash), and `validateValues` coerces a form map against the defs with per-field errors. No per-tenant code paths, no dynamic columns. The job-detail UI renders a Custom Fields card only when defs exist; admins manage defs at `/dashboard/settings/custom-fields`.
+**Alternatives considered:**
+- A real column per custom field (DDL per tenant) → unmanageable across tenants; defeats multi-tenancy.
+- A normalised `custom_field_values` table → heavier joins for a small, document-shaped payload that is always read with its job; jsonb is the right fit.
+- Validate defs only on write → a config edited by another path (or an older app version) could still be malformed; validating at read makes every consumer safe.
+**Consequences:** Custom field values are jsonb on the `jobs` spine (an ADR-worthy spine column — added in migration 47) and are not queryable as first-class columns (acceptable: they are display/ops metadata, not reporting dimensions). The same pattern extends to the rest of Phase 25 (statuses, job sheet, sign-off, email builder) — each a jsonb def set + zod-at-read. Job **status** customisation specifically stays deferred because stages derive from the locked STATE_MACHINE.md (CLAUDE rule 13); customising them needs a separate decision. PDF render of customised documents remains 🔒.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

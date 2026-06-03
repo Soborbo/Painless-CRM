@@ -44,12 +44,20 @@ export default async function StorageSitePage({ params }: Props) {
             <OccupancyBar occupancy={occupancy} label={t('occupancyLabel')} />
           </div>
         </div>
-        <Link
-          href={`/dashboard/storage/${siteId}/containers/new`}
-          className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] transition-opacity hover:opacity-90"
-        >
-          {t('addContainer')}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/dashboard/storage/${siteId}/import`}
+            className="rounded-md border px-4 py-2 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('importCsv')}
+          </Link>
+          <Link
+            href={`/dashboard/storage/${siteId}/containers/new`}
+            className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] transition-opacity hover:opacity-90"
+          >
+            {t('addContainer')}
+          </Link>
+        </div>
       </header>
 
       {containers.length === 0 ? (

@@ -5,6 +5,8 @@ import { NotesPanel } from '@/components/domain/job/notes-panel';
 import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { RequoteButton } from '@/components/domain/job/requote-button';
 import { StageBadge } from '@/components/domain/job/stage-badge';
+import { CustomFieldsPanel } from '@/components/domain/job/custom-fields-panel';
+import { TasksPanel } from '@/components/domain/job/tasks-panel';
 import { requireUser } from '@/lib/auth/require-role';
 import { isProfitReviewStage } from '@/lib/jobs/profit';
 import { isRequoteEligibleStage } from '@/lib/jobs/requote';
@@ -18,6 +20,7 @@ import {
   listSurveyors,
 } from '@/lib/queries/jobs';
 import { listNotesForJob } from '@/lib/queries/notes';
+import { listTasksForJob } from '@/lib/queries/job-tasks';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
 import { pickHeadlineQuote } from '@/lib/quotes/headline';
@@ -50,6 +53,7 @@ export default async function JobPage({ params }: Props) {
     audits,
     calls,
     jobNotes,
+    jobTasks,
     jobDocuments,
     children,
     t,
@@ -62,6 +66,7 @@ export default async function JobPage({ params }: Props) {
     getJobAcceptanceAudits(id),
     listPhoneCallsForJob(id),
     listNotesForJob(id),
+    listTasksForJob(id),
     listDocumentsForJob(id),
     listChildJobs(id),
     getTranslations('jobs'),
@@ -273,6 +278,10 @@ export default async function JobPage({ params }: Props) {
               <RequoteButton jobId={job.id} />
             </Section>
           ) : null}
+
+          <TasksPanel jobId={job.id} rows={jobTasks} />
+
+          <CustomFieldsPanel jobId={job.id} companyId={me.company_id} />
 
           <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
 

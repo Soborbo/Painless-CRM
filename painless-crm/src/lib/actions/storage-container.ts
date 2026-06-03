@@ -116,6 +116,53 @@ export async function updateStorageContainer(
   redirect(`/dashboard/storage/${siteId.data}/${idResult.data}`);
 }
 
+// Phase 24 — clone a container as a fresh, available unit (code suffixed
+// "-COPY"). A quick way to provision a row of identical containers.
+export async function duplicateStorageContainer(
+  _prev: StorageActionState,
+  form: FormData,
+): Promise<StorageActionState> {
+  const me = await requireRole(STORAGE_ROLES);
+  const idResult = StorageIdSchema.safeParse(form.get('id'));
+  const siteId = StorageIdSchema.safeParse(form.get('site_id'));
+  if (!idResult.success || !siteId.success) return { status: 'error', message: 'Missing id' };
+
+  const supabase = await createClient();
+  const { data: src } = await supabase
+    .from('storage_containers')
+    .select('container_code, size_cubic_ft, monthly_rate_pence, notes')
+    .eq('id', idResult.data)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (!src) return { status: 'error', message: 'Container not found' };
+  const s = src as {
+    container_code: string;
+    size_cubic_ft: number | null;
+    monthly_rate_pence: number;
+    notes: string | null;
+  };
+
+  const { error } = await supabase.from('storage_containers').insert({
+    company_id: me.company_id,
+    storage_site_id: siteId.data,
+    container_code: `${s.container_code}-COPY`,
+    size_cubic_ft: s.size_cubic_ft,
+    monthly_rate_pence: s.monthly_rate_pence,
+    status: 'available',
+    notes: s.notes,
+  });
+  if (error) {
+    const message =
+      error.code === '23505'
+        ? 'A "-COPY" of this container already exists — rename it first'
+        : 'Could not duplicate the container';
+    return { status: 'error', message };
+  }
+
+  revalidatePath(`/dashboard/storage/${siteId.data}`);
+  redirect(`/dashboard/storage/${siteId.data}`);
+}
+
 export async function softDeleteStorageContainer(
   _prev: StorageActionState,
   form: FormData,

@@ -30,8 +30,12 @@ export function AddNoteForm({ jobId }: { jobId: string }) {
       />
       <div className="flex flex-wrap items-center gap-3">
         <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" name="is_customer_visible" />
-          <span>{t('visibilityToggle')}</span>
+          <span>{t('categoryLabel')}</span>
+          <select name="category" defaultValue="admin" className="rounded-md border px-2 py-1 text-xs">
+            <option value="admin">{t('categoryAdmin')}</option>
+            <option value="staff">{t('categoryStaff')}</option>
+            <option value="customer_visible">{t('categoryCustomerVisible')}</option>
+          </select>
         </label>
         <span className="text-[11px] text-[var(--color-muted-foreground)]">
           {t('visibilityHelp')}

@@ -185,7 +185,8 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **Tests:** `tests/storage/csv-import.test.ts` — quoting, bad rows, dedupe, duplicate-container clone.
 **Est:** M.
 
-### Phase 25 — Customisation engine (fields / statuses / job-sheet / sign-off / email builder)  ·  larger, mixed  ·  ◑ 25a BUILT (2026-06-03)
+### Phase 25 — Customisation engine (fields / statuses / job-sheet / sign-off / email builder)  ·  larger, mixed  ·  ◕ 25a+25b+25c BUILT (2026-06-03)
+> **25b shipped (migration 48):** document-text config (`settings.document_text` — acceptance terms → public acceptance page, sign-off declaration → sign-off screen, quote footer; pure `lib/customisation/document-text.ts`; admin UI). **25c shipped (migration 48):** cubic-calculator presets (`settings.cubic_presets`, pure `lib/customisation/cubic-presets.ts`; admin UI; surfaced as a `<datalist>` with volume autofill on the survey cubic sheet). 993 tests. **Still TODO:** Job Sheet customisation, visual Email Builder (existing merge-field template editor suffices for v1). Job-status customisation DEFERRED (locked STATE_MACHINE). Customised-template PDF render 🔒.
 > **25a shipped (Custom Job Fields, migration 47):** config-as-data engine `lib/custom-fields/defs.ts` (pure `parseDefs` resilient-read, `validateValues` coerce-against-defs, `readValues`), `settings.custom_field_defs` + `jobs.custom_fields` jsonb, admin defs UI `settings/custom-fields` (add/delete), job-detail Custom Fields card (renders only when configured), nav link (admin), en/hu `customFields` ns. 980 tests. **ADR-034 sets the config-as-data pattern** for the rest. **Still TODO (25b+):** Cubic Calculator Fields, Job Sheet, Customer Acceptance terms, Company Sign-off templates, visual Email Builder. **Job Status customisation deferred** (conflicts with locked STATE_MACHINE.md — needs its own decision). Doc/PDF render of customised templates stays 🔒.
 **Goal:** The iMVE "Customisation" family beyond branding: Job Fields, Job Status, Cubic Calculator Fields, Job Sheet, Customer Acceptance, Company Sign-off Templates, visual Email Builder.
 **Schema:** mostly new — a `custom_field_defs` / `custom_status_defs` model (or structured `settings.feature_flags`/jsonb config), plus template config rows.
@@ -195,7 +196,8 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **Tests:** def validation, render-from-config, backward-compat with fixed defaults.
 **Est:** L. **Expand before starting.**
 
-### Phase 26 — Integrations hub, Lead Provider Settings, Account Statement  ·  mixed
+### Phase 26 — Integrations hub, Lead Provider Settings, Account Statement  ·  mixed  ·  ✅ BUILT (no-infra scope, 2026-06-03)
+> **Shipped (migration 48 jsonb config):** Lead Provider Settings (`settings.lead_provider_config`, pure `lib/customisation/lead-providers.ts` + `resolveSourceForProvider` seam for intake; admin UI), Account Statement (pure `lib/statements/statement.ts` running-balance + CSV; `customers/[id]/statement` page + export route; link on customer detail), Integrations hub (read-only `settings/integrations`, connected/not from integration_credentials, no secrets). Nav links, en/hu i18n. ADR-035. **🔒 remaining:** live OAuth connect flows + inbound lead-provider webhook ingestion (the mapping is ready to consume).
 **Goal:** iMVE Integrations + Lead Provider Settings UI + Account Statement.
 **Schema:** lead-provider config rows; account statement derivable from `invoices`/`payments`.
 **Infra:** statement + settings UI no-infra; specific provider connectors 🔒 per `INTEGRATION_CONTRACTS.md`.

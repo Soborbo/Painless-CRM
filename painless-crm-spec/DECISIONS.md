@@ -440,6 +440,19 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-035 — Phase 26: lead-provider mapping config-driven; statement derived; integrations hub read-only
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 26 covers the iMVE Integrations menu, Lead Provider Settings, and Account Statement. The constraints: actual provider connectors and inbound webhook ingestion are infra-gated, and secrets must never surface in the UI.
+**Decision:** Three no-infra slices, each honest about its boundary. (1) **Lead provider settings** are config-as-data (`settings.lead_provider_config`, ADR-034 pattern) mapping an inbound provider name → an `acquisition_source` key; `resolveSourceForProvider` is the pure seam the intake/attribution path consults — the inbound webhook that *calls* it stays gated. (2) **Account statement** is *derived*, no schema: a pure `buildStatement` turns a customer's non-draft invoices into a running-balance statement (payments already reflected in each invoice's outstanding), with a CSV export. (3) **Integrations hub** is *read-only status*: it reports which providers have stored `integration_credentials` (connected/not) plus always-on built-ins, and **never returns secret values** — only a boolean.
+**Alternatives considered:**
+- Build OAuth connect flows now → infra-gated (provider apps, redirect URIs, secret storage); status-only is the shippable part.
+- Statement from a new ledger table → unnecessary; invoices already carry total/paid/outstanding, so the statement is a pure projection.
+- Lead-provider ingestion endpoint now → blocked on inbound webhook infra; the mapping config is the buildable half and is ready for ingestion to consume.
+**Consequences:** Lead-provider config exists but is not yet *driven* by a live inbound endpoint (documented gate). The statement is invoice-grained (not payment-by-payment) — adequate for "what's owed" and exportable; a transaction-level ledger is a later option. The integrations hub shows status only; connecting providers remains a setup-time/infra task.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

@@ -388,6 +388,45 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-031 — Appointments are a thin diary overlay, distinct from assignments and capacity
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 22 adds the iMVE Calendar Overview (general appointments + staff holidays). The system already has `job_assignments` (crew/vehicle ops scheduling) and capacity bands (availability). The risk is conflating these three.
+**Decision:** A new `appointments` table is a **thin diary entry** — title, category, start/end, optional links to a job/customer/assignee — explicitly *not* a scheduling primitive: it does not allocate crew or consume capacity. `staff_holidays` is a separate worker-time-off table. Both follow the standard spine (RLS Pattern-1 inline, `set_updated_at`, soft delete, version). The calendar UI is month/week/day over a **pure window+grouping module** `lib/calendar/grid.ts` (`viewDays`, `groupAppointmentsByDay`, `holidayCoversDate`, `appointmentsOverlap`), fully unit-tested. Holidays are surfaced read-only on the dispatcher board (staff lanes show an "off" marker); deeper capacity integration is deferred.
+**Alternatives considered:**
+- Reuse `job_assignments` for appointments → pollutes ops scheduling with non-crew diary items and forces a fake worker/job on every entry.
+- Model holidays as `worker_availability` rows → that table is the capacity-planning surface; holidays are a distinct, reason-bearing concept and belong on their own table that *feeds* availability.
+- Hour-grid week/day rendering → deferred; the agenda-list week/day view is lean and faithful enough for v1.
+**Consequences:** Three scheduling-ish surfaces now coexist with clear roles (appointments = diary, assignments = ops, capacity = availability). Holidays are shown on the dispatcher board but do **not yet** subtract from capacity bands — a documented follow-up. Appointment create/delete only in v1 (edit deferred); week/day are agenda lists, not hour grids.
+
+---
+
+## ADR-032 — Message inbox is read-only over stored messages; threading by thread_id
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 23 adds the iMVE Messages nav. The `messages` table already records every email/SMS/WhatsApp (channel, direction, thread_id, in_reply_to, subject/body, sent/opened/replied timestamps), but there is no inbound ingestion or manual-compose send yet (both infra-gated, Phase 13 parts).
+**Decision:** The inbox is **read-only v1** — it lists and threads what is already stored; it does not compose or receive. Threading is by `thread_id`, falling back to the message's own id (a singleton) when unthreaded — most rows today are unthreaded outbound automation sends. Grouping/sorting/preview live in a pure module `lib/messages/thread.ts` (`groupThreads`, `sortThreadMessages`, `threadKey`), unit-tested. The detail view reloads a thread from a representative message's `thread_id`. `messages` has no `deleted_at`, so reads carry no soft-delete filter.
+**Alternatives considered:**
+- Group by customer instead of thread_id → over-merges distinct conversations; thread_id is the table's intended key and inbound ingestion will populate it.
+- Build compose/reply now → depends on channel send infra (Resend inbound, Tamar/WhatsApp) that is gated; replies stay on the job page / automation for now.
+- Wait for inbound infra before shipping any inbox → the stored history is already useful read-only (audit of what went out, per-customer/job linkage).
+**Consequences:** Today the inbox reads mostly as a flat, recency-sorted list of outbound sends (few threads, no inbound), which is honest given the data. When inbound ingestion lands and sets `thread_id`/`direction='inbound'`, the same pure grouping produces real two-sided threads with the "needs reply" badge — no rework. Compose/live reply remain a later infra-gated phase.
+
+---
+
+## ADR-033 — Storage CSV import is validate-then-commit with a preview; no silent row drops
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 24 adds the iMVE storage "Import CSV" and container "Duplicate". The office prepares container lists in a spreadsheet; importing them must be safe and predictable, and there is no CSV-parsing code yet (the export module is write-only).
+**Decision:** A hand-rolled RFC-4180 parser (`lib/storage/csv-import.ts`, the inverse of the export module's `csvField`) feeds a pure `buildContainerImport` that validates every data row against the existing `StorageContainerSchema`. The flow is **preview then commit**: the same Server Action runs in `preview` mode (returns valid count + per-line errors + skipped duplicates) and `commit` mode (inserts the valid rows). **No silent drops** — rejected rows are reported by line number, and duplicates (existing site codes or repeats within the file) are listed, not dropped quietly. A blank monthly rate is an error, not a coerced 0. Duplicate-container clones the source as a fresh `available` unit with a `-COPY` code suffix.
+**Alternatives considered:**
+- A CSV library (papaparse) → unnecessary dependency for a small, well-specified format; the export module already hand-rolls the write side.
+- Direct import without preview → unsafe; the office can't see what a paste will do before it commits.
+- Silently skipping bad/duplicate rows → hides data-entry mistakes; explicit per-line reporting is the point.
+**Consequences:** Import is paste-CSV (textarea), not file-upload — adequate and avoids the storage-bucket dependency. The parser is reused-validation, so import rules can never drift from the create form. Site-plan image upload stays 🔒 (needs a storage bucket). `-COPY` collisions surface a rename prompt rather than auto-incrementing.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

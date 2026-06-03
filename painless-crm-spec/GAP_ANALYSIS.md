@@ -155,7 +155,8 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **Tests:** `tests/reports/analytics.test.ts` — each aggregator + projected-revenue weighting + empty-data.
 **Est:** M.
 
-### Phase 22 — Appointments calendar & Staff Holiday  ·  small schema
+### Phase 22 — Appointments calendar & Staff Holiday  ·  small schema  ·  ✅ BUILT (2026-06-03)
+> **Shipped:** migration 46 `appointments` + `staff_holidays` (RLS Pattern-1 inline + set_updated_at triggers). Pure `lib/calendar/grid.ts` (viewDays month/week/day, groupAppointmentsByDay, holidayCoversDate, workersOnHoliday, appointmentsOverlap), `schemas/appointment.ts` (zod + datetime-local→ISO), `queries/appointments.ts` (listAppointments + listStaffHolidays) + `listWorkerOptions`, `actions/appointments.ts` (create/delete for both), calendar page (month grid + week/day agenda + category filter + prev/today/next) with add-appointment + add-holiday forms. Holidays surfaced read-only on the dispatcher board (staff "off" marker). i18n en/hu `calendar` ns. 951 tests. ADR-031. Deferred: appointment edit, hour-grid week/day, capacity-band integration.
 **Goal:** iMVE Calendar Overview (`calendar-view`) — month/week/day appointments with category filter + Add Appointment + Staff Holiday.
 **Schema:** new `appointments(id, company_id, title, category, starts_at, ends_at, job_id?, customer_id?, assigned_to_id?, …)` + `staff_holidays(id, company_id, worker_id, start_date, end_date, kind, …)`. RLS Pattern-1.
 **Infra:** none.
@@ -164,7 +165,8 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **Tests:** calendar windowing, overlap, holiday-blocks-availability.
 **Est:** M.
 
-### Phase 23 — Message inbox (read-only)  ·  no-infra (send/receive 🔒)
+### Phase 23 — Message inbox (read-only)  ·  no-infra (send/receive 🔒)  ·  ✅ BUILT (2026-06-03)
+> **Shipped (no migration):** pure `lib/messages/thread.ts` (`groupThreads` by thread_id w/ singleton fallback, `sortThreadMessages`, `threadKey`, needs-reply + preview), `queries/messages.ts` (`listRecentMessages` + `getThreadForMessage`, customer-name join, no deleted_at), inbox list `app/dashboard/messages/page.tsx` + thread detail `[id]/page.tsx` (inbound/outbound bubbles, customer/job links, read-only note), nav link (Sales group, sales+), en/hu i18n `inbox` ns. 958 tests. ADR-032. Inbound ingestion + live compose stay 🔒.
 **Goal:** iMVE Messages nav — a conversation inbox over the existing `messages` table.
 **Schema:** ✅ exists — `messages(channel, direction, thread_id, in_reply_to_message_id, subject, body, opened_at, replied_at, …)`.
 **Infra:** read + thread view buildable now. **🔒 inbound ingestion** (provider webhooks) and **live send** (beyond existing Resend automation) stay gated.
@@ -173,7 +175,8 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **Tests:** thread grouping by `thread_id`, direction ordering.
 **Est:** M.
 
-### Phase 24 — Storage CSV import & container duplicate  ·  no-infra (site-plan 🔒)
+### Phase 24 — Storage CSV import & container duplicate  ·  no-infra (site-plan 🔒)  ·  ✅ BUILT (2026-06-03)
+> **Shipped (no migration):** pure `lib/storage/csv-import.ts` (hand-rolled RFC-4180 `parseCsv` + `buildContainerImport` reusing StorageContainerSchema; per-line errors + in-file/existing dedupe, blank-rate is an error not 0), `actions/storage-import.ts` (preview/commit modes), `duplicateStorageContainer` in storage-container.ts (-COPY clone), import page + paste-CSV client form (preview → commit), Duplicate button on container detail, Import-CSV link on site page, en/hu i18n (`storageImport` + storage keys). 969 tests. ADR-033. Site-plan image upload stays 🔒 (storage bucket).
 **Goal:** iMVE storage Import CSV + container Duplicate (`storage-view`).
 **Schema:** ✅ exists. **No CSV-import code exists today** (export-only) — add a small pure parser.
 **Infra:** CSV + duplicate no-infra. **🔒 Site Plan image upload** (needs storage bucket).

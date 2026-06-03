@@ -1,4 +1,9 @@
-import { type AutomationRule, matchStageRules, scheduledFor } from '@/lib/comms/automation';
+import {
+  type AutomationRule,
+  matchRules,
+  matchStageRules,
+  scheduledFor,
+} from '@/lib/comms/automation';
 import { describe, expect, it } from 'vitest';
 
 const rule = (over: Partial<AutomationRule>): AutomationRule => ({
@@ -38,6 +43,43 @@ describe('matchStageRules', () => {
       rule({ id: 'other', trigger_event: 'invoice.overdue' }),
     ];
     expect(matchStageRules(rules, 'quoted', 'declined')).toHaveLength(0);
+  });
+});
+
+describe('matchRules — generalised matcher (ADR-024)', () => {
+  it('filters by service_type on the quoted stage', () => {
+    const rules = [
+      rule({
+        id: 'removal',
+        trigger_filters: { to: 'quoted', service_type: 'removal' },
+      }),
+      rule({
+        id: 'waste',
+        trigger_filters: { to: 'quoted', service_type: 'waste_clearance' },
+      }),
+    ];
+    const ctx = { from: 'contacted', to: 'quoted', service_type: 'waste_clearance' };
+    expect(matchRules(rules, 'job.stage_changed', ctx).map((r) => r.id)).toEqual(['waste']);
+  });
+
+  it('a service_type rule does not match when the context lacks it', () => {
+    const rules = [rule({ id: 'r', trigger_filters: { to: 'quoted', service_type: 'removal' } })];
+    expect(matchRules(rules, 'job.stage_changed', { to: 'quoted' })).toHaveLength(0);
+  });
+
+  it('matches non-stage events by their own filter keys', () => {
+    const rules = [
+      rule({ id: 'dep', trigger_event: 'payment.recorded', trigger_filters: { kind: 'deposit' } }),
+      rule({ id: 'fin', trigger_event: 'payment.recorded', trigger_filters: { kind: 'final' } }),
+    ];
+    expect(
+      matchRules(rules, 'payment.recorded', { kind: 'final' }).map((r) => r.id),
+    ).toEqual(['fin']);
+  });
+
+  it('a null/absent filter is a wildcard', () => {
+    const rules = [rule({ id: 'any', trigger_event: 'job.created', trigger_filters: null })];
+    expect(matchRules(rules, 'job.created', {}).map((r) => r.id)).toEqual(['any']);
   });
 });
 

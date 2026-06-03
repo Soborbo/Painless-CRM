@@ -2,7 +2,7 @@
 
 import { recordCommissionForPaidJob } from '@/lib/affiliates/record';
 import { requireRole, requireUser } from '@/lib/auth/require-role';
-import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
+import { enqueueEventAutomation, enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { pickNextRep } from '@/lib/jobs/routing';
 import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { type JobStage, classifyTransition } from '@/lib/jobs/state-machine';
@@ -92,6 +92,18 @@ export async function createJob(_prev: JobActionState, form: FormData): Promise<
     reason: 'Job created',
   });
 
+  // Fire job.created automation (Phase 13b / ADR-024) — e.g. the Welcome email.
+  // Best-effort; must never block job creation.
+  try {
+    await enqueueEventAutomation({
+      companyId: me.company_id,
+      event: 'job.created',
+      jobId: data.id,
+    });
+  } catch {
+    // swallow — automation is never on the critical path
+  }
+
   revalidatePath('/dashboard/jobs');
   redirect(`/dashboard/jobs/${data.id}`);
 }
@@ -178,7 +190,7 @@ export async function transitionJobStage(
   const supabase = await createClient();
   const { data: existing } = await supabase
     .from('jobs')
-    .select('stage, version')
+    .select('stage, version, service_type')
     .eq('id', parsed.data.id)
     .is('deleted_at', null)
     .maybeSingle();
@@ -257,6 +269,7 @@ export async function transitionJobStage(
       jobId: parsed.data.id,
       fromStage,
       toStage: parsed.data.target_stage,
+      serviceType: (existing as { service_type?: string | null }).service_type ?? null,
     });
   } catch {
     // best-effort — automation must never block the transition

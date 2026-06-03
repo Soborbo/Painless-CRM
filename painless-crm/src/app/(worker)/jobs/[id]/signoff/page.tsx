@@ -1,4 +1,5 @@
 import { requireUser } from '@/lib/auth/require-role';
+import { getDocumentTextByCompanyId } from '@/lib/queries/customisation';
 import { getWorkerForUser, getWorkerJobDetail, hasSignoff } from '@/lib/queries/worker-app';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
@@ -18,6 +19,7 @@ export default async function JobSignoffPage({ params }: Props) {
   if (!job) notFound();
 
   const alreadySigned = await hasSignoff(id);
+  const documentText = await getDocumentTextByCompanyId(me.company_id);
   const t = await getTranslations('workerApp');
 
   return (
@@ -37,7 +39,14 @@ export default async function JobSignoffPage({ params }: Props) {
           {t('signoff.alreadySigned')}
         </p>
       ) : (
-        <SignoffForm jobId={id} jobNumber={job.job_number} />
+        <>
+          {documentText.signoff_declaration ? (
+            <p className="whitespace-pre-wrap rounded-md border p-3 text-sm text-[var(--color-muted-foreground)]">
+              {documentText.signoff_declaration}
+            </p>
+          ) : null}
+          <SignoffForm jobId={id} jobNumber={job.job_number} />
+        </>
       )}
     </main>
   );

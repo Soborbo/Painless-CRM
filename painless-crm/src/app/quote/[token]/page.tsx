@@ -1,6 +1,7 @@
 import { formatFileSize } from '@/lib/documents/storage-path';
 import { serverEnv } from '@/lib/env';
 import { listPublicDocumentsForQuote, signPublicDocuments } from '@/lib/queries/documents';
+import { getDocumentTextByCompanyId } from '@/lib/queries/customisation';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { listPublicVariantsForQuote } from '@/lib/queries/quote-variants';
 import { expireSingleQuote, shouldExpire } from '@/lib/quotes/expiry';
@@ -52,6 +53,7 @@ export default async function PublicQuotePage({ params }: Props) {
     await listPublicDocumentsForQuote(quote.id, quote.job_id, quote.customer.id),
   );
   const verdict = classifyAcceptable(quote);
+  const documentText = await getDocumentTextByCompanyId(quote.company_id);
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col gap-6 px-6 py-10">
       <header className="border-b pb-6">
@@ -199,8 +201,14 @@ export default async function PublicQuotePage({ params }: Props) {
         />
       )}
 
+      {documentText.acceptance_terms ? (
+        <section className="rounded-md border border-[var(--color-border)] bg-[var(--color-muted)]/20 p-4 text-xs text-[var(--color-muted-foreground)]">
+          <p className="whitespace-pre-wrap">{documentText.acceptance_terms}</p>
+        </section>
+      ) : null}
+
       <footer className="flex items-center justify-between text-xs text-[var(--color-muted-foreground)]">
-        <span>{t('footer')}</span>
+        <span>{documentText.quote_footer || t('footer')}</span>
         <a
           href={`/quote/${token}/print`}
           target="_blank"

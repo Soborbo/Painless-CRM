@@ -15,10 +15,12 @@ export function CubicSheet({
   surveyId,
   items,
   summary,
+  presets = [],
 }: {
   surveyId: string;
   items: CubicItem[];
   summary: CubicSummary;
+  presets?: { name: string; cubic_ft: number }[];
 }) {
   const [addState, addAction, adding] = useActionState(addCubicItem, INITIAL);
   const [, removeAction] = useActionState(removeCubicItem, INITIAL);
@@ -94,8 +96,26 @@ export function CubicSheet({
           name="item"
           placeholder="Item *"
           required
+          list={presets.length > 0 ? 'cubic-presets' : undefined}
+          onChange={(e) => {
+            const match = presets.find(
+              (p) => p.name.toLowerCase() === e.target.value.toLowerCase(),
+            );
+            if (!match) return;
+            const vol = e.currentTarget.form?.elements.namedItem(
+              'cubic_ft_each',
+            ) as HTMLInputElement | null;
+            if (vol && !vol.value) vol.value = String(match.cubic_ft);
+          }}
           className="rounded-md border px-2 py-1 md:col-span-2"
         />
+        {presets.length > 0 ? (
+          <datalist id="cubic-presets">
+            {presets.map((p) => (
+              <option key={p.name} value={p.name} />
+            ))}
+          </datalist>
+        ) : null}
         <input
           name="quantity"
           type="number"

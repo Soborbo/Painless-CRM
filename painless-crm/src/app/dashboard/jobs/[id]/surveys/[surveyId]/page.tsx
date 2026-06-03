@@ -1,4 +1,5 @@
 import { requireRole } from '@/lib/auth/require-role';
+import { getCubicPresetsForCompany } from '@/lib/queries/customisation';
 import { getSurvey } from '@/lib/queries/surveys';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -10,10 +11,11 @@ const SURVEY_ROLES = ['surveyor', 'manager', 'admin', 'super_admin'] as const;
 type Props = { params: Promise<{ id: string; surveyId: string }> };
 
 export default async function SurveyDetailPage({ params }: Props) {
-  await requireRole(SURVEY_ROLES);
+  const me = await requireRole(SURVEY_ROLES);
   const { id, surveyId } = await params;
   const result = await getSurvey(surveyId);
   if (!result || result.survey.job_id !== id) notFound();
+  const presets = await getCubicPresetsForCompany(me.company_id);
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-8">
@@ -30,7 +32,12 @@ export default async function SurveyDetailPage({ params }: Props) {
         <SurveyForm jobId={id} survey={result.survey} />
       </section>
 
-      <CubicSheet surveyId={surveyId} items={result.items} summary={result.summary} />
+      <CubicSheet
+        surveyId={surveyId}
+        items={result.items}
+        summary={result.summary}
+        presets={presets}
+      />
     </main>
   );
 }

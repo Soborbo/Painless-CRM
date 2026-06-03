@@ -34,6 +34,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
         ...link('/dashboard/customers', t('customers')),
         ...link('/dashboard/jobs', t('jobs')),
         ...link('/dashboard/quotes', t('quotes')),
+        ...link('/dashboard/messages', t('messages'), [
+          'sales',
+          'accounts',
+          'manager',
+          'admin',
+          'super_admin',
+        ]),
         ...link('/dashboard/sla', t('sla')),
         ...link('/dashboard/callbacks', t('callbacks')),
       ],
@@ -42,6 +49,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       title: 'Operations',
       links: [
         ...link('/dashboard/dispatch', t('dispatch'), MANAGER),
+        ...link('/dashboard/calendar', t('calendar'), MANAGER),
         ...link('/dashboard/rota', t('rota'), MANAGER),
         ...link('/dashboard/vehicles', t('vehicles'), MANAGER),
         ...link('/dashboard/storage', t('storage'), MANAGER),

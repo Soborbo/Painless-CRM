@@ -62,6 +62,12 @@ export default async function CustomerPage({ params }: Props) {
             {t('newJob')}
           </Link>
           <Link
+            href={`/dashboard/customers/${id}/statement`}
+            className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('statement')}
+          </Link>
+          <Link
             href={`/dashboard/customers/${id}/edit`}
             className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
           >

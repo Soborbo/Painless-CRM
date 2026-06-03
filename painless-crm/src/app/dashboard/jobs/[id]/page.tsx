@@ -5,6 +5,7 @@ import { NotesPanel } from '@/components/domain/job/notes-panel';
 import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { RequoteButton } from '@/components/domain/job/requote-button';
 import { StageBadge } from '@/components/domain/job/stage-badge';
+import { CustomFieldsPanel } from '@/components/domain/job/custom-fields-panel';
 import { TasksPanel } from '@/components/domain/job/tasks-panel';
 import { requireUser } from '@/lib/auth/require-role';
 import { isProfitReviewStage } from '@/lib/jobs/profit';
@@ -279,6 +280,8 @@ export default async function JobPage({ params }: Props) {
           ) : null}
 
           <TasksPanel jobId={job.id} rows={jobTasks} />
+
+          <CustomFieldsPanel jobId={job.id} companyId={me.company_id} />
 
           <NotesPanel jobId={job.id} rows={jobNotes} currentUserId={me.id} />
 

@@ -185,7 +185,8 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **Tests:** `tests/storage/csv-import.test.ts` — quoting, bad rows, dedupe, duplicate-container clone.
 **Est:** M.
 
-### Phase 25 — Customisation engine (fields / statuses / job-sheet / sign-off / email builder)  ·  larger, mixed
+### Phase 25 — Customisation engine (fields / statuses / job-sheet / sign-off / email builder)  ·  larger, mixed  ·  ◑ 25a BUILT (2026-06-03)
+> **25a shipped (Custom Job Fields, migration 47):** config-as-data engine `lib/custom-fields/defs.ts` (pure `parseDefs` resilient-read, `validateValues` coerce-against-defs, `readValues`), `settings.custom_field_defs` + `jobs.custom_fields` jsonb, admin defs UI `settings/custom-fields` (add/delete), job-detail Custom Fields card (renders only when configured), nav link (admin), en/hu `customFields` ns. 980 tests. **ADR-034 sets the config-as-data pattern** for the rest. **Still TODO (25b+):** Cubic Calculator Fields, Job Sheet, Customer Acceptance terms, Company Sign-off templates, visual Email Builder. **Job Status customisation deferred** (conflicts with locked STATE_MACHINE.md — needs its own decision). Doc/PDF render of customised templates stays 🔒.
 **Goal:** The iMVE "Customisation" family beyond branding: Job Fields, Job Status, Cubic Calculator Fields, Job Sheet, Customer Acceptance, Company Sign-off Templates, visual Email Builder.
 **Schema:** mostly new — a `custom_field_defs` / `custom_status_defs` model (or structured `settings.feature_flags`/jsonb config), plus template config rows.
 **Infra:** none for config; the **document/PDF rendering of customised templates is 🔒**.

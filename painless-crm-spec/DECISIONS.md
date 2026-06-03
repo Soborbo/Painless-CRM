@@ -427,6 +427,19 @@ Format adapted from Michael Nygard's ADR template, kept short for solo project t
 
 ---
 
+## ADR-034 — Customisation is config-as-data (jsonb), validated by zod at read; no per-tenant code
+**Date:** 2026-06-03
+**Status:** accepted
+**Context:** Phase 25 is the iMVE "Customisation" family (custom job fields, statuses, job sheet, sign-off templates, email builder). It must let each tenant reshape parts of the app without us shipping per-tenant code or branching the schema per customer. Phase 25a delivers the first slice — custom job fields — and sets the pattern for the rest.
+**Decision:** Customisation is **config-as-data**: the definitions live in jsonb (`settings.custom_field_defs`), the per-entity values live in jsonb on the entity (`jobs.custom_fields`), and a pure engine (`lib/custom-fields/defs.ts`) validates both with zod **at read** — `parseDefs` keeps individually-valid defs and drops malformed ones (a bad stored config degrades to fewer fields, never a crash), and `validateValues` coerces a form map against the defs with per-field errors. No per-tenant code paths, no dynamic columns. The job-detail UI renders a Custom Fields card only when defs exist; admins manage defs at `/dashboard/settings/custom-fields`.
+**Alternatives considered:**
+- A real column per custom field (DDL per tenant) → unmanageable across tenants; defeats multi-tenancy.
+- A normalised `custom_field_values` table → heavier joins for a small, document-shaped payload that is always read with its job; jsonb is the right fit.
+- Validate defs only on write → a config edited by another path (or an older app version) could still be malformed; validating at read makes every consumer safe.
+**Consequences:** Custom field values are jsonb on the `jobs` spine (an ADR-worthy spine column — added in migration 47) and are not queryable as first-class columns (acceptable: they are display/ops metadata, not reporting dimensions). The same pattern extends to the rest of Phase 25 (statuses, job sheet, sign-off, email builder) — each a jsonb def set + zod-at-read. Job **status** customisation specifically stays deferred because stages derive from the locked STATE_MACHINE.md (CLAUDE rule 13); customising them needs a separate decision. PDF render of customised documents remains 🔒.
+
+---
+
 ## Open decisions (not yet resolved — pending input)
 
 These are flagged in relevant phase docs. Each becomes an ADR once decided.

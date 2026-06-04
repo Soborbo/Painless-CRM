@@ -3770,6 +3770,7 @@ export type Database = {
           invited_by_id: string
           role: string
           token: string
+          worker_id: string | null
         }
         Insert: {
           accepted_at?: string | null
@@ -3781,6 +3782,7 @@ export type Database = {
           invited_by_id: string
           role: string
           token: string
+          worker_id?: string | null
         }
         Update: {
           accepted_at?: string | null
@@ -3792,6 +3794,7 @@ export type Database = {
           invited_by_id?: string
           role?: string
           token?: string
+          worker_id?: string | null
         }
         Relationships: [
           {
@@ -3806,6 +3809,13 @@ export type Database = {
             columns: ["invited_by_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_invitations_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "workers"
             referencedColumns: ["id"]
           },
         ]

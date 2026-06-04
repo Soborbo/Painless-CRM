@@ -11,6 +11,7 @@ export type WorkerRow = {
   skills: string | null;
   active: boolean;
   notes: string | null;
+  user_id: string | null;
   created_at: string;
   updated_at: string;
   version: number;
@@ -42,7 +43,27 @@ export async function listWorkerOptions(): Promise<WorkerOption[]> {
 }
 
 const COLUMNS =
-  'id, full_name, phone, email, hourly_rate_pence, skills, active, notes, created_at, updated_at, version';
+  'id, full_name, phone, email, hourly_rate_pence, skills, active, notes, user_id, created_at, updated_at, version';
+
+export type WorkerPendingInvite = { id: string; email: string; expires_at: string };
+
+// Latest live (unaccepted, unexpired) app invitation for a worker, if any.
+// Powers the "invitation pending" state on the worker profile.
+export async function getWorkerPendingInvite(
+  workerId: string,
+): Promise<WorkerPendingInvite | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('user_invitations')
+    .select('id, email, expires_at')
+    .eq('worker_id', workerId)
+    .is('accepted_at', null)
+    .gt('expires_at', new Date().toISOString())
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return (data as WorkerPendingInvite | null) ?? null;
+}
 
 export async function listWorkers(filters: WorkerListFilters): Promise<WorkerListResult> {
   const supabase = await createClient();

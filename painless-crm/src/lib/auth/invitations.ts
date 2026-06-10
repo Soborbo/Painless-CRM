@@ -3,7 +3,7 @@
 import { requireRole } from '@/lib/auth/require-role';
 import { serverEnv } from '@/lib/env';
 import { sendInviteEmail } from '@/lib/integrations/resend/invite';
-import { AcceptInviteSchema, InviteUserSchema } from '@/lib/schemas/invite';
+import { AcceptInviteSchema, InviteUserSchema, InviteWorkerSchema } from '@/lib/schemas/invite';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -52,6 +52,64 @@ export async function inviteUser(_prev: ActionState, form: FormData): Promise<Ac
   return { ok: true, message: 'Invitation sent' };
 }
 
+// Invite a worker into the PWA from their profile. Unlike inviteUser this binds
+// the invitation to the worker record (worker_id) so acceptInvitation can set
+// workers.user_id — the FK the worker app resolves via current_user_worker_id().
+export async function inviteWorker(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const inviter = await requireRole(ADMIN_ROLES);
+
+  const parsed = InviteWorkerSchema.safeParse({
+    worker_id: form.get('worker_id'),
+    role: form.get('role'),
+  });
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message ?? 'Invalid input' };
+  }
+
+  const supabase = await createClient();
+  const { data: worker } = await supabase
+    .from('workers')
+    .select('id, email, user_id')
+    .eq('id', parsed.data.worker_id)
+    .is('deleted_at', null)
+    .maybeSingle();
+
+  if (!worker) return { ok: false, message: 'Worker not found' };
+  if (worker.user_id) return { ok: false, message: 'This worker already has an account' };
+  if (!worker.email) return { ok: false, message: 'Add an email to the worker first' };
+
+  // Block a second live invite for the same worker (one pending at a time).
+  const { data: existing } = await supabase
+    .from('user_invitations')
+    .select('id')
+    .eq('worker_id', worker.id)
+    .is('accepted_at', null)
+    .gt('expires_at', new Date().toISOString())
+    .maybeSingle();
+  if (existing) return { ok: false, message: 'An invitation is already pending for this worker' };
+
+  const token = generateToken();
+  const { error } = await supabase.from('user_invitations').insert({
+    company_id: inviter.company_id,
+    email: worker.email.toLowerCase(),
+    role: parsed.data.role,
+    invited_by_id: inviter.id,
+    worker_id: worker.id,
+    token,
+  });
+  if (error) return { ok: false, message: 'Could not create invitation' };
+
+  const env = serverEnv();
+  await sendInviteEmail({
+    to: worker.email,
+    inviterName: inviter.full_name,
+    acceptUrl: `${env.NEXT_PUBLIC_APP_URL}/auth/accept-invite?token=${token}`,
+  });
+
+  revalidatePath(`/dashboard/workers/${worker.id}`);
+  return { ok: true, message: 'Invitation sent' };
+}
+
 export async function revokeInvitation(_prev: ActionState, form: FormData): Promise<ActionState> {
   const inviter = await requireRole(ADMIN_ROLES);
   const id = form.get('id');
@@ -86,7 +144,7 @@ export async function acceptInvitation(_prev: ActionState, form: FormData): Prom
   const admin = createAdminClient();
   const { data: invite, error: lookupError } = await admin
     .from('user_invitations')
-    .select('id, company_id, email, role, expires_at, accepted_at')
+    .select('id, company_id, email, role, expires_at, accepted_at, worker_id')
     .eq('token', parsed.data.token)
     .maybeSingle();
 
@@ -119,19 +177,34 @@ export async function acceptInvitation(_prev: ActionState, form: FormData): Prom
     return { ok: false, message: 'Could not create user' };
   }
 
-  const { error: profileError } = await admin.from('users').insert({
-    auth_id: created.user.id,
-    company_id: invite.company_id,
-    email: invite.email,
-    full_name: parsed.data.full_name,
-    role: invite.role,
-  });
-  if (profileError) {
+  const { data: profile, error: profileError } = await admin
+    .from('users')
+    .insert({
+      auth_id: created.user.id,
+      company_id: invite.company_id,
+      email: invite.email,
+      full_name: parsed.data.full_name,
+      role: invite.role,
+    })
+    .select('id')
+    .single();
+  if (profileError || !profile) {
     // Best-effort cleanup: delete the auth user we just created and release the
     // claim so the invitation can be retried.
     await admin.auth.admin.deleteUser(created.user.id);
     await admin.from('user_invitations').update({ accepted_at: null }).eq('id', invite.id);
     return { ok: false, message: 'Could not create profile' };
+  }
+
+  // Worker invitations bind the new profile to the worker record so the PWA can
+  // resolve it. Best-effort + guarded on user_id IS NULL: the account is the
+  // primary outcome, so a stale/already-linked worker never fails the accept.
+  if (invite.worker_id) {
+    await admin
+      .from('workers')
+      .update({ user_id: profile.id })
+      .eq('id', invite.worker_id)
+      .is('user_id', null);
   }
 
   // Invitation was already claimed (accepted_at set) atomically above.

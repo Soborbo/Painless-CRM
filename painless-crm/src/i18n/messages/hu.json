@@ -1206,6 +1206,16 @@
     "filterInactive": "",
     "filterAll": "",
     "skillsPlaceholder": "",
+    "appAccess": {
+      "heading": "",
+      "help": "",
+      "roleLabel": "",
+      "sendInvite": "",
+      "sent": "",
+      "linked": "",
+      "pending": "",
+      "needsEmail": ""
+    },
     "performanceHeading": "",
     "performanceNote": "",
     "availabilityHeading": "",

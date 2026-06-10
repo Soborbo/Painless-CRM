@@ -4,7 +4,13 @@ import {
   SetNewPasswordSchema,
   SignInSchema,
 } from '@/lib/schemas/auth';
-import { AcceptInviteSchema, INVITABLE_ROLES, InviteUserSchema } from '@/lib/schemas/invite';
+import {
+  AcceptInviteSchema,
+  INVITABLE_ROLES,
+  InviteUserSchema,
+  InviteWorkerSchema,
+  WORKER_INVITE_ROLES,
+} from '@/lib/schemas/invite';
 import { describe, expect, it } from 'vitest';
 
 describe('auth schemas', () => {
@@ -62,5 +68,27 @@ describe('invite schemas', () => {
     );
     expect(AcceptInviteSchema.safeParse({ ...base, full_name: '' }).success).toBe(false);
     expect(AcceptInviteSchema.safeParse({ ...base, token: 'short' }).success).toBe(false);
+  });
+});
+
+describe('worker invite schema', () => {
+  const workerId = '00000000-0000-0000-0000-0000000000aa';
+
+  it('accepts only loader/surveyor with a uuid worker_id', () => {
+    for (const role of WORKER_INVITE_ROLES) {
+      expect(InviteWorkerSchema.safeParse({ worker_id: workerId, role }).success).toBe(true);
+    }
+  });
+
+  it('rejects non-worker roles', () => {
+    for (const role of ['admin', 'manager', 'sales', 'accounts', 'viewer', 'super_admin']) {
+      expect(InviteWorkerSchema.safeParse({ worker_id: workerId, role }).success).toBe(false);
+    }
+  });
+
+  it('rejects a non-uuid worker_id', () => {
+    expect(InviteWorkerSchema.safeParse({ worker_id: 'not-a-uuid', role: 'loader' }).success).toBe(
+      false,
+    );
   });
 });

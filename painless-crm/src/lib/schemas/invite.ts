@@ -14,6 +14,17 @@ export type AppRole = (typeof APP_ROLES)[number];
 
 export const INVITABLE_ROLES = APP_ROLES.filter((r) => r !== 'super_admin');
 
+// Roles a worker can be invited with from their profile (they get into the
+// worker PWA). Office-only roles stay on the Users settings invite flow.
+export const WORKER_INVITE_ROLES = ['loader', 'surveyor'] as const;
+export type WorkerInviteRole = (typeof WORKER_INVITE_ROLES)[number];
+
+export const InviteWorkerSchema = z.object({
+  worker_id: z.string().uuid(),
+  role: z.enum(WORKER_INVITE_ROLES),
+});
+export type InviteWorkerInput = z.infer<typeof InviteWorkerSchema>;
+
 export const InviteUserSchema = z.object({
   email: z.string().email().max(254),
   role: z.enum(APP_ROLES).refine((r) => r !== 'super_admin', {

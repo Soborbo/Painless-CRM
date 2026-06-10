@@ -1206,6 +1206,16 @@
     "filterInactive": "Inactive",
     "filterAll": "All",
     "skillsPlaceholder": "e.g. piano move, packing, LGV licence",
+    "appAccess": {
+      "heading": "App access",
+      "help": "Send this worker an invitation to the worker app. They set their own password, and their account is linked to this profile automatically.",
+      "roleLabel": "Role in app",
+      "sendInvite": "Invite to app",
+      "sent": "Invitation sent",
+      "linked": "This worker has an app account.",
+      "pending": "Invitation pending · expires {date}",
+      "needsEmail": "Add an email address to this worker before inviting them to the app."
+    },
     "performanceHeading": "Performance",
     "performanceNote": "Hours worked and customer rating arrive with job execution (Phase 10) and reviews (Phase 11).",
     "availabilityHeading": "Availability",

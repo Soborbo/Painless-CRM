@@ -1,5 +1,5 @@
 import { serverEnv } from '@/lib/env';
-import { Resend } from 'resend';
+import { safeSend } from './safe-send';
 
 export interface VehicleComplianceEmailInput {
   to: string[];
@@ -14,18 +14,11 @@ const FROM = 'Painless CRM <alerts@crm.painlessremovals.com>';
 // local runs and the cron in non-prod never fail on a missing secret.
 export async function sendVehicleComplianceEmail(
   input: VehicleComplianceEmailInput,
-): Promise<void> {
+): Promise<boolean> {
   const env = serverEnv();
   if (!env.RESEND_API_KEY) {
     console.warn('[vehicle-compliance] RESEND_API_KEY missing — would send to %o', input.to);
-    return;
+    return true;
   }
-
-  const resend = new Resend(env.RESEND_API_KEY);
-  await resend.emails.send({
-    from: FROM,
-    to: input.to,
-    subject: input.subject,
-    text: input.text,
-  });
+  return safeSend('vehicle-compliance', env.RESEND_API_KEY, { from: FROM, ...input });
 }

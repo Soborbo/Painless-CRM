@@ -83,6 +83,13 @@ describe('validateValues', () => {
     expect(r.errors.parking).toBeTruthy();
   });
 
+  it('rejects hex and scientific notation for number fields', () => {
+    expect(validateValues(DEFS, { code: 'x', floors: '0x10' }).errors.floors).toBeTruthy();
+    expect(validateValues(DEFS, { code: 'x', floors: '1e3' }).errors.floors).toBeTruthy();
+    expect(validateValues(DEFS, { code: 'x', floors: 'Infinity' }).errors.floors).toBeTruthy();
+    expect(validateValues(DEFS, { code: 'x', floors: '-2.5' }).values.floors).toBe(-2.5);
+  });
+
   it('checkbox is always present as a boolean', () => {
     expect(validateValues(DEFS, { code: 'x', fragile: '' }).values.fragile).toBe(false);
     expect(validateValues(DEFS, { code: 'x', fragile: 'true' }).values.fragile).toBe(true);

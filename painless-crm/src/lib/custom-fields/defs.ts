@@ -80,7 +80,9 @@ export function validateValues(
     }
 
     if (def.type === 'number') {
-      const n = Number(raw);
+      // Plain decimal notation only — Number() alone would accept hex ('0x10')
+      // and scientific notation ('1e3'), which are never intended in a form.
+      const n = /^-?\d+(\.\d+)?$/.test(raw) ? Number(raw) : Number.NaN;
       if (!Number.isFinite(n)) errors[def.key] = `${def.label} must be a number`;
       else values[def.key] = n;
       continue;

@@ -108,12 +108,12 @@ export async function runVehicleComplianceSweep(
   const digests = buildAlertDigests(alerts, recipientsByCompany);
   let emailsSent = 0;
   for (const digest of digests) {
-    await sendVehicleComplianceEmail({
+    const sent = await sendVehicleComplianceEmail({
       to: digest.recipients,
       subject: digest.subject,
       text: digest.text,
     });
-    emailsSent += 1;
+    if (sent) emailsSent += 1;
   }
 
   return { vehiclesScanned: vehicles.length, alertsDue: alerts.length, emailsSent };

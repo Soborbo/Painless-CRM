@@ -44,12 +44,12 @@ export async function POST(req: Request): Promise<Response> {
 
     let emailsSent = 0;
     for (const digest of digests) {
-      await sendSlaDigestEmail({
+      const sent = await sendSlaDigestEmail({
         to: digest.recipients,
         subject: digest.subject,
         text: digest.text,
       });
-      emailsSent += 1;
+      if (sent) emailsSent += 1;
     }
 
     // In-app breach notifications to the assigned rep — deduped against any

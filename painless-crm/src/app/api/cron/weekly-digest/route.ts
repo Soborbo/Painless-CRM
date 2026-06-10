@@ -44,12 +44,12 @@ export async function POST(req: Request): Promise<Response> {
 
     let emailsSent = 0;
     for (const digest of digests) {
-      await sendWeeklyDigestEmail({
+      const sent = await sendWeeklyDigestEmail({
         to: digest.recipients,
         subject: digest.subject,
         text: digest.text,
       });
-      emailsSent += 1;
+      if (sent) emailsSent += 1;
     }
 
     return NextResponse.json({

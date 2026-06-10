@@ -57,16 +57,18 @@ describe('buildDailyDigests', () => {
   });
 
   it('skips recipients with the digest disabled', () => {
-    const digests = buildDailyDigests([notif({ recipient_user_id: 'u1' })], [
-      { user_id: 'u1', email: 'u1@test', digest_enabled: false },
-    ]);
+    const digests = buildDailyDigests(
+      [notif({ recipient_user_id: 'u1' })],
+      [{ user_id: 'u1', email: 'u1@test', digest_enabled: false }],
+    );
     expect(digests).toHaveLength(0);
   });
 
   it('skips recipients with no email', () => {
-    const digests = buildDailyDigests([notif({ recipient_user_id: 'u1' })], [
-      { user_id: 'u1', email: '', digest_enabled: true },
-    ]);
+    const digests = buildDailyDigests(
+      [notif({ recipient_user_id: 'u1' })],
+      [{ user_id: 'u1', email: '', digest_enabled: true }],
+    );
     expect(digests).toHaveLength(0);
   });
 

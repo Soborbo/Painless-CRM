@@ -33,11 +33,19 @@ export function Donut({
   const radius = (size - thickness) / 2;
   const circ = 2 * Math.PI * radius;
   const cx = size / 2;
+  const description = segments.map((s) => `${s.label}: ${s.value}`).join(', ');
 
   let offset = 0;
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img">
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      role="img"
+      aria-label={description}
+    >
+      <title>{description}</title>
       <g transform={`rotate(-90 ${cx} ${cx})`}>
         {/* Track ring — also the whole chart when there is no data. */}
         <circle

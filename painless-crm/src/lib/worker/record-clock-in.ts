@@ -1,8 +1,8 @@
-import { boundedClientTimestamp } from './client-timestamp';
 import { getGpsThresholdForCompany, getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { ClockInInput } from '@/lib/schemas/clock-in';
 import { createClient } from '@/lib/supabase/server';
 import { computeClockInGeo } from '@/lib/worker/clock-in';
+import { boundedClientTimestamp } from './client-timestamp';
 
 // Shared clock-in persister (Phase 09). Used by both the server action (online
 // form submit) and the API route (offline-queue replay). Idempotent: replaying

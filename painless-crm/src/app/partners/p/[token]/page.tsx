@@ -85,7 +85,9 @@ export default async function PartnerPortalTokenPage({ params }: Props) {
               {data.rows.map((c) => (
                 <tr key={c.id}>
                   <td className="px-4 py-2">{c.jobNumber != null ? `#${c.jobNumber}` : '—'}</td>
-                  <td className="px-4 py-2 text-right tabular-nums">{formatPence(c.amountPence)}</td>
+                  <td className="px-4 py-2 text-right tabular-nums">
+                    {formatPence(c.amountPence)}
+                  </td>
                   <td className="px-4 py-2">{STATUS_LABEL[c.status] ?? c.status}</td>
                   <td className="px-4 py-2">{formatDate(c.paidAt ?? c.createdAt)}</td>
                 </tr>

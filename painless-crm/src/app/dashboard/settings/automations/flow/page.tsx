@@ -34,11 +34,21 @@ function Chip({ email }: { email: FlowEmail }) {
     >
       <span className="font-medium">{email.templateName}</span>
       <span className="flex flex-wrap gap-1 text-[10px] uppercase tracking-wide text-[var(--color-muted-foreground)]">
-        {email.delayLabel ? <span className="rounded bg-[var(--color-muted)] px-1">{email.delayLabel}</span> : null}
-        {email.dwell ? <span className="rounded bg-[var(--color-muted)] px-1">auto-cancel</span> : null}
-        {email.serviceType ? <span className="rounded bg-[var(--color-muted)] px-1">{label(email.serviceType)}</span> : null}
-        {email.kind ? <span className="rounded bg-[var(--color-muted)] px-1">{email.kind}</span> : null}
-        {email.active ? null : <span className="rounded bg-[var(--color-muted)] px-1">inactive</span>}
+        {email.delayLabel ? (
+          <span className="rounded bg-[var(--color-muted)] px-1">{email.delayLabel}</span>
+        ) : null}
+        {email.dwell ? (
+          <span className="rounded bg-[var(--color-muted)] px-1">auto-cancel</span>
+        ) : null}
+        {email.serviceType ? (
+          <span className="rounded bg-[var(--color-muted)] px-1">{label(email.serviceType)}</span>
+        ) : null}
+        {email.kind ? (
+          <span className="rounded bg-[var(--color-muted)] px-1">{email.kind}</span>
+        ) : null}
+        {email.active ? null : (
+          <span className="rounded bg-[var(--color-muted)] px-1">inactive</span>
+        )}
       </span>
     </Link>
   );
@@ -114,7 +124,11 @@ export default async function AutomationFlowPage() {
         </h2>
         <div className="flex flex-col gap-3">
           {EVENT_LANE.map((event) => (
-            <StageRow key={event} name={TRIGGER_EVENT_LABELS[event]} emails={model.byEvent[event] ?? []} />
+            <StageRow
+              key={event}
+              name={TRIGGER_EVENT_LABELS[event]}
+              emails={model.byEvent[event] ?? []}
+            />
           ))}
         </div>
       </section>

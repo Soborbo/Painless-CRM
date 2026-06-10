@@ -56,10 +56,7 @@ export async function addJobNote(_prev: NoteActionState, form: FormData): Promis
   if (!job) return { status: 'error', message: 'Job not found' };
 
   // Resolve @mentions against active company users (RLS scopes the read).
-  const { data: users } = await supabase
-    .from('users')
-    .select('id, full_name')
-    .eq('active', true);
+  const { data: users } = await supabase.from('users').select('id, full_name').eq('active', true);
   const mentions = resolveMentions(parsed.data.body, users ?? []);
 
   const { data, error } = await supabase

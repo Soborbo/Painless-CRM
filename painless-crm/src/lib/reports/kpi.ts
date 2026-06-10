@@ -36,7 +36,10 @@ export function kpiWindows(now: Date, period: KpiPeriod): KpiWindows {
   const prevStart = start - lenMs;
   return {
     current: { startIso: new Date(start).toISOString(), endIso: new Date(end).toISOString() },
-    previous: { startIso: new Date(prevStart).toISOString(), endIso: new Date(start).toISOString() },
+    previous: {
+      startIso: new Date(prevStart).toISOString(),
+      endIso: new Date(start).toISOString(),
+    },
   };
 }
 

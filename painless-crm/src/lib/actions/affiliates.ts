@@ -26,7 +26,10 @@ export const INITIAL_AFFILIATE_STATE: AffiliateActionState = { status: 'idle' };
 // flat_per_job (converted to pence here). See schemas/affiliate.ts contract.
 function normaliseCommissionValue(form: FormData): string {
   const type = form.get('commission_type');
-  const raw = typeof form.get('commission_value') === 'string' ? (form.get('commission_value') as string).trim() : '';
+  const raw =
+    typeof form.get('commission_value') === 'string'
+      ? (form.get('commission_value') as string).trim()
+      : '';
   if (raw === '') return '';
   if (type === 'flat_per_job') {
     const pounds = Number(raw);
@@ -215,10 +218,7 @@ export async function toggleAffiliateCode(
   const active = form.get('active') === 'true';
 
   const supabase = await createClient();
-  const { error } = await supabase
-    .from('affiliate_codes')
-    .update({ active })
-    .eq('id', codeId.data);
+  const { error } = await supabase.from('affiliate_codes').update({ active }).eq('id', codeId.data);
   if (error) return { status: 'error', message: 'Could not update the code' };
 
   revalidatePath(`/dashboard/affiliates/${affiliateId.data}`);

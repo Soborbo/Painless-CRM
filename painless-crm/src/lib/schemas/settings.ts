@@ -23,15 +23,8 @@ export const CURRENCIES = ['GBP', 'EUR', 'USD'] as const;
 export const LOCALES = ['en-GB', 'hu-HU'] as const;
 
 export const CompanySettingsSchema = z.object({
-  company_name: z
-    .string()
-    .trim()
-    .min(1, { message: 'Company name is required' })
-    .max(200),
-  brand_color: z
-    .string()
-    .trim()
-    .regex(HEX_COLOR, { message: 'Use a hex colour like #0066cc' }),
+  company_name: z.string().trim().min(1, { message: 'Company name is required' }).max(200),
+  brand_color: z.string().trim().regex(HEX_COLOR, { message: 'Use a hex colour like #0066cc' }),
   logo_url: optionalUrl,
   vat_number: optionalText(40),
   ico_registration: optionalText(40),

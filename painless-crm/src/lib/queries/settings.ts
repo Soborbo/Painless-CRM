@@ -1,7 +1,7 @@
 import { requireUser } from '@/lib/auth/require-role';
+import { type BrandingSource, DEFAULT_COMPANY_NAME } from '@/lib/settings/branding';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
-import { DEFAULT_COMPANY_NAME, type BrandingSource } from '@/lib/settings/branding';
 
 // Phase 18 — company settings reads. RLS scopes the authed read to the tenant;
 // the public branding read uses the admin client for anonymous document pages.

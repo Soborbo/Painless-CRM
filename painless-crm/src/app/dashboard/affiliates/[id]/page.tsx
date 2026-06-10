@@ -69,9 +69,7 @@ export default async function AffiliateDetailPage({ params }: Props) {
           >
             {t('edit')}
           </Link>
-          {isAdmin ? (
-            <DeleteAffiliateButton id={affiliate.id} version={affiliate.version} />
-          ) : null}
+          {isAdmin ? <DeleteAffiliateButton id={affiliate.id} version={affiliate.version} /> : null}
         </div>
       </header>
 

@@ -69,9 +69,17 @@ describe('buildSlaPerformance', () => {
     const { byRep } = buildSlaPerformance(
       [
         // u1: 1 on-time
-        row({ assigned_to_id: 'u1', assigned_to_name: 'Pete', first_response_at: '2026-06-01T10:30:00Z' }),
+        row({
+          assigned_to_id: 'u1',
+          assigned_to_name: 'Pete',
+          first_response_at: '2026-06-01T10:30:00Z',
+        }),
         // u2: 1 breached
-        row({ assigned_to_id: 'u2', assigned_to_name: 'Sam', first_response_at: '2026-06-01T11:30:00Z' }),
+        row({
+          assigned_to_id: 'u2',
+          assigned_to_name: 'Sam',
+          first_response_at: '2026-06-01T11:30:00Z',
+        }),
       ],
       NOW,
     );
@@ -82,7 +90,13 @@ describe('buildSlaPerformance', () => {
 
   it('buckets unassigned leads under a single row', () => {
     const { byRep } = buildSlaPerformance(
-      [row({ assigned_to_id: null, assigned_to_name: null, first_response_at: '2026-06-01T10:30:00Z' })],
+      [
+        row({
+          assigned_to_id: null,
+          assigned_to_name: null,
+          first_response_at: '2026-06-01T10:30:00Z',
+        }),
+      ],
       NOW,
     );
     expect(byRep).toHaveLength(1);

@@ -1,15 +1,19 @@
-import { describe, expect, it } from 'vitest';
-import { transformJob } from '@/lib/migration/transform-job';
 import { UnmappedStatusError } from '@/lib/migration/status-mapping';
+import { transformJob } from '@/lib/migration/transform-job';
 import {
   validateCustomerIdentifiers,
   validateSourceStatuses,
 } from '@/lib/migration/validate-source';
+import { describe, expect, it } from 'vitest';
 
 describe('transformJob', () => {
   it('maps status fields and preserves the legacy reference', () => {
     expect(
-      transformJob({ status: 'Awaiting Deposit', reference: 'IMVE-123', createdDate: '2024-01-02' }),
+      transformJob({
+        status: 'Awaiting Deposit',
+        reference: 'IMVE-123',
+        createdDate: '2024-01-02',
+      }),
     ).toEqual({
       stage: 'accepted',
       sub_status: 'awaiting_deposit',
@@ -64,10 +68,7 @@ describe('validateSourceStatuses', () => {
 
 describe('validateCustomerIdentifiers', () => {
   it('passes when every row has an email or phone', () => {
-    const report = validateCustomerIdentifiers([
-      { email: 'a@b.com' },
-      { phone: '0117 911 5000' },
-    ]);
+    const report = validateCustomerIdentifiers([{ email: 'a@b.com' }, { phone: '0117 911 5000' }]);
     expect(report.ok).toBe(true);
   });
 

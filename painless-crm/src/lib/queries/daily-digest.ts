@@ -45,10 +45,12 @@ export async function fetchDailyDigestData(sinceIso: string): Promise<DailyDiges
     enabledByUser.set(p.user_id, p.email_digest_enabled ?? true);
   }
 
-  const recipients: DigestRecipient[] = ((userRows ?? []) as Array<{
-    id: string;
-    email: string | null;
-  }>)
+  const recipients: DigestRecipient[] = (
+    (userRows ?? []) as Array<{
+      id: string;
+      email: string | null;
+    }>
+  )
     .filter((u) => !!u.email)
     .map((u) => ({
       user_id: u.id,

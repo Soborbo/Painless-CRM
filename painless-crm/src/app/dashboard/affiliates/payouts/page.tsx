@@ -38,7 +38,10 @@ export default async function PayoutsPage({ searchParams }: Props) {
       </header>
 
       <section className="grid gap-3 sm:grid-cols-3">
-        <SummaryTile label={t('statuses.pending')} value={formatPence(totalsByStatus.pending ?? 0)} />
+        <SummaryTile
+          label={t('statuses.pending')}
+          value={formatPence(totalsByStatus.pending ?? 0)}
+        />
         <SummaryTile
           label={t('statuses.approved')}
           value={formatPence(totalsByStatus.approved ?? 0)}

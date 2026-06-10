@@ -20,8 +20,12 @@ describe('AppointmentSchema', () => {
   });
 
   it('rejects end before/equal to start', () => {
-    expect(AppointmentSchema.safeParse({ ...APPT, ends_at: '2026-06-10T09:00' }).success).toBe(false);
-    expect(AppointmentSchema.safeParse({ ...APPT, ends_at: '2026-06-10T08:00' }).success).toBe(false);
+    expect(AppointmentSchema.safeParse({ ...APPT, ends_at: '2026-06-10T09:00' }).success).toBe(
+      false,
+    );
+    expect(AppointmentSchema.safeParse({ ...APPT, ends_at: '2026-06-10T08:00' }).success).toBe(
+      false,
+    );
   });
 
   it('rejects a bad category or malformed datetime', () => {

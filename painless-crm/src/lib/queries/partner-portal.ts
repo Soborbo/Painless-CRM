@@ -41,12 +41,18 @@ export async function getPartnerPortalByAffiliateId(
     .select('name, active, deleted_at')
     .eq('id', affiliateId)
     .maybeSingle();
-  const affiliate = aff as { name: string; active: boolean | null; deleted_at: string | null } | null;
+  const affiliate = aff as {
+    name: string;
+    active: boolean | null;
+    deleted_at: string | null;
+  } | null;
   if (!affiliate || affiliate.deleted_at || affiliate.active === false) return null;
 
   const { data: commissionRows } = await supabase
     .from('commission_records')
-    .select('id, amount_pence, status, created_at, paid_at, job:jobs!commission_records_job_id_fkey (job_number)')
+    .select(
+      'id, amount_pence, status, created_at, paid_at, job:jobs!commission_records_job_id_fkey (job_number)',
+    )
     .eq('affiliate_id', affiliateId)
     .order('created_at', { ascending: false })
     .limit(500);

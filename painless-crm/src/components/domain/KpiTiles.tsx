@@ -1,4 +1,4 @@
-import { type KpiMetric, type KpiPeriod, KPI_PERIODS } from '@/lib/reports/kpi';
+import { KPI_PERIODS, type KpiMetric, type KpiPeriod } from '@/lib/reports/kpi';
 import { formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';

@@ -61,8 +61,22 @@ describe('serializeArAgingToCsv', () => {
   it('emits a row per bucket with share and a total trailer', () => {
     const aging = buildArAging(
       [
-        { status: 'sent', total_pence: 0, amount_paid_pence: 0, amount_outstanding_pence: 100_00, issued_at: null, due_at: '2026-07-01T00:00:00Z' },
-        { status: 'sent', total_pence: 0, amount_paid_pence: 0, amount_outstanding_pence: 300_00, issued_at: null, due_at: '2026-01-01T00:00:00Z' },
+        {
+          status: 'sent',
+          total_pence: 0,
+          amount_paid_pence: 0,
+          amount_outstanding_pence: 100_00,
+          issued_at: null,
+          due_at: '2026-07-01T00:00:00Z',
+        },
+        {
+          status: 'sent',
+          total_pence: 0,
+          amount_paid_pence: 0,
+          amount_outstanding_pence: 300_00,
+          issued_at: null,
+          due_at: '2026-01-01T00:00:00Z',
+        },
       ],
       '2026-06-02T00:00:00Z',
     );

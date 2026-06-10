@@ -55,10 +55,7 @@ function tierPercentFor(tiers: TieredTier[], wonJobCount: number): number {
 const percentOf = (revenuePence: number, percent: number): number =>
   Math.max(0, Math.round((revenuePence * percent) / 100));
 
-export function computeCommissionPence(
-  terms: CommissionTerms,
-  ctx: CommissionContext,
-): number {
+export function computeCommissionPence(terms: CommissionTerms, ctx: CommissionContext): number {
   const revenue = Math.max(0, Math.round(ctx.jobRevenuePence));
   switch (terms.commissionType) {
     case 'percent_revenue':

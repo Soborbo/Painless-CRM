@@ -14,7 +14,9 @@ const KEY_RE = /^[a-z][a-z0-9_]{0,39}$/;
 
 export const CustomFieldDefSchema = z
   .object({
-    key: z.string().regex(KEY_RE, { message: 'Key must be lower_snake_case (start with a letter)' }),
+    key: z
+      .string()
+      .regex(KEY_RE, { message: 'Key must be lower_snake_case (start with a letter)' }),
     label: z.string().trim().min(1, { message: 'Label is required' }).max(80),
     type: z.enum(CUSTOM_FIELD_TYPES),
     options: z.array(z.string().trim().min(1).max(80)).max(30).optional(),

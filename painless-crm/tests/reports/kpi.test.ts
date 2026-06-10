@@ -1,9 +1,4 @@
-import {
-  type KpiCounts,
-  buildKpiMetrics,
-  isKpiPeriod,
-  kpiWindows,
-} from '@/lib/reports/kpi';
+import { type KpiCounts, buildKpiMetrics, isKpiPeriod, kpiWindows } from '@/lib/reports/kpi';
 import { describe, expect, it } from 'vitest';
 
 const NOW = new Date('2026-06-02T00:00:00Z');

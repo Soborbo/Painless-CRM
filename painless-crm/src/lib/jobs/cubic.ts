@@ -20,9 +20,7 @@ export interface CubicSummary {
 // Phase 09 — pick the best cubic-ft estimate to pre-fill the end-of-job sheet's
 // "actual cubic feet" field. Returns the first positive, finite candidate (so a
 // surveyor's estimate wins over an itemised fallback), or null if none usable.
-export function pickCubicEstimate(
-  candidates: Array<number | null | undefined>,
-): number | null {
+export function pickCubicEstimate(candidates: Array<number | null | undefined>): number | null {
   for (const c of candidates) {
     if (typeof c === 'number' && Number.isFinite(c) && c > 0) return c;
   }

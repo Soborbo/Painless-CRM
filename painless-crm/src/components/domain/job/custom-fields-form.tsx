@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_CF_STATE,
   type CustomFieldActionState,
+  INITIAL_CF_STATE,
   saveJobCustomFields,
 } from '@/lib/actions/custom-fields';
 import type { CustomFieldDef } from '@/lib/custom-fields/defs';
@@ -32,15 +32,21 @@ export function CustomFieldsForm({
       <input type="hidden" name="job_id" value={jobId} />
       {defs.map((def) => {
         const name = `cf_${def.key}`;
+        const inputId = `cf-input-${def.key}`;
         const current = values[def.key];
         return (
-          <label key={def.key} className="flex flex-col gap-1 text-sm">
+          <label key={def.key} htmlFor={inputId} className="flex flex-col gap-1 text-sm">
             <span className="text-xs text-[var(--color-muted-foreground)]">
               {def.label}
               {def.required ? ' *' : ''}
             </span>
             {def.type === 'select' ? (
-              <select name={name} defaultValue={String(current ?? '')} className={field}>
+              <select
+                id={inputId}
+                name={name}
+                defaultValue={String(current ?? '')}
+                className={field}
+              >
                 <option value="">—</option>
                 {def.options?.map((o) => (
                   <option key={o} value={o}>
@@ -49,9 +55,16 @@ export function CustomFieldsForm({
                 ))}
               </select>
             ) : def.type === 'checkbox' ? (
-              <input type="checkbox" name={name} defaultChecked={current === true} className="h-4 w-4" />
+              <input
+                id={inputId}
+                type="checkbox"
+                name={name}
+                defaultChecked={current === true}
+                className="h-4 w-4"
+              />
             ) : (
               <input
+                id={inputId}
                 type={def.type === 'number' ? 'number' : 'text'}
                 name={name}
                 defaultValue={current === undefined ? '' : String(current)}

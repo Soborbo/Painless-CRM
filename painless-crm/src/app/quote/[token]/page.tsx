@@ -1,7 +1,7 @@
 import { formatFileSize } from '@/lib/documents/storage-path';
 import { serverEnv } from '@/lib/env';
-import { listPublicDocumentsForQuote, signPublicDocuments } from '@/lib/queries/documents';
 import { getDocumentTextByCompanyId } from '@/lib/queries/customisation';
+import { listPublicDocumentsForQuote, signPublicDocuments } from '@/lib/queries/documents';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { listPublicVariantsForQuote } from '@/lib/queries/quote-variants';
 import { expireSingleQuote, shouldExpire } from '@/lib/quotes/expiry';

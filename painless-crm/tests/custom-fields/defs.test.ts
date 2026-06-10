@@ -15,9 +15,9 @@ describe('CustomFieldDefSchema', () => {
     ).toBe(true);
   });
   it('rejects a bad key', () => {
-    expect(CustomFieldDefSchema.safeParse({ key: 'Access Code', label: 'x', type: 'text' }).success).toBe(
-      false,
-    );
+    expect(
+      CustomFieldDefSchema.safeParse({ key: 'Access Code', label: 'x', type: 'text' }).success,
+    ).toBe(false);
     expect(CustomFieldDefSchema.safeParse({ key: '1abc', label: 'x', type: 'text' }).success).toBe(
       false,
     );

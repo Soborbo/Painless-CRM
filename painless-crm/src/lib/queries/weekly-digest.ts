@@ -1,3 +1,4 @@
+import type { KpiWindows } from '@/lib/reports/kpi';
 import type {
   DigestAcceptance,
   DigestLeadJob,
@@ -5,7 +6,6 @@ import type {
   DigestQuote,
   DigestWonJob,
 } from '@/lib/reports/weekly-digest';
-import type { KpiWindows } from '@/lib/reports/kpi';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 // Data layer for the weekly performance digest cron (Phase 14). Runs on the

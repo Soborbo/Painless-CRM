@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { JOB_STAGES } from '@/lib/jobs/state-machine';
 import {
   UnmappedStatusError,
   isMappableStatus,
@@ -6,7 +6,7 @@ import {
   mapStatus,
   normalizeKey,
 } from '@/lib/migration/status-mapping';
-import { JOB_STAGES } from '@/lib/jobs/state-machine';
+import { describe, expect, it } from 'vitest';
 
 describe('mapStatus', () => {
   it('maps a simple status to a stage', () => {

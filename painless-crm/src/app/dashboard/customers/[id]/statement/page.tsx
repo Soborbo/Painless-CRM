@@ -72,7 +72,9 @@ export default async function StatementPage({ params }: Props) {
                 <td className="font-mono">{l.invoice_number}</td>
                 <td>{l.status ?? '—'}</td>
                 <td className="text-right tabular-nums">{formatPence(l.total_pence)}</td>
-                <td className="text-right tabular-nums">{formatPence(l.amount_outstanding_pence)}</td>
+                <td className="text-right tabular-nums">
+                  {formatPence(l.amount_outstanding_pence)}
+                </td>
                 <td className="text-right font-medium tabular-nums">
                   {formatPence(l.running_outstanding_pence)}
                 </td>
@@ -88,7 +90,9 @@ export default async function StatementPage({ params }: Props) {
 function Tile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border p-4">
-      <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+        {label}
+      </p>
       <p className="mt-1 text-lg font-semibold tabular-nums">{value}</p>
     </div>
   );

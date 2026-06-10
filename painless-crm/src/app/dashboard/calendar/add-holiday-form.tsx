@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_CALENDAR_STATE,
   type CalendarActionState,
+  INITIAL_CALENDAR_STATE,
   createStaffHoliday,
 } from '@/lib/actions/appointments';
 import { HOLIDAY_KINDS } from '@/lib/schemas/appointment';
@@ -47,11 +47,23 @@ export function AddHolidayForm({
       <div className="grid grid-cols-2 gap-2">
         <label className="flex flex-col gap-1 text-[11px] text-[var(--color-muted-foreground)]">
           {t('starts')}
-          <input name="start_date" type="date" defaultValue={defaultDate} required className={field} />
+          <input
+            name="start_date"
+            type="date"
+            defaultValue={defaultDate}
+            required
+            className={field}
+          />
         </label>
         <label className="flex flex-col gap-1 text-[11px] text-[var(--color-muted-foreground)]">
           {t('ends')}
-          <input name="end_date" type="date" defaultValue={defaultDate} required className={field} />
+          <input
+            name="end_date"
+            type="date"
+            defaultValue={defaultDate}
+            required
+            className={field}
+          />
         </label>
       </div>
       <select name="kind" defaultValue="holiday" className={field} aria-label={t('kind')}>

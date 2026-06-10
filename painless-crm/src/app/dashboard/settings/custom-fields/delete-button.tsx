@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  INITIAL_CF_STATE,
-  deleteCustomFieldDef,
-} from '@/lib/actions/custom-fields';
+import { INITIAL_CF_STATE, deleteCustomFieldDef } from '@/lib/actions/custom-fields';
 import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
 

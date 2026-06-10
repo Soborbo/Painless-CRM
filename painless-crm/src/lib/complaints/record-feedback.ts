@@ -79,10 +79,7 @@ export async function persistFeedback(
     .single();
   if (error || !inserted) {
     // Release the claim so a genuine submission can be retried after a failure.
-    await supabase
-      .from('review_requests')
-      .update({ responded_at: null })
-      .eq('id', req.id);
+    await supabase.from('review_requests').update({ responded_at: null }).eq('id', req.id);
     return { ok: false, reason: 'error' };
   }
 

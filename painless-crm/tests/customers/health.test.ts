@@ -23,7 +23,11 @@ describe('computeHealthScore', () => {
 
   it('gives zero recency points when never active', () => {
     // 25 neutral nps + 0 recency + 15 storage = 40
-    const r = computeHealthScore({ lastNps: null, daysSinceActivity: null, hasActiveStorage: true });
+    const r = computeHealthScore({
+      lastNps: null,
+      daysSinceActivity: null,
+      hasActiveStorage: true,
+    });
     expect(r.score).toBe(40);
   });
 

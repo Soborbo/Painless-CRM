@@ -17,9 +17,9 @@ describe('resolveDocumentText', () => {
     });
   });
   it('picks string fields, ignores non-strings', () => {
-    expect(
-      resolveDocumentText({ acceptance_terms: 'Pay within 7 days', quote_footer: 5 }),
-    ).toEqual({ acceptance_terms: 'Pay within 7 days', signoff_declaration: '', quote_footer: '' });
+    expect(resolveDocumentText({ acceptance_terms: 'Pay within 7 days', quote_footer: 5 })).toEqual(
+      { acceptance_terms: 'Pay within 7 days', signoff_declaration: '', quote_footer: '' },
+    );
   });
   it('schema enforces max length', () => {
     const ok = DocumentTextSchema.safeParse({
@@ -60,9 +60,7 @@ describe('parseCubicPresets', () => {
 describe('lead providers', () => {
   it('parses and defaults active to true', () => {
     const out = parseLeadProviders([{ name: 'Compare My Move', source_key: 'compare_my_move' }]);
-    expect(out).toEqual([
-      { name: 'Compare My Move', source_key: 'compare_my_move', active: true },
-    ]);
+    expect(out).toEqual([{ name: 'Compare My Move', source_key: 'compare_my_move', active: true }]);
   });
   it('rejects a bad source_key', () => {
     expect(parseLeadProviders([{ name: 'X', source_key: 'Bad Key' }])).toEqual([]);

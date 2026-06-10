@@ -57,7 +57,9 @@ export async function VehicleTable({ rows }: { rows: VehicleRow[] }) {
                   </span>
                 ) : null}
               </td>
-              <td className="px-3 py-2">{row.type ? t(`types.${row.type.replace('.', '_')}`) : '—'}</td>
+              <td className="px-3 py-2">
+                {row.type ? t(`types.${row.type.replace('.', '_')}`) : '—'}
+              </td>
               <td className="px-3 py-2">
                 {row.capacity_cubic_ft != null ? `${row.capacity_cubic_ft} ft³` : '—'}
               </td>

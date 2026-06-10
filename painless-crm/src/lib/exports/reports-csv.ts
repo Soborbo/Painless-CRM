@@ -89,10 +89,7 @@ export function serializeArAgingToCsv(aging: ArAging): string {
 
 // --- Storage performance ----------------------------------------------------
 
-export const STORAGE_CSV_HEADER = [
-  'metric',
-  'value',
-] as const;
+export const STORAGE_CSV_HEADER = ['metric', 'value'] as const;
 
 // Storage is KPI-shaped rather than row-shaped, so the CSV is a metric/value
 // grid — pence metrics keep their pence value, counts and rates are plain.

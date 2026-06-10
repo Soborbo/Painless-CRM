@@ -53,7 +53,9 @@ describe('CompanySettingsSchema', () => {
   });
 
   it('rejects a malformed logo URL', () => {
-    expect(CompanySettingsSchema.safeParse({ ...VALID, logo_url: 'not-a-url' }).success).toBe(false);
+    expect(CompanySettingsSchema.safeParse({ ...VALID, logo_url: 'not-a-url' }).success).toBe(
+      false,
+    );
   });
 
   it('coerces numeric defaults from form strings and enforces ranges', () => {
@@ -68,9 +70,9 @@ describe('CompanySettingsSchema', () => {
     expect(
       CompanySettingsSchema.safeParse({ ...VALID, default_quote_validity_days: 0 }).success,
     ).toBe(false);
-    expect(CompanySettingsSchema.safeParse({ ...VALID, default_deposit_percent: 101 }).success).toBe(
-      false,
-    );
+    expect(
+      CompanySettingsSchema.safeParse({ ...VALID, default_deposit_percent: 101 }).success,
+    ).toBe(false);
   });
 
   it('rejects unknown currency/locale', () => {

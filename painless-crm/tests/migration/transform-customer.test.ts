@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
 import {
   type CustomerTransformResult,
   groupByDedupKey,
   transformCustomer,
 } from '@/lib/migration/transform-customer';
+import { describe, expect, it } from 'vitest';
 
 describe('transformCustomer', () => {
   it('transforms an individual customer', () => {

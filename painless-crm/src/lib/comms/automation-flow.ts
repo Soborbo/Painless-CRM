@@ -59,9 +59,13 @@ export function buildFlowModel(
     const email = toEmail(rule, nameOf);
     if (rule.trigger_event === 'job.stage_changed') {
       const key = rule.to_stage ?? 'any';
-      (byStage[key] ??= []).push(email);
+      const list = byStage[key] ?? [];
+      list.push(email);
+      byStage[key] = list;
     } else {
-      (byEvent[rule.trigger_event] ??= []).push(email);
+      const list = byEvent[rule.trigger_event] ?? [];
+      list.push(email);
+      byEvent[rule.trigger_event] = list;
     }
   }
 

@@ -97,7 +97,12 @@ describe('projectedRevenue', () => {
       row({ stage: 'paid', quote_total_pence: 100_00 }), // excluded
       row({ stage: 'dead', quote_total_pence: 100_00 }), // excluded
     ]);
-    expect(out).toBe(Math.round(100_00 * (WIN_PROBABILITY_BY_STAGE.quoted as number) + 100_00 * (WIN_PROBABILITY_BY_STAGE.accepted as number)));
+    expect(out).toBe(
+      Math.round(
+        100_00 * (WIN_PROBABILITY_BY_STAGE.quoted as number) +
+          100_00 * (WIN_PROBABILITY_BY_STAGE.accepted as number),
+      ),
+    );
     expect(out).toBe(11_000);
   });
 

@@ -41,11 +41,19 @@ export default async function AnalyticsPage({ searchParams }: Props) {
       <div className="flex flex-wrap items-center gap-4 text-sm">
         <div className="flex gap-1">
           <Toggle active={view === 'jobs'} href={href({ view: 'jobs' })} label={t('jobs')} />
-          <Toggle active={view === 'storage'} href={href({ view: 'storage' })} label={t('storage')} />
+          <Toggle
+            active={view === 'storage'}
+            href={href({ view: 'storage' })}
+            label={t('storage')}
+          />
         </div>
         <div className="ml-auto flex gap-1">
           <Toggle active={range === 'month'} href={href({ range: 'month' })} label={t('month')} />
-          <Toggle active={range === 'quarter'} href={href({ range: 'quarter' })} label={t('quarter')} />
+          <Toggle
+            active={range === 'quarter'}
+            href={href({ range: 'quarter' })}
+            label={t('quarter')}
+          />
         </div>
       </div>
 

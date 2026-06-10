@@ -1,6 +1,10 @@
 'use client';
 
-import { INITIAL_IMPORT_STATE, type ImportState, importContainers } from '@/lib/actions/storage-import';
+import {
+  INITIAL_IMPORT_STATE,
+  type ImportState,
+  importContainers,
+} from '@/lib/actions/storage-import';
 import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
 
@@ -61,7 +65,8 @@ export function ContainerImportForm({ siteId }: { siteId: string }) {
           <p className="font-medium">{t('willImport', { count: state.valid })}</p>
           {state.duplicates.length > 0 ? (
             <p className="mt-1 text-xs text-amber-700">
-              {t('skipDuplicates', { count: state.duplicates.length })}: {state.duplicates.join(', ')}
+              {t('skipDuplicates', { count: state.duplicates.length })}:{' '}
+              {state.duplicates.join(', ')}
             </p>
           ) : null}
           {state.errors.length > 0 ? (

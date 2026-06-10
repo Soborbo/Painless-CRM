@@ -108,7 +108,7 @@ export function buildArAging(rows: readonly FinancialInvoiceRow[], nowIso: strin
   }
 
   return {
-    buckets: AGING_BUCKETS.map((key) => totals.get(key)!),
+    buckets: AGING_BUCKETS.map((key) => totals.get(key) ?? { key, count: 0, outstandingPence: 0 }),
     totalCount,
     totalOutstandingPence,
   };

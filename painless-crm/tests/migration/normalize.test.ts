@@ -1,4 +1,3 @@
-import { describe, expect, it } from 'vitest';
 import {
   classifyCustomerType,
   customerDedupKey,
@@ -7,6 +6,7 @@ import {
   normalizeText,
   splitName,
 } from '@/lib/migration/normalize';
+import { describe, expect, it } from 'vitest';
 
 describe('normalizeEmail', () => {
   it('lowercases and trims', () => {

@@ -58,6 +58,16 @@ async function claimDunningStage(
   return !error;
 }
 
+// When the provider rejects the email after we claimed the stage, release the
+// claim so tomorrow's run retries instead of silently never sending.
+async function releaseDunningStage(
+  supabase: ReturnType<typeof createAdminClient>,
+  invoiceId: string,
+  stage: DunningStage,
+): Promise<void> {
+  await supabase.from('dunning_log').delete().eq('invoice_id', invoiceId).eq('stage', stage);
+}
+
 export async function runDunningSweep(now: Date = new Date()): Promise<DunningResult> {
   const supabase = createAdminClient();
   const result: DunningResult = { scanned: 0, markedOverdue: 0, remindersSent: 0, escalated: 0 };
@@ -73,7 +83,8 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
 
   const invoices = (rows ?? []) as unknown as Array<Record<string, unknown>>;
   result.scanned = invoices.length;
-  const escalateByCompany = new Map<string, number>();
+  // companyId → invoice ids newly claimed for admin escalation this run.
+  const escalateByCompany = new Map<string, string[]>();
 
   for (const inv of invoices) {
     const dueAt = inv.due_at as string;
@@ -82,12 +93,14 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
 
     const status = inv.status as string;
     if (shouldMarkOverdue(status, days)) {
-      await supabase
+      const { data: marked } = await supabase
         .from('invoices')
         .update({ status: 'overdue', version: (inv.version as number) + 1 })
         .eq('id', inv.id as string)
-        .eq('version', inv.version as number);
-      result.markedOverdue += 1;
+        .eq('version', inv.version as number)
+        .select('id')
+        .maybeSingle();
+      if (marked) result.markedOverdue += 1;
     }
 
     const stage = dunningStage(days);
@@ -102,10 +115,9 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
         'admin',
       );
       if (claimed) {
-        escalateByCompany.set(
-          inv.company_id as string,
-          (escalateByCompany.get(inv.company_id as string) ?? 0) + 1,
-        );
+        const list = escalateByCompany.get(inv.company_id as string) ?? [];
+        list.push(inv.id as string);
+        escalateByCompany.set(inv.company_id as string, list);
       }
       continue;
     }
@@ -124,18 +136,23 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
     );
     if (!claimed) continue;
     const copy = COPY[stage];
-    await sendDunningEmail({
+    const sent = await sendDunningEmail({
       to: email,
       subject: copy.subject,
       text: `Hi ${customerDisplayName(customer)},\n\n${copy.body} ${inv.invoice_number} for ${formatPence(
         (inv.amount_outstanding_pence as number) ?? 0,
       )} is outstanding. Please get in touch or arrange payment.\n\nThank you,\nPainless Removals`,
     });
+    if (!sent) {
+      await releaseDunningStage(supabase, inv.id as string, stage);
+      continue;
+    }
     result.remindersSent += 1;
   }
 
   // T+30 → notify each company's managers/admins.
-  for (const [companyId, count] of escalateByCompany) {
+  for (const [companyId, invoiceIds] of escalateByCompany) {
+    const count = invoiceIds.length;
     const { data: admins } = await supabase
       .from('users')
       .select('email')
@@ -145,12 +162,21 @@ export async function runDunningSweep(now: Date = new Date()): Promise<DunningRe
     const recipients = ((admins ?? []) as Array<{ email: string }>)
       .map((a) => a.email)
       .filter(Boolean);
+    let delivered = 0;
     for (const to of recipients) {
-      await sendDunningEmail({
+      const sent = await sendDunningEmail({
         to,
         subject: `${count} invoice(s) 30+ days overdue`,
         text: `${count} invoice(s) are now 30+ days overdue and need attention.`,
       });
+      if (sent) delivered += 1;
+    }
+    if (recipients.length > 0 && delivered === 0) {
+      // Every send failed — release the claims so tomorrow's run re-escalates.
+      for (const invoiceId of invoiceIds) {
+        await releaseDunningStage(supabase, invoiceId, 'admin');
+      }
+      continue;
     }
     result.escalated += count;
   }

@@ -93,12 +93,17 @@ export async function runReviewRequestSweep(now: Date = new Date()): Promise<Rev
       reviewUrl: `${appUrl}/r/${token}/review`,
       complaintsUrl: `${appUrl}/feedback/${token}`,
     });
-    await sendReviewRequestEmail({
+    const sent = await sendReviewRequestEmail({
       to: email,
       subject: mail.subject,
       text: mail.text,
       html: mail.html,
     });
+    if (!sent) {
+      // Don't advance the row — the next sweep retries this request.
+      result.skipped += 1;
+      continue;
+    }
 
     if (action.kind === 'send_initial') {
       await supabase.from('review_requests').update({ sent_at: now.toISOString() }).eq('id', token);

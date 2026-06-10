@@ -84,14 +84,22 @@ export function AffiliateForm({
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={t('fields.contactName')} name="contact_name" defaultValue={defaults.contact_name} />
+        <Field
+          label={t('fields.contactName')}
+          name="contact_name"
+          defaultValue={defaults.contact_name}
+        />
         <Field
           label={t('fields.contactEmail')}
           name="contact_email"
           type="email"
           defaultValue={defaults.contact_email}
         />
-        <Field label={t('fields.contactPhone')} name="contact_phone" defaultValue={defaults.contact_phone} />
+        <Field
+          label={t('fields.contactPhone')}
+          name="contact_phone"
+          defaultValue={defaults.contact_phone}
+        />
       </div>
 
       <fieldset className="grid gap-4 rounded-md border p-4 sm:grid-cols-2">

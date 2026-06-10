@@ -37,9 +37,7 @@ export async function getIntegrationStatuses(): Promise<IntegrationStatus[]> {
     .select('provider')
     .eq('company_id', me.company_id);
 
-  const connected = new Set(
-    ((data ?? []) as Array<{ provider: string }>).map((r) => r.provider),
-  );
+  const connected = new Set(((data ?? []) as Array<{ provider: string }>).map((r) => r.provider));
 
   const credentialRows: IntegrationStatus[] = CREDENTIAL_PROVIDERS.map((p) => ({
     provider: p.provider,

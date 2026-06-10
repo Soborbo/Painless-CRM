@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_CF_STATE,
   type CustomFieldActionState,
+  INITIAL_CF_STATE,
   addCustomFieldDef,
 } from '@/lib/actions/custom-fields';
 import { CUSTOM_FIELD_TYPES } from '@/lib/custom-fields/defs';
@@ -31,7 +31,12 @@ export function AddCustomFieldForm() {
         </label>
         <label className="flex flex-col gap-1 text-xs">
           {t('key')}
-          <input name="key" required placeholder="e.g. access_code" className={`${field} font-mono`} />
+          <input
+            name="key"
+            required
+            placeholder="e.g. access_code"
+            className={`${field} font-mono`}
+          />
         </label>
         <label className="flex flex-col gap-1 text-xs">
           {t('type')}

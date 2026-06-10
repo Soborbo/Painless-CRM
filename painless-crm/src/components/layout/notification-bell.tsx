@@ -17,7 +17,7 @@ export async function NotificationBell() {
       className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border hover:bg-[var(--color-muted)]"
     >
       <svg
-        aria-hidden
+        aria-hidden="true"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

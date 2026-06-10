@@ -8,10 +8,7 @@ const ROLES = ['admin', 'super_admin'] as const;
 
 export default async function JobSheetFieldsPage() {
   await requireRole(ROLES);
-  const [defs, t] = await Promise.all([
-    getJobSheetFieldDefs(),
-    getTranslations('jobSheetFields'),
-  ]);
+  const [defs, t] = await Promise.all([getJobSheetFieldDefs(), getTranslations('jobSheetFields')]);
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-8">

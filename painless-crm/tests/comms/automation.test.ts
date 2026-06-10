@@ -72,9 +72,9 @@ describe('matchRules — generalised matcher (ADR-024)', () => {
       rule({ id: 'dep', trigger_event: 'payment.recorded', trigger_filters: { kind: 'deposit' } }),
       rule({ id: 'fin', trigger_event: 'payment.recorded', trigger_filters: { kind: 'final' } }),
     ];
-    expect(
-      matchRules(rules, 'payment.recorded', { kind: 'final' }).map((r) => r.id),
-    ).toEqual(['fin']);
+    expect(matchRules(rules, 'payment.recorded', { kind: 'final' }).map((r) => r.id)).toEqual([
+      'fin',
+    ]);
   });
 
   it('a null/absent filter is a wildcard', () => {

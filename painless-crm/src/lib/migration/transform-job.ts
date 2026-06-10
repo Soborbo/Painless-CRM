@@ -2,8 +2,8 @@
 // The CRITICAL stage mapping lives in status-mapping.ts (MIGRATION_MAPPING.md §3).
 
 import type { JobStage } from '@/lib/jobs/state-machine';
-import { type StorageStatus, UnmappedStatusError, mapStatus } from './status-mapping';
 import { normalizeText } from './normalize';
+import { type StorageStatus, UnmappedStatusError, mapStatus } from './status-mapping';
 
 export type RawImveJob = {
   status?: string | null;

@@ -9,8 +9,8 @@ export const STATEMENT_CSV_HEADER = [
   'type',
   'status',
   'total_pence',
-  'paid_pence',
-  'outstanding_pence',
+  'amount_paid_pence',
+  'amount_outstanding_pence',
   'running_outstanding_pence',
 ] as const;
 

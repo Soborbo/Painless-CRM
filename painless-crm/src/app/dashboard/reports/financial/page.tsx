@@ -113,7 +113,10 @@ export default async function FinancialReportPage({ searchParams }: Props) {
             </thead>
             <tbody className="divide-y">
               {aging.buckets.map((b) => (
-                <tr key={b.key} className={b.key === 'd90_plus' && b.count > 0 ? 'text-red-700' : ''}>
+                <tr
+                  key={b.key}
+                  className={b.key === 'd90_plus' && b.count > 0 ? 'text-red-700' : ''}
+                >
                   <td className="px-4 py-2">{t(`financial.buckets.${b.key}` as never)}</td>
                   <td className="px-4 py-2 text-right tabular-nums">{b.count}</td>
                   <td className="px-4 py-2 text-right tabular-nums">

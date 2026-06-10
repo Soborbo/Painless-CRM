@@ -1,10 +1,10 @@
-import { boundedClientTimestamp } from './client-timestamp';
 import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { finalBalancePence } from '@/lib/invoices/auto-create';
 import { createInvoiceWithLine, jobHasInvoiceOfType } from '@/lib/invoices/create';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { SignoffInput } from '@/lib/schemas/signoff';
 import { createClient } from '@/lib/supabase/server';
+import { boundedClientTimestamp } from './client-timestamp';
 
 // Shared persister for the end-of-job customer sign-off (Phase 11 §1).
 // Idempotent via the client_event_id dedup index (23505 = a replayed queued

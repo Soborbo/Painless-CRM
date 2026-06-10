@@ -1,5 +1,5 @@
 import { serverEnv } from '@/lib/env';
-import { Resend } from 'resend';
+import { safeSend } from './safe-send';
 
 export interface DunningEmailInput {
   to: string;
@@ -10,13 +10,13 @@ export interface DunningEmailInput {
 const FROM = 'Painless Removals <accounts@crm.painlessremovals.com>';
 
 // Sends one dunning reminder (Phase 12 §9). Degrades to a dev-time log without
-// an API key, like the other Resend helpers.
-export async function sendDunningEmail(input: DunningEmailInput): Promise<void> {
+// an API key, like the other Resend helpers. Returns false on a provider
+// rejection so the sweep can release its idempotency claim and retry tomorrow.
+export async function sendDunningEmail(input: DunningEmailInput): Promise<boolean> {
   const env = serverEnv();
   if (!env.RESEND_API_KEY) {
     console.warn('[dunning] RESEND_API_KEY missing — would email %s', input.to);
-    return;
+    return true;
   }
-  const resend = new Resend(env.RESEND_API_KEY);
-  await resend.emails.send({ from: FROM, to: input.to, subject: input.subject, text: input.text });
+  return safeSend('dunning', env.RESEND_API_KEY, { from: FROM, ...input });
 }

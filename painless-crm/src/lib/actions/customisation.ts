@@ -1,7 +1,11 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
-import { CubicPresetSchema, MAX_PRESETS, parseCubicPresets } from '@/lib/customisation/cubic-presets';
+import {
+  CubicPresetSchema,
+  MAX_PRESETS,
+  parseCubicPresets,
+} from '@/lib/customisation/cubic-presets';
 import { DocumentTextSchema } from '@/lib/customisation/document-text';
 import {
   LeadProviderSchema,
@@ -82,7 +86,10 @@ export async function addCubicPreset(
     return { status: 'error', message: 'A preset with that name already exists' };
   }
   if (presets.length >= MAX_PRESETS) return { status: 'error', message: 'Too many presets' };
-  const { error } = await writeCol(supabase, me.company_id, 'cubic_presets', [...presets, parsed.data]);
+  const { error } = await writeCol(supabase, me.company_id, 'cubic_presets', [
+    ...presets,
+    parsed.data,
+  ]);
   if (error) return { status: 'error', message: 'Could not save the preset' };
   revalidatePath('/dashboard/settings/cubic-presets');
   return { status: 'ok' };
@@ -117,7 +124,9 @@ export async function addLeadProvider(
     return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Invalid input' };
   }
   const supabase = await createClient();
-  const providers = parseLeadProviders(await readCol(supabase, me.company_id, 'lead_provider_config'));
+  const providers = parseLeadProviders(
+    await readCol(supabase, me.company_id, 'lead_provider_config'),
+  );
   if (providers.some((p) => p.name.toLowerCase() === parsed.data.name.toLowerCase())) {
     return { status: 'error', message: 'A provider with that name already exists' };
   }
@@ -138,7 +147,9 @@ export async function deleteLeadProvider(
   const me = await requireRole(ADMIN);
   const name = String(form.get('name') ?? '');
   const supabase = await createClient();
-  const providers = parseLeadProviders(await readCol(supabase, me.company_id, 'lead_provider_config'));
+  const providers = parseLeadProviders(
+    await readCol(supabase, me.company_id, 'lead_provider_config'),
+  );
   const { error } = await writeCol(
     supabase,
     me.company_id,

@@ -28,7 +28,11 @@ export async function POST(req: Request): Promise<Response> {
   if (!isFreshTimestamp(ts, Date.now())) {
     return NextResponse.json({ error: 'stale_timestamp' }, { status: 401 });
   }
-  const valid = await verifyHmac(secret, `${ts}.${CRON_PAYLOAD}`, req.headers.get('x-cron-signature'));
+  const valid = await verifyHmac(
+    secret,
+    `${ts}.${CRON_PAYLOAD}`,
+    req.headers.get('x-cron-signature'),
+  );
   if (!valid) {
     return NextResponse.json({ error: 'invalid_signature' }, { status: 401 });
   }
@@ -40,12 +44,12 @@ export async function POST(req: Request): Promise<Response> {
 
     let emailsSent = 0;
     for (const digest of digests) {
-      await sendSlaDigestEmail({
+      const sent = await sendSlaDigestEmail({
         to: digest.recipients,
         subject: digest.subject,
         text: digest.text,
       });
-      emailsSent += 1;
+      if (sent) emailsSent += 1;
     }
 
     // In-app breach notifications to the assigned rep — deduped against any

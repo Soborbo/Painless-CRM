@@ -3,8 +3,8 @@ import { type CalendarView, viewDays } from '@/lib/calendar/grid';
 import { listAppointments, listStaffHolidays } from '@/lib/queries/appointments';
 import { listCustomerOptions } from '@/lib/queries/customers';
 import { listWorkerOptions } from '@/lib/queries/workers';
-import { APPOINTMENT_CATEGORIES } from '@/lib/schemas/appointment';
 import { addDaysYmd, isValidYmd, todayYmd } from '@/lib/rota/dates';
+import { APPOINTMENT_CATEGORIES } from '@/lib/schemas/appointment';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { AddAppointmentForm } from './add-appointment-form';
@@ -83,8 +83,14 @@ export default async function CalendarPage({ searchParams }: Props) {
         <form className="ml-auto flex items-center gap-2">
           <input type="hidden" name="view" value={view} />
           <input type="hidden" name="date" value={anchor} />
-          <label className="text-xs text-[var(--color-muted-foreground)]">{t('category')}</label>
+          <label
+            htmlFor="calendar-category"
+            className="text-xs text-[var(--color-muted-foreground)]"
+          >
+            {t('category')}
+          </label>
           <select
+            id="calendar-category"
             name="category"
             defaultValue={category}
             className="rounded-md border px-2 py-1 text-xs"
@@ -96,7 +102,10 @@ export default async function CalendarPage({ searchParams }: Props) {
               </option>
             ))}
           </select>
-          <button type="submit" className="rounded-md border px-2 py-1 text-xs hover:bg-[var(--color-muted)]">
+          <button
+            type="submit"
+            className="rounded-md border px-2 py-1 text-xs hover:bg-[var(--color-muted)]"
+          >
             {t('apply')}
           </button>
         </form>

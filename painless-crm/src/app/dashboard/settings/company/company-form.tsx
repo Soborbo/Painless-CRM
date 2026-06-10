@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  INITIAL_COMPANY_SETTINGS_STATE,
-  updateCompanySettings,
-} from '@/lib/actions/settings';
+import { INITIAL_COMPANY_SETTINGS_STATE, updateCompanySettings } from '@/lib/actions/settings';
 import type { CompanySettings } from '@/lib/queries/settings';
 import { CURRENCIES, LOCALES } from '@/lib/schemas/settings';
 import { DEFAULT_BRAND_COLOR } from '@/lib/settings/branding';
@@ -27,7 +24,12 @@ export function CompanySettingsForm({ settings }: { settings: CompanySettings })
       <Section title={t('identity')}>
         <label className={LABEL}>
           <span>{t('companyName')} *</span>
-          <input name="company_name" defaultValue={settings.company_name} required className={FIELD} />
+          <input
+            name="company_name"
+            defaultValue={settings.company_name}
+            required
+            className={FIELD}
+          />
         </label>
         <div className="grid grid-cols-2 gap-4">
           <label className={LABEL}>
@@ -96,7 +98,11 @@ export function CompanySettingsForm({ settings }: { settings: CompanySettings })
           </label>
           <label className={LABEL}>
             <span>{t('currency')}</span>
-            <select name="default_currency" defaultValue={settings.default_currency} className={FIELD}>
+            <select
+              name="default_currency"
+              defaultValue={settings.default_currency}
+              className={FIELD}
+            >
               {CURRENCIES.map((c) => (
                 <option key={c} value={c}>
                   {c}

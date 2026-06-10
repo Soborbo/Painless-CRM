@@ -1,7 +1,7 @@
-import { requireUser } from '@/lib/auth/require-role';
 import { KpiTiles } from '@/components/domain/KpiTiles';
-import { getKpiCounts } from '@/lib/queries/kpi';
+import { requireUser } from '@/lib/auth/require-role';
 import { type TodayMoveRow, getHomeSnapshot } from '@/lib/queries/home-snapshot';
+import { getKpiCounts } from '@/lib/queries/kpi';
 import { type KpiPeriod, buildKpiMetrics, isKpiPeriod, kpiWindows } from '@/lib/reports/kpi';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';

@@ -2,8 +2,8 @@
 // at once (unmapped statuses, missing identifiers) rather than failing on the first row.
 // Run before any transform/load. Mirrors MIGRATION_MAPPING.md §8 "validate-source".
 
-import { isMappableStatus } from './status-mapping';
 import { customerDedupKey } from './normalize';
+import { isMappableStatus } from './status-mapping';
 
 export type SourceStatusReport = {
   ok: boolean;

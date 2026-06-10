@@ -9,9 +9,7 @@ describe('csvField formula-injection hardening', () => {
     expect(csvField('=1+1')).toBe("'=1+1");
     // A formula that also contains quotes/commas is apostrophe-prefixed AND
     // RFC-4180 quoted (internal quotes doubled).
-    expect(csvField('=HYPERLINK("http://evil","x")')).toBe(
-      '"\'=HYPERLINK(""http://evil"",""x"")"',
-    );
+    expect(csvField('=HYPERLINK("http://evil","x")')).toBe('"\'=HYPERLINK(""http://evil"",""x"")"');
   });
 
   it('neutralises +, -, @ and leading tab/CR triggers', () => {

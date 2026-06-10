@@ -1,5 +1,5 @@
 import { completeness } from '@/lib/jobs/tasks';
-import type { JobTaskRow } from '@/lib/queries/job-tasks';
+import type { JobTaskRow, TaskAssigneeOption } from '@/lib/queries/job-tasks';
 import { getTranslations } from 'next-intl/server';
 import { AddTaskForm } from './add-task-form';
 import { TaskItem } from './task-item';
@@ -7,9 +7,10 @@ import { TaskItem } from './task-item';
 interface Props {
   jobId: string;
   rows: JobTaskRow[];
+  assignees?: TaskAssigneeOption[];
 }
 
-export async function TasksPanel({ jobId, rows }: Props) {
+export async function TasksPanel({ jobId, rows, assignees }: Props) {
   const t = await getTranslations('jobTasks');
   const stats = completeness(rows);
 
@@ -26,7 +27,7 @@ export async function TasksPanel({ jobId, rows }: Props) {
         ) : null}
       </div>
       <div className="mt-3 flex flex-col gap-3 text-sm">
-        <AddTaskForm jobId={jobId} />
+        <AddTaskForm jobId={jobId} assignees={assignees} />
         {rows.length === 0 ? (
           <p className="text-sm text-[var(--color-muted-foreground)]">{t('empty')}</p>
         ) : (

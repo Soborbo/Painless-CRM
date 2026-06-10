@@ -448,8 +448,6 @@
     "removeTag": "",
     "activity": "",
     "noActivity": "",
-    "comingSoon": "",
-    "comingSoonBody": "",
     "transitionTitle": "",
     "confirmTransition": "",
     "terminalStage": "",
@@ -533,7 +531,13 @@
         "no_capacity": "",
         "unknown": ""
       }
-    }
+    },
+    "schedulePanel": "",
+    "scheduleEmpty": "",
+    "moneyPanel": "",
+    "moneyEmpty": "",
+    "invoicedTotal": "",
+    "outstandingTotal": ""
   },
   "profitReview": {
     "title": "",
@@ -972,7 +976,9 @@
     "add": "",
     "dueDate": "",
     "delete": "",
-    "progress": ""
+    "progress": "",
+    "assignee": "",
+    "unassigned": ""
   },
   "documents": {
     "panelTitle": "",
@@ -1553,7 +1559,9 @@
     "kind_holiday": "",
     "kind_sick": "",
     "kind_training": "",
-    "kind_other": ""
+    "kind_other": "",
+    "remove": "",
+    "confirmRemove": ""
   },
   "customFields": {
     "navLabel": "",

@@ -32,7 +32,9 @@ export async function StorageAnalytics({ report }: { report: StorageReport }) {
           />
           <p className="mt-3 text-sm">
             {t('netMrr')}:{' '}
-            <span className="font-semibold tabular-nums">{formatPence(report.netMrrChangePence)}</span>
+            <span className="font-semibold tabular-nums">
+              {formatPence(report.netMrrChangePence)}
+            </span>
           </p>
         </div>
       </section>
@@ -43,7 +45,9 @@ export async function StorageAnalytics({ report }: { report: StorageReport }) {
 function Tile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border p-4">
-      <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+        {label}
+      </p>
       <p className="mt-1 text-xl font-semibold tabular-nums">{value}</p>
     </div>
   );

@@ -8,7 +8,13 @@ import {
 import { useTranslations } from 'next-intl';
 import { useActionState, useRef } from 'react';
 
-export function AddTaskForm({ jobId }: { jobId: string }) {
+export function AddTaskForm({
+  jobId,
+  assignees = [],
+}: {
+  jobId: string;
+  assignees?: Array<{ id: string; full_name: string }>;
+}) {
   const t = useTranslations('jobTasks');
   const formRef = useRef<HTMLFormElement>(null);
   const [state, action, pending] = useActionState<JobTaskActionState, FormData>(
@@ -37,6 +43,21 @@ export function AddTaskForm({ jobId }: { jobId: string }) {
           aria-label={t('dueDate')}
           className="rounded-md border px-2 py-2 text-sm"
         />
+        {assignees.length > 0 ? (
+          <select
+            name="assigned_to_id"
+            defaultValue=""
+            aria-label={t('assignee')}
+            className="rounded-md border px-2 py-2 text-sm"
+          >
+            <option value="">{t('unassigned')}</option>
+            {assignees.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.full_name}
+              </option>
+            ))}
+          </select>
+        ) : null}
         <button
           type="submit"
           disabled={pending}

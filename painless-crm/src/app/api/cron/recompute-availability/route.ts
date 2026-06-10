@@ -22,7 +22,11 @@ export async function POST(req: Request): Promise<Response> {
   if (!isFreshTimestamp(ts, Date.now())) {
     return NextResponse.json({ error: 'stale_timestamp' }, { status: 401 });
   }
-  const valid = await verifyHmac(secret, `${ts}.${CRON_PAYLOAD}`, req.headers.get('x-cron-signature'));
+  const valid = await verifyHmac(
+    secret,
+    `${ts}.${CRON_PAYLOAD}`,
+    req.headers.get('x-cron-signature'),
+  );
   if (!valid) {
     return NextResponse.json({ error: 'invalid_signature' }, { status: 401 });
   }

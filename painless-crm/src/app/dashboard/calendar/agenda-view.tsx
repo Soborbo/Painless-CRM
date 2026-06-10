@@ -6,6 +6,7 @@ import {
 } from '@/lib/calendar/grid';
 import { getTranslations } from 'next-intl/server';
 import { AppointmentChip } from './appt-chip';
+import { CalendarDeleteButton } from './delete-button';
 
 const HEADING = new Intl.DateTimeFormat('en-GB', {
   weekday: 'long',
@@ -45,13 +46,23 @@ export async function AgendaView({
               {dayAppts.length === 0 ? (
                 <p className="text-xs text-[var(--color-muted-foreground)]">{t('empty')}</p>
               ) : (
-                dayAppts.map((a) => <AppointmentChip key={a.id} appt={a} />)
+                dayAppts.map((a) => (
+                  <div key={a.id} className="flex items-center gap-1">
+                    <div className="min-w-0 flex-1">
+                      <AppointmentChip appt={a} />
+                    </div>
+                    <CalendarDeleteButton id={a.id} kind="appointment" />
+                  </div>
+                ))
               )}
-              {off.length > 0 ? (
-                <span className="mt-1 truncate rounded bg-rose-100 px-1.5 py-0.5 text-[10px] text-rose-900">
-                  {t('away', { names: off.map((h) => h.worker_name).join(', ') })}
-                </span>
-              ) : null}
+              {off.map((h) => (
+                <div key={h.id} className="mt-1 flex items-center gap-1">
+                  <span className="min-w-0 flex-1 truncate rounded bg-rose-100 px-1.5 py-0.5 text-[10px] text-rose-900">
+                    {t('away', { names: h.worker_name })} · {t(`kind_${h.kind}` as never)}
+                  </span>
+                  <CalendarDeleteButton id={h.id} kind="holiday" />
+                </div>
+              ))}
             </div>
           </section>
         );

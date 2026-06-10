@@ -203,7 +203,11 @@ export async function runAutomationQueue(now: Date = new Date()): Promise<Automa
       // returned, not thrown — record it as 'failed' so it is visible and never
       // logged as a successful send, and do NOT increment the rule run_count
       // (audit H3). The no-API-key dev path is a 'skipped', not a real failure.
-      const sendStatus = sendResult.ok ? 'sent' : sendResult.reason === 'no_api_key' ? 'queued' : 'failed';
+      const sendStatus = sendResult.ok
+        ? 'sent'
+        : sendResult.reason === 'no_api_key'
+          ? 'queued'
+          : 'failed';
 
       await supabase.from('messages').insert({
         company_id: row.company_id,

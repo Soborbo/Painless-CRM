@@ -13,7 +13,10 @@ interface Props {
 
 type NotesT = Awaited<ReturnType<typeof getTranslations<'notes'>>>;
 
-const SECTIONS: { key: NoteCategory; titleKey: 'sectionAdmin' | 'sectionStaff' | 'sectionCustomerVisible' }[] = [
+const SECTIONS: {
+  key: NoteCategory;
+  titleKey: 'sectionAdmin' | 'sectionStaff' | 'sectionCustomerVisible';
+}[] = [
   { key: 'admin', titleKey: 'sectionAdmin' },
   { key: 'staff', titleKey: 'sectionStaff' },
   { key: 'customer_visible', titleKey: 'sectionCustomerVisible' },

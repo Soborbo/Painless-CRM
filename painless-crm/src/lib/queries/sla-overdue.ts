@@ -80,9 +80,7 @@ export async function fetchOverdueDigestData(now: Date): Promise<OverdueDigestDa
 
 // Job IDs that already have an SLA-breach notification, for the cron's dedup
 // (Phase 15). Service-role read so it spans tenants like the rest of the cron.
-export async function fetchNotifiedBreachJobIds(
-  jobIds: readonly string[],
-): Promise<Set<string>> {
+export async function fetchNotifiedBreachJobIds(jobIds: readonly string[]): Promise<Set<string>> {
   if (jobIds.length === 0) return new Set();
   const supabase = createAdminClient();
   const { data } = await supabase

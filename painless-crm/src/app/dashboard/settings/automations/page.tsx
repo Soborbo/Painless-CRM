@@ -9,7 +9,9 @@ const label = (s: string) => s.replace(/_/g, ' ');
 
 // One-line description of when a rule fires.
 function triggerSummary(r: AutomationRuleRow): string {
-  const parts: string[] = [TRIGGER_EVENT_LABELS[r.trigger_event as TriggerEvent] ?? r.trigger_event];
+  const parts: string[] = [
+    TRIGGER_EVENT_LABELS[r.trigger_event as TriggerEvent] ?? r.trigger_event,
+  ];
   if (r.trigger_event === 'job.stage_changed') {
     parts.push(`→ ${label(r.to_stage ?? 'any')}`);
     if (r.service_type) parts.push(`(${label(r.service_type)})`);
@@ -61,7 +63,9 @@ export default async function AutomationsPage() {
             >
               <span>
                 <span className="font-medium">{r.name}</span>
-                <span className="ml-2 text-[var(--color-muted-foreground)]">{triggerSummary(r)}</span>
+                <span className="ml-2 text-[var(--color-muted-foreground)]">
+                  {triggerSummary(r)}
+                </span>
               </span>
               <span className="text-xs text-[var(--color-muted-foreground)]">
                 {r.active ? `${r.run_count} runs` : 'inactive'}

@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  type CommissionActionState,
-  updateCommissionStatus,
-} from '@/lib/actions/commissions';
+import { type CommissionActionState, updateCommissionStatus } from '@/lib/actions/commissions';
 import { useTranslations } from 'next-intl';
 import { useActionState } from 'react';
 

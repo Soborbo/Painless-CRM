@@ -33,14 +33,34 @@ describe('vehicleCheckFlags', () => {
   });
 
   it('flags an explicit failed walk-around but not a null one', () => {
-    expect(vehicleCheckFlags({ walk_around_clear: false, defects_noted: null, fuel_level: 90 }).failedWalkAround).toBe(true);
-    expect(vehicleCheckFlags({ walk_around_clear: null, defects_noted: null, fuel_level: 90 }).failedWalkAround).toBe(false);
+    expect(
+      vehicleCheckFlags({ walk_around_clear: false, defects_noted: null, fuel_level: 90 })
+        .failedWalkAround,
+    ).toBe(true);
+    expect(
+      vehicleCheckFlags({ walk_around_clear: null, defects_noted: null, fuel_level: 90 })
+        .failedWalkAround,
+    ).toBe(false);
   });
 
   it('flags low fuel strictly below the threshold', () => {
-    expect(vehicleCheckFlags({ walk_around_clear: true, defects_noted: null, fuel_level: LOW_FUEL_THRESHOLD - 1 }).lowFuel).toBe(true);
-    expect(vehicleCheckFlags({ walk_around_clear: true, defects_noted: null, fuel_level: LOW_FUEL_THRESHOLD }).lowFuel).toBe(false);
-    expect(vehicleCheckFlags({ walk_around_clear: true, defects_noted: null, fuel_level: null }).lowFuel).toBe(false);
+    expect(
+      vehicleCheckFlags({
+        walk_around_clear: true,
+        defects_noted: null,
+        fuel_level: LOW_FUEL_THRESHOLD - 1,
+      }).lowFuel,
+    ).toBe(true);
+    expect(
+      vehicleCheckFlags({
+        walk_around_clear: true,
+        defects_noted: null,
+        fuel_level: LOW_FUEL_THRESHOLD,
+      }).lowFuel,
+    ).toBe(false);
+    expect(
+      vehicleCheckFlags({ walk_around_clear: true, defects_noted: null, fuel_level: null }).lowFuel,
+    ).toBe(false);
   });
 });
 

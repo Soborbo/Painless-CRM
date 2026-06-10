@@ -1,8 +1,4 @@
-import {
-  type MentionableUser,
-  parseMentionHandles,
-  resolveMentions,
-} from '@/lib/notes/mentions';
+import { type MentionableUser, parseMentionHandles, resolveMentions } from '@/lib/notes/mentions';
 import { describe, expect, it } from 'vitest';
 
 const USERS: MentionableUser[] = [

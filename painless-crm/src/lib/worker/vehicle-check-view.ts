@@ -18,7 +18,8 @@ export interface VehicleCheckFlags {
 }
 
 export function vehicleCheckFlags(check: VehicleCheckLike): VehicleCheckFlags {
-  const hasDefects = typeof check.defects_noted === 'string' && check.defects_noted.trim().length > 0;
+  const hasDefects =
+    typeof check.defects_noted === 'string' && check.defects_noted.trim().length > 0;
   // walk_around_clear === false is an explicit fail; null (not recorded) is not.
   const failedWalkAround = check.walk_around_clear === false;
   const lowFuel =

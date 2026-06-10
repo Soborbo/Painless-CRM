@@ -20,7 +20,10 @@ export interface CategoryCount {
   count: number;
 }
 
-function tally(rows: readonly AnalyticsJobRow[], pick: (r: AnalyticsJobRow) => string): Map<string, number> {
+function tally(
+  rows: readonly AnalyticsJobRow[],
+  pick: (r: AnalyticsJobRow) => string,
+): Map<string, number> {
   const map = new Map<string, number>();
   for (const r of rows) {
     const key = pick(r);
@@ -50,7 +53,9 @@ export function byStatus(rows: readonly AnalyticsJobRow[]): CategoryCount[] {
   const order = new Map(JOB_STAGES.map((s, i) => [s as string, i]));
   return [...map.entries()]
     .map(([key, count]) => ({ key, count }))
-    .sort((a, b) => (order.get(a.key) ?? 99) - (order.get(b.key) ?? 99) || a.key.localeCompare(b.key));
+    .sort(
+      (a, b) => (order.get(a.key) ?? 99) - (order.get(b.key) ?? 99) || a.key.localeCompare(b.key),
+    );
 }
 
 export interface StaffConversion {

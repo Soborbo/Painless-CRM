@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_CALENDAR_STATE,
   type CalendarActionState,
+  INITIAL_CALENDAR_STATE,
   createAppointment,
 } from '@/lib/actions/appointments';
 import { APPOINTMENT_CATEGORIES } from '@/lib/schemas/appointment';
@@ -55,11 +55,23 @@ export function AddAppointmentForm({
         </select>
         <label className="flex flex-col gap-1 text-[11px] text-[var(--color-muted-foreground)]">
           {t('starts')}
-          <input name="starts_at" type="datetime-local" defaultValue={`${defaultDate}T09:00`} required className={field} />
+          <input
+            name="starts_at"
+            type="datetime-local"
+            defaultValue={`${defaultDate}T09:00`}
+            required
+            className={field}
+          />
         </label>
         <label className="flex flex-col gap-1 text-[11px] text-[var(--color-muted-foreground)]">
           {t('ends')}
-          <input name="ends_at" type="datetime-local" defaultValue={`${defaultDate}T10:00`} required className={field} />
+          <input
+            name="ends_at"
+            type="datetime-local"
+            defaultValue={`${defaultDate}T10:00`}
+            required
+            className={field}
+          />
         </label>
       </div>
       <select name="customer_id" defaultValue="" className={field} aria-label={t('customer')}>

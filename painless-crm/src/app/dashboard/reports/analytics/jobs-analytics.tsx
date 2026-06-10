@@ -99,9 +99,13 @@ export async function JobsAnalytics({ rows }: { rows: AnalyticsJobRow[] }) {
 function Tile({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
     <div className="rounded-md border p-4">
-      <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+        {label}
+      </p>
       <p className="mt-1 text-xl font-semibold tabular-nums">{value}</p>
-      {hint ? <p className="mt-0.5 text-[11px] text-[var(--color-muted-foreground)]">{hint}</p> : null}
+      {hint ? (
+        <p className="mt-0.5 text-[11px] text-[var(--color-muted-foreground)]">{hint}</p>
+      ) : null}
     </div>
   );
 }
@@ -109,7 +113,9 @@ function Tile({ label, value, hint }: { label: string; value: string; hint?: str
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="rounded-md border p-4">
-      <h2 className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">{title}</h2>
+      <h2 className="text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
+        {title}
+      </h2>
       <div className="mt-3">{children}</div>
     </section>
   );

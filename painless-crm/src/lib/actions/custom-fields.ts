@@ -1,7 +1,12 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
-import { CustomFieldDefSchema, MAX_DEFS, parseDefs, validateValues } from '@/lib/custom-fields/defs';
+import {
+  CustomFieldDefSchema,
+  MAX_DEFS,
+  parseDefs,
+  validateValues,
+} from '@/lib/custom-fields/defs';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
@@ -25,7 +30,11 @@ export type CustomFieldActionState =
 
 export const INITIAL_CF_STATE: CustomFieldActionState = { status: 'idle' };
 
-async function readDefs(supabase: DbClient, companyId: string, col: DefColumn = 'custom_field_defs') {
+async function readDefs(
+  supabase: DbClient,
+  companyId: string,
+  col: DefColumn = 'custom_field_defs',
+) {
   const { data } = await supabase
     .from('settings')
     .select(col)
@@ -60,7 +69,12 @@ async function addDef(
     key: String(form.get('key') ?? '').trim(),
     label: String(form.get('label') ?? '').trim(),
     type: String(form.get('type') ?? ''),
-    options: optionsRaw ? optionsRaw.split(',').map((s) => s.trim()).filter(Boolean) : undefined,
+    options: optionsRaw
+      ? optionsRaw
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : undefined,
     required: form.get('required') === 'on',
   });
   if (!parsed.success) {
@@ -87,7 +101,12 @@ async function deleteDef(
   const key = String(form.get('key') ?? '');
   const supabase = await createClient();
   const defs = await readDefs(supabase, me.company_id, col);
-  const { error } = await writeDefs(supabase, me.company_id, defs.filter((d) => d.key !== key), col);
+  const { error } = await writeDefs(
+    supabase,
+    me.company_id,
+    defs.filter((d) => d.key !== key),
+    col,
+  );
   if (error) return { status: 'error', message: 'Could not remove the field' };
   revalidatePath(page);
   return { status: 'ok' };

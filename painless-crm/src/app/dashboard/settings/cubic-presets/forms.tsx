@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_CUSTOMISATION_STATE,
   type CustomisationState,
+  INITIAL_CUSTOMISATION_STATE,
   addCubicPreset,
   deleteCubicPreset,
 } from '@/lib/actions/customisation';
@@ -30,7 +30,14 @@ export function AddPresetForm() {
       </label>
       <label className="flex flex-col gap-1 text-xs">
         {t('cubicFtLabel')}
-        <input name="cubic_ft" type="number" step="0.1" min={0} required className={`${field} w-28`} />
+        <input
+          name="cubic_ft"
+          type="number"
+          step="0.1"
+          min={0}
+          required
+          className={`${field} w-28`}
+        />
       </label>
       <button
         type="submit"

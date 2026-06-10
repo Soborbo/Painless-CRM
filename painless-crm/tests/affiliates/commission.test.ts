@@ -31,12 +31,19 @@ describe('computeCommissionPence', () => {
     const terms = {
       commissionType: 'tiered' as const,
       commissionValue: null,
-      commissionConfig: { tiers: [{ min_jobs: 1, percent: 5 }, { min_jobs: 10, percent: 7.5 }] },
+      commissionConfig: {
+        tiers: [
+          { min_jobs: 1, percent: 5 },
+          { min_jobs: 10, percent: 7.5 },
+        ],
+      },
     };
     // 3 won jobs → 5% tier
     expect(computeCommissionPence(terms, { jobRevenuePence: 100_000, wonJobCount: 3 })).toBe(5_000);
     // 12 won jobs → 7.5% tier
-    expect(computeCommissionPence(terms, { jobRevenuePence: 100_000, wonJobCount: 12 })).toBe(7_500);
+    expect(computeCommissionPence(terms, { jobRevenuePence: 100_000, wonJobCount: 12 })).toBe(
+      7_500,
+    );
   });
 
   it('returns 0 for a tiered config with no matching tier or malformed config', () => {

@@ -15,10 +15,8 @@ export function RealtimeRefresh() {
     const supabase = createClient();
     const channel = supabase
       .channel('vehicle-checks-admin')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'vehicle_checks' },
-        () => router.refresh(),
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'vehicle_checks' }, () =>
+        router.refresh(),
       )
       .subscribe();
 

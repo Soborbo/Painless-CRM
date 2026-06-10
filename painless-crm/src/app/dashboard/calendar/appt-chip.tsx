@@ -20,7 +20,10 @@ function targetHref(a: CalendarAppointment): string | null {
   return null;
 }
 
-export function AppointmentChip({ appt, showTime = true }: { appt: CalendarAppointment; showTime?: boolean }) {
+export function AppointmentChip({
+  appt,
+  showTime = true,
+}: { appt: CalendarAppointment; showTime?: boolean }) {
   const cls = CATEGORY_CLASS[appt.category] ?? CATEGORY_CLASS.other;
   const href = targetHref(appt);
   const body = (

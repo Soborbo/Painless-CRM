@@ -1,15 +1,19 @@
 import { requireRole } from '@/lib/auth/require-role';
 import { holidayCoversDate } from '@/lib/calendar/grid';
 import { type LaneType, assembleBoard } from '@/lib/dispatch/board';
-import { getDispatchBoardData } from '@/lib/queries/dispatch-board';
 import { listStaffHolidays } from '@/lib/queries/appointments';
+import { getDispatchBoardData } from '@/lib/queries/dispatch-board';
 import { addDaysYmd, enumerateDates, isValidYmd, todayYmd } from '@/lib/rota/dates';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 const ROLES = ['manager', 'admin', 'super_admin'] as const;
 const WEEKDAY = new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'UTC' });
-const DAY_MONTH = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+const DAY_MONTH = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'UTC',
+});
 
 type Props = { searchParams: Promise<{ view?: string; start?: string; weeks?: string }> };
 
@@ -64,11 +68,20 @@ export default async function DispatchPage({ searchParams }: Props) {
       <div className="flex flex-wrap items-center gap-4 text-sm">
         <div className="flex gap-1">
           <Toggle active={view === 'staff'} href={href({ view: 'staff' })} label={t('staff')} />
-          <Toggle active={view === 'vehicle'} href={href({ view: 'vehicle' })} label={t('vehicle')} />
+          <Toggle
+            active={view === 'vehicle'}
+            href={href({ view: 'vehicle' })}
+            label={t('vehicle')}
+          />
         </div>
         <div className="flex gap-1">
           {[1, 2, 3, 4].map((w) => (
-            <Toggle key={w} active={weeks === w} href={href({ weeks: w })} label={t('weeks', { count: w })} />
+            <Toggle
+              key={w}
+              active={weeks === w}
+              href={href({ weeks: w })}
+              label={t('weeks', { count: w })}
+            />
           ))}
         </div>
         <div className="ml-auto flex gap-1">
@@ -91,7 +104,9 @@ export default async function DispatchPage({ searchParams }: Props) {
                 const date = new Date(`${d}T00:00:00.000Z`);
                 return (
                   <div key={d} className="border-l p-2 text-center">
-                    <div className="text-[var(--color-muted-foreground)]">{WEEKDAY.format(date)}</div>
+                    <div className="text-[var(--color-muted-foreground)]">
+                      {WEEKDAY.format(date)}
+                    </div>
                     <div>{DAY_MONTH.format(date)}</div>
                   </div>
                 );
@@ -166,13 +181,19 @@ function Toggle({ active, href, label }: { active: boolean; href: string; label:
 
 function NavLink({ href, label }: { href: string; label: string }) {
   return (
-    <Link href={href} className="rounded-md border px-3 py-1.5 text-xs hover:bg-[var(--color-muted)]">
+    <Link
+      href={href}
+      className="rounded-md border px-3 py-1.5 text-xs hover:bg-[var(--color-muted)]"
+    >
       {label}
     </Link>
   );
 }
 
-function Chip({ tone, children }: { tone: 'neutral' | 'amber' | 'blue'; children: React.ReactNode }) {
+function Chip({
+  tone,
+  children,
+}: { tone: 'neutral' | 'amber' | 'blue'; children: React.ReactNode }) {
   const cls = {
     neutral: 'bg-zinc-100 text-zinc-700',
     amber: 'bg-amber-100 text-amber-900',

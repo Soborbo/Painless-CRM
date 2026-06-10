@@ -26,8 +26,10 @@ export const DocumentTextSchema = z.object({
 });
 
 export function resolveDocumentText(raw: unknown): DocumentText {
-  const o = raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
-  const pick = (k: (typeof DOCUMENT_TEXT_KEYS)[number]) => (typeof o[k] === 'string' ? (o[k] as string) : '');
+  const o =
+    raw && typeof raw === 'object' && !Array.isArray(raw) ? (raw as Record<string, unknown>) : {};
+  const pick = (k: (typeof DOCUMENT_TEXT_KEYS)[number]) =>
+    typeof o[k] === 'string' ? (o[k] as string) : '';
   return {
     acceptance_terms: pick('acceptance_terms'),
     signoff_declaration: pick('signoff_declaration'),

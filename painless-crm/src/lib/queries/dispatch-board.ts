@@ -29,34 +29,36 @@ export async function getDispatchBoardData(
 ): Promise<DispatchBoardData> {
   const supabase = await createClient();
 
-  const [{ data: assignmentRows }, { data: workerRows }, { data: vehicleRows }] = await Promise.all([
-    supabase
-      .from('job_assignments')
-      .select(
-        `id, job_id, worker_id, vehicle_id, role, scheduled_start, scheduled_end, date,
+  const [{ data: assignmentRows }, { data: workerRows }, { data: vehicleRows }] = await Promise.all(
+    [
+      supabase
+        .from('job_assignments')
+        .select(
+          `id, job_id, worker_id, vehicle_id, role, scheduled_start, scheduled_end, date,
          worker:workers (full_name),
          vehicle:vehicles (registration),
          job:jobs!job_assignments_job_id_fkey (
            job_number, stage,
            customer:customers (customer_type, first_name, last_name, company_name, primary_email)
          )`,
-      )
-      .gte('date', fromDate)
-      .lte('date', toDate)
-      .is('deleted_at', null),
-    supabase
-      .from('workers')
-      .select('id, full_name')
-      .is('deleted_at', null)
-      .eq('active', true)
-      .order('full_name', { ascending: true }),
-    supabase
-      .from('vehicles')
-      .select('id, registration')
-      .is('deleted_at', null)
-      .eq('active', true)
-      .order('registration', { ascending: true }),
-  ]);
+        )
+        .gte('date', fromDate)
+        .lte('date', toDate)
+        .is('deleted_at', null),
+      supabase
+        .from('workers')
+        .select('id, full_name')
+        .is('deleted_at', null)
+        .eq('active', true)
+        .order('full_name', { ascending: true }),
+      supabase
+        .from('vehicles')
+        .select('id, registration')
+        .is('deleted_at', null)
+        .eq('active', true)
+        .order('registration', { ascending: true }),
+    ],
+  );
 
   const assignments: BoardAssignment[] = ((assignmentRows ?? []) as Array<Record<string, unknown>>)
     .map((raw) => {

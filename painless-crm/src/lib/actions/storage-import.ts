@@ -16,7 +16,12 @@ const ROLES = ['manager', 'admin', 'super_admin'] as const;
 export type ImportState =
   | { status: 'idle' }
   | { status: 'error'; message: string }
-  | { status: 'preview'; valid: number; duplicates: string[]; errors: { line: number; message: string }[] }
+  | {
+      status: 'preview';
+      valid: number;
+      duplicates: string[];
+      errors: { line: number; message: string }[];
+    }
   | { status: 'done'; inserted: number; skipped: number };
 
 export const INITIAL_IMPORT_STATE: ImportState = { status: 'idle' };

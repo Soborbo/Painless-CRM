@@ -14,7 +14,9 @@ const KEY_RE = /^[a-z][a-z0-9_]{0,39}$/;
 
 export const CustomFieldDefSchema = z
   .object({
-    key: z.string().regex(KEY_RE, { message: 'Key must be lower_snake_case (start with a letter)' }),
+    key: z
+      .string()
+      .regex(KEY_RE, { message: 'Key must be lower_snake_case (start with a letter)' }),
     label: z.string().trim().min(1, { message: 'Label is required' }).max(80),
     type: z.enum(CUSTOM_FIELD_TYPES),
     options: z.array(z.string().trim().min(1).max(80)).max(30).optional(),
@@ -78,7 +80,9 @@ export function validateValues(
     }
 
     if (def.type === 'number') {
-      const n = Number(raw);
+      // Plain decimal notation only — Number() alone would accept hex ('0x10')
+      // and scientific notation ('1e3'), which are never intended in a form.
+      const n = /^-?\d+(\.\d+)?$/.test(raw) ? Number(raw) : Number.NaN;
       if (!Number.isFinite(n)) errors[def.key] = `${def.label} must be a number`;
       else values[def.key] = n;
       continue;

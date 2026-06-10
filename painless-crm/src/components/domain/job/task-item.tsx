@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  INITIAL_JOB_TASK_STATE,
-  deleteJobTask,
-  toggleJobTask,
-} from '@/lib/actions/job-tasks';
+import { INITIAL_JOB_TASK_STATE, deleteJobTask, toggleJobTask } from '@/lib/actions/job-tasks';
 import type { JobTaskRow } from '@/lib/queries/job-tasks';
 import { formatDate } from '@/lib/utils/format';
 import { useTranslations } from 'next-intl';

@@ -21,9 +21,9 @@ describe('formatAddressLine', () => {
   });
 
   it('trims and drops empty segments', () => {
-    expect(
-      formatAddressLine({ line1: ' Flat 2 ', line2: '  ', city: 'Bath', postcode: '' }),
-    ).toBe('Flat 2, Bath');
+    expect(formatAddressLine({ line1: ' Flat 2 ', line2: '  ', city: 'Bath', postcode: '' })).toBe(
+      'Flat 2, Bath',
+    );
   });
 });
 

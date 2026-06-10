@@ -1,7 +1,7 @@
-import { boundedClientTimestamp } from './client-timestamp';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { VehicleCheckInput } from '@/lib/schemas/vehicle-check';
 import { createClient } from '@/lib/supabase/server';
+import { boundedClientTimestamp } from './client-timestamp';
 
 // Shared persister for the vehicle pre-check. Idempotent via the client_event_id
 // dedup index (migration 40). The dashboard photo + signature columns are left

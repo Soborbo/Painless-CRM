@@ -34,9 +34,7 @@ export async function getJobCustomFields(
 
 // Phase 25 — Job Sheet customisation reuses the same engine over a separate
 // settings column (settings.job_sheet_fields). See ADR-036.
-export async function getJobSheetFieldDefsForCompany(
-  companyId: string,
-): Promise<CustomFieldDef[]> {
+export async function getJobSheetFieldDefsForCompany(companyId: string): Promise<CustomFieldDef[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('settings')

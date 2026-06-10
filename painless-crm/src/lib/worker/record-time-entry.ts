@@ -1,7 +1,7 @@
-import { boundedClientTimestamp } from './client-timestamp';
 import { getWorkerJobDetail } from '@/lib/queries/worker-app';
 import type { TimeEntryInput } from '@/lib/schemas/time-entry';
 import { createClient } from '@/lib/supabase/server';
+import { boundedClientTimestamp } from './client-timestamp';
 
 // Shared persister for job-progress time entries (load/unload start/end,
 // clock-out). Idempotent via the client_event_id dedup index (23505 = a replayed

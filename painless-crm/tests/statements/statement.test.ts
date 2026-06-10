@@ -18,8 +18,16 @@ function inv(over: Partial<StatementInvoice>): StatementInvoice {
 describe('buildStatement', () => {
   it('orders oldest-first and runs a balance', () => {
     const s = buildStatement([
-      inv({ invoice_number: 'PR-2', issued_at: '2026-03-01T00:00:00.000Z', amount_outstanding_pence: 5000 }),
-      inv({ invoice_number: 'PR-1', issued_at: '2026-01-01T00:00:00.000Z', amount_outstanding_pence: 10000 }),
+      inv({
+        invoice_number: 'PR-2',
+        issued_at: '2026-03-01T00:00:00.000Z',
+        amount_outstanding_pence: 5000,
+      }),
+      inv({
+        invoice_number: 'PR-1',
+        issued_at: '2026-01-01T00:00:00.000Z',
+        amount_outstanding_pence: 10000,
+      }),
     ]);
     expect(s.lines.map((l) => l.invoice_number)).toEqual(['PR-1', 'PR-2']);
     expect(s.lines.map((l) => l.running_outstanding_pence)).toEqual([10000, 15000]);
@@ -28,7 +36,12 @@ describe('buildStatement', () => {
   it('totals invoiced/paid/outstanding', () => {
     const s = buildStatement([
       inv({ total_pence: 10000, amount_paid_pence: 10000, amount_outstanding_pence: 0 }),
-      inv({ invoice_number: 'PR-2', total_pence: 4000, amount_paid_pence: 1000, amount_outstanding_pence: 3000 }),
+      inv({
+        invoice_number: 'PR-2',
+        total_pence: 4000,
+        amount_paid_pence: 1000,
+        amount_outstanding_pence: 3000,
+      }),
     ]);
     expect(s.totalInvoicedPence).toBe(14000);
     expect(s.totalPaidPence).toBe(11000);

@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  INITIAL_CUSTOMISATION_STATE,
   type CustomisationState,
+  INITIAL_CUSTOMISATION_STATE,
   addLeadProvider,
   deleteLeadProvider,
 } from '@/lib/actions/customisation';
@@ -30,7 +30,12 @@ export function AddProviderForm() {
       </label>
       <label className="flex flex-col gap-1 text-xs">
         {t('sourceKey')}
-        <input name="source_key" required placeholder="compare_my_move" className={`${field} font-mono`} />
+        <input
+          name="source_key"
+          required
+          placeholder="compare_my_move"
+          className={`${field} font-mono`}
+        />
       </label>
       <button
         type="submit"

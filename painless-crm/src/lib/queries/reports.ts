@@ -1,5 +1,5 @@
-import type { AnalyticsJobRow } from '@/lib/reports/analytics';
 import type { DateRange } from '@/lib/jobs/profit-dashboard';
+import type { AnalyticsJobRow } from '@/lib/reports/analytics';
 import type { AttributionJobRow } from '@/lib/reports/attribution';
 import type { FinancialInvoiceRow } from '@/lib/reports/financial';
 import type { ReportJobRow } from '@/lib/reports/funnel';

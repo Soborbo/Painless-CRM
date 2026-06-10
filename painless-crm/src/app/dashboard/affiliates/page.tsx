@@ -77,9 +77,13 @@ export default async function AffiliatesPage({ searchParams }: Props) {
                   <td className="px-3 py-2">{a.contact_email ?? a.contact_name ?? '—'}</td>
                   <td className="px-3 py-2">
                     {a.active ? (
-                      <span className="text-[var(--color-success,#16a34a)]">{t('statusActive')}</span>
+                      <span className="text-[var(--color-success,#16a34a)]">
+                        {t('statusActive')}
+                      </span>
                     ) : (
-                      <span className="text-[var(--color-muted-foreground)]">{t('statusPending')}</span>
+                      <span className="text-[var(--color-muted-foreground)]">
+                        {t('statusPending')}
+                      </span>
                     )}
                   </td>
                 </tr>

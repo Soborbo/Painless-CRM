@@ -122,6 +122,41 @@ export async function getRotaDay(date: string): Promise<RotaDay> {
   };
 }
 
+export type JobScheduleEntry = RotaAssignment & { date: string };
+
+// Job-detail Schedule panel — every crew/vehicle slot booked against one job,
+// across all dates (multi-day moves render one row per slot per day).
+export async function listAssignmentsForJob(jobId: string): Promise<JobScheduleEntry[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('job_assignments')
+    .select(
+      'id, job_id, worker_id, vehicle_id, role, date, scheduled_start, scheduled_end, notes, version, worker:workers (full_name), vehicle:vehicles (registration)',
+    )
+    .eq('job_id', jobId)
+    .is('deleted_at', null)
+    .order('date', { ascending: true })
+    .order('scheduled_start', { ascending: true, nullsFirst: true });
+  return ((data ?? []) as Array<Record<string, unknown>>).map((raw) => {
+    const worker = embedOne<{ full_name: string }>(raw.worker);
+    const vehicle = embedOne<{ registration: string }>(raw.vehicle);
+    return {
+      id: raw.id as string,
+      job_id: raw.job_id as string,
+      date: raw.date as string,
+      worker_id: raw.worker_id as string,
+      worker_name: worker?.full_name ?? 'Unknown',
+      vehicle_id: (raw.vehicle_id as string | null) ?? null,
+      vehicle_registration: vehicle?.registration ?? null,
+      role: (raw.role as string | null) ?? null,
+      scheduled_start: (raw.scheduled_start as string | null) ?? null,
+      scheduled_end: (raw.scheduled_end as string | null) ?? null,
+      notes: (raw.notes as string | null) ?? null,
+      version: raw.version as number,
+    };
+  });
+}
+
 // Every assignment slot on a date, for the conflict check in the action.
 export async function getAssignmentSlotsForDate(date: string): Promise<AssignmentSlot[]> {
   const supabase = await createClient();

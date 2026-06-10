@@ -31,6 +31,25 @@ function flatten(raw: Record<string, unknown>): JobTaskRow {
   };
 }
 
+export interface TaskAssigneeOption {
+  id: string;
+  full_name: string;
+}
+
+// Options for the add-task assignee select — any active user in the tenant.
+export async function listTaskAssignees(): Promise<TaskAssigneeOption[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('users')
+    .select('id, full_name')
+    .eq('active', true)
+    .order('full_name', { ascending: true });
+  return ((data ?? []) as Array<{ id: string; full_name: string }>).map((r) => ({
+    id: r.id,
+    full_name: r.full_name,
+  }));
+}
+
 export async function listTasksForJob(jobId: string): Promise<JobTaskRow[]> {
   const supabase = await createClient();
   const { data } = await supabase

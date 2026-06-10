@@ -448,8 +448,6 @@
     "removeTag": "Remove tag",
     "activity": "Activity",
     "noActivity": "No activity yet.",
-    "comingSoon": "Coming soon",
-    "comingSoonBody": "Quote, schedule, photos, money tabs land in later phases.",
     "transitionTitle": "Move stage",
     "confirmTransition": "Confirm move",
     "terminalStage": "This job is in a terminal stage. Re-engagement creates a new job.",
@@ -533,7 +531,13 @@
         "no_capacity": "No sales rep with capacity right now.",
         "unknown": "Couldn't create the new lead. Try again."
       }
-    }
+    },
+    "schedulePanel": "Schedule",
+    "scheduleEmpty": "No crew or vehicle booked yet — assign from the rota.",
+    "moneyPanel": "Money",
+    "moneyEmpty": "No invoices raised yet.",
+    "invoicedTotal": "Invoiced",
+    "outstandingTotal": "Outstanding"
   },
   "profitReview": {
     "title": "Profit review",
@@ -972,7 +976,9 @@
     "add": "Add",
     "dueDate": "Due date",
     "delete": "Delete",
-    "progress": "{done}/{total} done ({percent}%)"
+    "progress": "{done}/{total} done ({percent}%)",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned"
   },
   "documents": {
     "panelTitle": "Documents",
@@ -1553,7 +1559,9 @@
     "kind_holiday": "Holiday",
     "kind_sick": "Sick",
     "kind_training": "Training",
-    "kind_other": "Other"
+    "kind_other": "Other",
+    "remove": "Remove",
+    "confirmRemove": "Remove this entry from the calendar?"
   },
   "customFields": {
     "navLabel": "Custom fields",

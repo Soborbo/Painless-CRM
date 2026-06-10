@@ -11,7 +11,8 @@ import { requireUser } from '@/lib/auth/require-role';
 import { isProfitReviewStage } from '@/lib/jobs/profit';
 import { isRequoteEligibleStage } from '@/lib/jobs/requote';
 import { listDocumentsForJob } from '@/lib/queries/documents';
-import { listTasksForJob } from '@/lib/queries/job-tasks';
+import { getInvoicesForJob } from '@/lib/queries/invoices';
+import { listTaskAssignees, listTasksForJob } from '@/lib/queries/job-tasks';
 import {
   getJobById,
   getJobStatusHistory,
@@ -23,6 +24,7 @@ import {
 import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
+import { type JobScheduleEntry, listAssignmentsForJob } from '@/lib/queries/rota';
 import { pickHeadlineQuote } from '@/lib/quotes/headline';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
@@ -56,6 +58,9 @@ export default async function JobPage({ params }: Props) {
     jobTasks,
     jobDocuments,
     children,
+    assignments,
+    invoices,
+    taskAssignees,
     t,
   ] = await Promise.all([
     getJobStatusHistory(id),
@@ -69,6 +74,9 @@ export default async function JobPage({ params }: Props) {
     listTasksForJob(id),
     listDocumentsForJob(id),
     listChildJobs(id),
+    listAssignmentsForJob(id),
+    getInvoicesForJob(id),
+    listTaskAssignees(),
     getTranslations('jobs'),
   ]);
 
@@ -279,7 +287,7 @@ export default async function JobPage({ params }: Props) {
             </Section>
           ) : null}
 
-          <TasksPanel jobId={job.id} rows={jobTasks} />
+          <TasksPanel jobId={job.id} rows={jobTasks} assignees={taskAssignees} />
 
           <CustomFieldsPanel jobId={job.id} companyId={me.company_id} />
 
@@ -291,9 +299,11 @@ export default async function JobPage({ params }: Props) {
 
           <CallsPanel rows={calls} />
 
-          <ActivityPanel history={history} />
+          <SchedulePanel assignments={assignments} />
 
-          <PlaceholderTabs />
+          <MoneyPanel jobId={job.id} invoices={invoices} />
+
+          <ActivityPanel history={history} />
 
           {job.surveyor ? (
             <Section title={t('surveyor')}>
@@ -345,11 +355,90 @@ async function ActivityPanel({
   );
 }
 
-async function PlaceholderTabs() {
+async function SchedulePanel({ assignments }: { assignments: JobScheduleEntry[] }) {
   const t = await getTranslations('jobs');
   return (
-    <Section title={t('comingSoon')}>
-      <p className="text-sm text-[var(--color-muted-foreground)]">{t('comingSoonBody')}</p>
+    <Section title={t('schedulePanel')}>
+      {assignments.length === 0 ? (
+        <p className="text-sm text-[var(--color-muted-foreground)]">{t('scheduleEmpty')}</p>
+      ) : (
+        <ol className="flex flex-col gap-2 text-sm">
+          {assignments.map((a) => (
+            <li key={a.id} className="flex flex-wrap items-baseline gap-2">
+              <Link
+                href={`/dashboard/rota/${a.date}`}
+                className="font-mono text-xs hover:underline"
+              >
+                {formatDate(a.date)}
+              </Link>
+              <span>
+                {a.worker_name}
+                {a.role ? (
+                  <span className="text-[var(--color-muted-foreground)]"> · {a.role}</span>
+                ) : null}
+              </span>
+              {a.vehicle_registration ? (
+                <span className="rounded bg-[var(--color-muted)] px-1.5 py-0.5 font-mono text-xs">
+                  {a.vehicle_registration}
+                </span>
+              ) : null}
+              {a.scheduled_start ? (
+                <span className="font-mono text-xs text-[var(--color-muted-foreground)]">
+                  {a.scheduled_start.slice(0, 5)}
+                  {a.scheduled_end ? `–${a.scheduled_end.slice(0, 5)}` : ''}
+                </span>
+              ) : null}
+            </li>
+          ))}
+        </ol>
+      )}
+    </Section>
+  );
+}
+
+async function MoneyPanel({
+  jobId,
+  invoices,
+}: {
+  jobId: string;
+  invoices: Awaited<ReturnType<typeof getInvoicesForJob>>;
+}) {
+  const t = await getTranslations('jobs');
+  const invoicedPence = invoices.reduce((sum, i) => sum + i.total_pence, 0);
+  const outstandingPence = invoices.reduce((sum, i) => sum + (i.amount_outstanding_pence ?? 0), 0);
+  return (
+    <Section title={t('moneyPanel')}>
+      {invoices.length === 0 ? (
+        <p className="text-sm text-[var(--color-muted-foreground)]">{t('moneyEmpty')}</p>
+      ) : (
+        <>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <DetailRow label={t('invoicedTotal')} value={formatPence(invoicedPence)} />
+            <DetailRow label={t('outstandingTotal')} value={formatPence(outstandingPence)} />
+          </div>
+          <ol className="flex flex-col gap-1.5 text-sm">
+            {invoices.map((inv) => (
+              <li key={inv.id} className="flex flex-wrap items-baseline gap-2">
+                <Link href={`/dashboard/invoices/${inv.id}`} className="font-mono hover:underline">
+                  {inv.invoice_number}
+                </Link>
+                {inv.status ? (
+                  <span className="rounded bg-[var(--color-muted)] px-1.5 py-0.5 text-xs">
+                    {inv.status}
+                  </span>
+                ) : null}
+                <span className="ml-auto tabular-nums">{formatPence(inv.total_pence)}</span>
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
+      <Link
+        href={`/dashboard/jobs/${jobId}/invoices`}
+        className="text-xs text-[var(--color-muted-foreground)] hover:underline"
+      >
+        {t('invoicesTab')} →
+      </Link>
     </Section>
   );
 }

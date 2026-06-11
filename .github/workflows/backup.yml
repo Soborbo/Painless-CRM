@@ -1,0 +1,64 @@
+name: Offsite DB Backup
+
+# Independent, offsite logical backup of the Supabase Postgres DB to a Cloudflare
+# R2 bucket. The point is separation: the R2 credentials below are scoped to ONE
+# write-only bucket that the production app/service-role CANNOT reach, so a full
+# production compromise (or ransomware) cannot delete the backups. This is the
+# "attacker can't wipe my backups" control — the 3-2-1 rule.
+#
+# Trigger: daily at 02:00 UTC, plus manual (workflow_dispatch) for ad-hoc dumps.
+#
+# Required repo secrets:
+#   BACKUP_DATABASE_URL  — Supabase "Direct connection" URI (port 5432) WITH
+#                          ?sslmode=require. Use a dedicated read-only role if you
+#                          can; otherwise the postgres connection string.
+#   R2_ACCOUNT_ID        — Cloudflare account id (the R2 S3 endpoint host).
+#   R2_BUCKET            — target bucket name (e.g. painless-crm-backups).
+#   R2_ACCESS_KEY_ID     — R2 API token, scoped to ONLY this bucket, Object R/W.
+#   R2_SECRET_ACCESS_KEY — its secret.
+#
+# Hardening checklist (do once, in the Cloudflare dashboard):
+#   - Create the R2 token in a SEPARATE scope from your Workers/prod token.
+#   - Restrict it to the single backup bucket.
+#   - Enable bucket versioning + an Object Lock / retention policy (or a lifecycle
+#     rule) so even this token cannot truly erase history.
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Dump Postgres → gzip
+        env:
+          DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          STAMP="$(date -u +%Y-%m-%dT%H-%M-%SZ)"
+          echo "FILE=painless-crm-${STAMP}.sql.gz" >> "$GITHUB_ENV"
+          # pg_dump must match the server major version (Postgres 17); run it from
+          # the official image so the runner's client version never drifts.
+          docker run --rm -i -e DATABASE_URL postgres:17-alpine \
+            pg_dump --no-owner --no-privileges --format=plain "$DATABASE_URL" \
+            | gzip -9 > "painless-crm-${STAMP}.sql.gz"
+          ls -lh "painless-crm-${STAMP}.sql.gz"
+
+      - name: Upload → Cloudflare R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          # R2 rejects the AWS CLI v2 default flexible-checksum trailers; only
+          # send/validate checksums when the operation requires it.
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          set -euo pipefail
+          aws s3 cp "$FILE" "s3://${R2_BUCKET}/daily/${FILE}" \
+            --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"

@@ -16,6 +16,9 @@ import { redirect } from 'next/navigation';
 export type ActionState = { ok: boolean; message?: string };
 
 const GENERIC_AUTH_ERROR: ActionState = { ok: false, message: 'Invalid credentials' };
+// Only same-origin relative paths; rejects protocol-relative (//evil.com) and
+// absolute URLs. Mirrors SAFE_NEXT in src/app/auth/callback/route.ts.
+const SAFE_NEXT = /^\/(?!\/)/;
 const RATE_LIMITED: ActionState = {
   ok: false,
   message: 'Too many attempts. Please wait a few minutes and try again.',
@@ -68,7 +71,7 @@ export async function signInWithPassword(_prev: ActionState, form: FormData): Pr
   if (error) return GENERIC_AUTH_ERROR;
 
   const next = (form.get('next') as string | null) ?? '/dashboard';
-  redirect(next.startsWith('/') ? next : '/dashboard');
+  redirect(SAFE_NEXT.test(next) ? next : '/dashboard');
 }
 
 export async function sendMagicLink(_prev: ActionState, form: FormData): Promise<ActionState> {

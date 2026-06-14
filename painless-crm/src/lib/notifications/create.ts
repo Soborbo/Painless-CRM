@@ -25,7 +25,9 @@ export type NotificationPriority = (typeof NOTIFICATION_PRIORITIES)[number];
 export interface NotificationInput {
   companyId: string;
   recipientUserId: string;
-  type: NotificationType;
+  // A catalog event key (src/lib/notifications/events.ts) or a legacy type
+  // string. Stored verbatim in notifications.type (free text in the DB).
+  type: NotificationType | string;
   title: string;
   body?: string | null;
   linkUrl?: string | null;

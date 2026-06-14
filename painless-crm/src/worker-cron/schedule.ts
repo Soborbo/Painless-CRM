@@ -30,7 +30,16 @@ export const CRON_SCHEDULE: Record<string, CronJob> = {
   '* * * * *': { path: '/api/cron/automation-queue', payload: 'automation-queue' },
   '*/30 * * * *': { path: '/api/cron/stale-clock-in', payload: 'stale-clock-in' },
   '0 7 * * 1': { path: '/api/cron/weekly-digest', payload: 'weekly-digest' },
-  '55 7 * * 1-5': { path: '/api/cron/daily-digest', payload: 'daily-digest' },
+  // Notification email sweeps (ADR-040). The daily/weekly digests fire at both
+  // 08:05 and 09:05 UTC; the route's London-local guard runs the sweep only at
+  // 09:00 London (BST in summer, GMT in winter). :05 avoids the 0 9 sla-digest
+  // slot. email_sent_at makes the double-trigger idempotent.
+  '*/5 * * * *': { path: '/api/cron/notify-immediate', payload: 'notify-immediate' },
+  '0 * * * *': { path: '/api/cron/notify-hourly', payload: 'notify-hourly' },
+  '5 8 * * *': { path: '/api/cron/daily-digest', payload: 'daily-digest' },
+  '5 9 * * *': { path: '/api/cron/daily-digest', payload: 'daily-digest' },
+  '5 8 * * 1': { path: '/api/cron/notify-weekly', payload: 'notify-weekly' },
+  '5 9 * * 1': { path: '/api/cron/notify-weekly', payload: 'notify-weekly' },
 };
 
 export function resolveCronJob(cron: string): CronJob | null {

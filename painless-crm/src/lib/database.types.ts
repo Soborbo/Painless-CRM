@@ -2471,6 +2471,7 @@ export type Database = {
           company_id: string
           email_digest_enabled: boolean | null
           email_digest_time: string | null
+          event_prefs: Json
           push_enabled: boolean | null
           push_subscriptions: Json | null
           updated_at: string | null
@@ -2481,6 +2482,7 @@ export type Database = {
           company_id: string
           email_digest_enabled?: boolean | null
           email_digest_time?: string | null
+          event_prefs?: Json
           push_enabled?: boolean | null
           push_subscriptions?: Json | null
           updated_at?: string | null
@@ -2491,6 +2493,7 @@ export type Database = {
           company_id?: string
           email_digest_enabled?: boolean | null
           email_digest_time?: string | null
+          event_prefs?: Json
           push_enabled?: boolean | null
           push_subscriptions?: Json | null
           updated_at?: string | null
@@ -2519,6 +2522,7 @@ export type Database = {
           company_id: string
           created_at: string | null
           delivered_channels: string[] | null
+          email_sent_at: string | null
           id: string
           link_url: string | null
           priority: string | null
@@ -2534,6 +2538,7 @@ export type Database = {
           company_id: string
           created_at?: string | null
           delivered_channels?: string[] | null
+          email_sent_at?: string | null
           id?: string
           link_url?: string | null
           priority?: string | null
@@ -2549,6 +2554,7 @@ export type Database = {
           company_id?: string
           created_at?: string | null
           delivered_channels?: string[] | null
+          email_sent_at?: string | null
           id?: string
           link_url?: string | null
           priority?: string | null
@@ -3370,6 +3376,7 @@ export type Database = {
           feature_flags: Json | null
           ico_registration: string | null
           logo_url: string | null
+          notification_settings: Json
           updated_at: string
           vat_number: string | null
           version: number
@@ -3387,6 +3394,7 @@ export type Database = {
           feature_flags?: Json | null
           ico_registration?: string | null
           logo_url?: string | null
+          notification_settings?: Json
           updated_at?: string
           vat_number?: string | null
           version?: number
@@ -3404,6 +3412,7 @@ export type Database = {
           feature_flags?: Json | null
           ico_registration?: string | null
           logo_url?: string | null
+          notification_settings?: Json
           updated_at?: string
           vat_number?: string | null
           version?: number

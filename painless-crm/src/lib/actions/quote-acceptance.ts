@@ -5,6 +5,7 @@ import { serverEnv } from '@/lib/env';
 import { sendQuoteAcceptedEmail } from '@/lib/integrations/resend/quote';
 import { depositAmountPence, shouldCreateDeposit } from '@/lib/invoices/auto-create';
 import { createInvoiceWithLine, jobHasInvoiceOfType } from '@/lib/invoices/create';
+import { emitEvent } from '@/lib/notifications/emit';
 import { getPublicQuoteById } from '@/lib/queries/public-quote';
 import { classifyAcceptable, pickClientIp } from '@/lib/quotes/public-acceptance';
 import { verifyQuoteToken } from '@/lib/quotes/share-tokens';
@@ -211,6 +212,17 @@ export async function acceptQuote(
   } catch {
     // swallow — confirmation email + deposit are best-effort
   }
+
+  // Notify staff the customer accepted (ADR-040). Best-effort.
+  await emitEvent({
+    companyId: quote.company_id,
+    eventKey: 'quote.accepted',
+    title: `Quote accepted by ${quote.customer.display_name} — £${(acceptedTotal / 100).toFixed(2)}`,
+    linkUrl: `/dashboard/jobs/${quote.job_id}`,
+    relatedEntityType: 'job',
+    relatedEntityId: quote.job_id,
+    priority: 'high',
+  });
 
   revalidatePath(`/dashboard/jobs/${quote.job_id}`);
   return { status: 'ok', quote_id: quote.id };

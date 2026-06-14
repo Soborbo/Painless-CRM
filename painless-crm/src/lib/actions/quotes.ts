@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth/require-role';
 import { serverEnv } from '@/lib/env';
 import { sendQuoteEmail } from '@/lib/integrations/resend/quote';
 import { createQuoteForJob } from '@/lib/jobs/quote-writer';
+import { emitEvent } from '@/lib/notifications/emit';
 import { parseSimulationForm } from '@/lib/pricing/form';
 import { supersedePredecessor } from '@/lib/quotes/revisions';
 import { signQuoteToken } from '@/lib/quotes/share-tokens';
@@ -104,6 +105,17 @@ export async function buildManualQuote(
       message: err instanceof Error ? err.message : 'Could not create quote',
     };
   }
+  // Notify subscribers a quote was raised (ADR-040). Best-effort, before the
+  // throwing redirect below.
+  await emitEvent({
+    companyId: me.company_id,
+    eventKey: 'quote.created',
+    title: 'New quote raised',
+    linkUrl: `/dashboard/jobs/${jobId}`,
+    relatedEntityType: 'job',
+    relatedEntityId: jobId,
+  });
+
   // redirect() works by THROWING a NEXT_REDIRECT control-flow error, so it must
   // stay OUTSIDE the try above — otherwise the blanket catch swallows a
   // successful create and renders the redirect digest as an error (audit H5).
@@ -112,7 +124,7 @@ export async function buildManualQuote(
 }
 
 export async function sendQuote(_prev: SendQuoteState, form: FormData): Promise<SendQuoteState> {
-  await requireRole(QUOTE_BUILDER_ROLES);
+  const me = await requireRole(QUOTE_BUILDER_ROLES);
 
   const idParse = QuoteIdSchema.safeParse(form.get('quote_id'));
   const versionParse = VersionSchema.safeParse(form.get('version'));
@@ -170,6 +182,16 @@ export async function sendQuote(_prev: SendQuoteState, form: FormData): Promise<
   const shareUrl = `${env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '')}/quote/${token}`;
 
   await emailQuoteToCustomer(supabase, updated.job_id as string, shareUrl, existing.valid_until);
+
+  // Notify subscribers the quote was sent (ADR-040). Best-effort.
+  await emitEvent({
+    companyId: me.company_id,
+    eventKey: 'quote.sent',
+    title: 'Quote sent to customer',
+    linkUrl: `/dashboard/jobs/${updated.job_id as string}`,
+    relatedEntityType: 'job',
+    relatedEntityId: updated.job_id as string,
+  });
 
   revalidatePath(`/dashboard/jobs/${updated.job_id as string}`);
   return { status: 'ok', quote_id: updated.id as string, share_url: shareUrl };

@@ -211,6 +211,30 @@
       "save": "",
       "saving": "",
       "saved": ""
+    },
+    "subs": {
+      "title": "Értesítsen e-mailben erről…",
+      "intro": "Válaszd ki, mely eseményekről kapj e-mailt és milyen gyakran. A napi és heti összefoglalót brit idő szerint 09:00-kor küldjük.",
+      "editFor": "Feliratkozások szerkesztése ehhez",
+      "myself": "Magamnak",
+      "view": "Megnyitás",
+      "save": "Feliratkozások mentése",
+      "saving": "Mentés…",
+      "saved": "Mentve",
+      "groups": {
+        "sales": "Értékesítés és leadek",
+        "ops": "Üzemeltetés",
+        "finance": "Pénzügy",
+        "care": "Ügyfélszolgálat",
+        "collab": "Együttműködés"
+      },
+      "freq": {
+        "off": "Ki",
+        "immediate": "Azonnal",
+        "hourly": "Óránként",
+        "daily": "Naponta (09:00)",
+        "weekly": "Hetente (hétfő 09:00)"
+      }
     }
   },
   "theme": {
@@ -537,7 +561,21 @@
     "moneyPanel": "",
     "moneyEmpty": "",
     "invoicedTotal": "",
-    "outstandingTotal": ""
+    "outstandingTotal": "",
+    "subtitle": "",
+    "viewGrid": "",
+    "view": "",
+    "created": "",
+    "movingFromLabel": "",
+    "movingToLabel": "",
+    "noAddressYet": "",
+    "floorN": "",
+    "liftAvailable": "",
+    "noLift": "",
+    "whatsapp": "",
+    "duplicate": "",
+    "duplicateHint": "",
+    "clearFilters": ""
   },
   "profitReview": {
     "title": "",

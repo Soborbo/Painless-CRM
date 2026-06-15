@@ -76,9 +76,13 @@ const DETAIL_COLUMNS = `
   created_at, updated_at, version,
   customer:customers (id, customer_type, first_name, last_name, company_name, primary_email, primary_phone),
   assigned_to:users!jobs_assigned_to_id_fkey (id, full_name),
-  surveyor:users!jobs_surveyor_id_fkey (id, full_name),
-  parent:jobs!jobs_parent_job_id_fkey (id, job_number, stage)
+  surveyor:users!jobs_surveyor_id_fkey (id, full_name)
 `;
+// NOTE: the parent job is fetched in a SEPARATE query, not as a PostgREST embed.
+// The self-referential FK jobs_parent_job_id_fkey is not reliably resolvable in
+// PostgREST's schema cache on this project (PGRST200 "Could not find a
+// relationship between 'jobs' and 'jobs'"), which 400'd the whole detail query
+// and 404'd the job page. A second lookup by parent_job_id sidesteps it.
 
 export async function listJobs(filters: JobListFilters): Promise<JobListResult> {
   const supabase = await createClient();
@@ -212,7 +216,21 @@ export async function getJobById(id: string): Promise<JobDetail | null> {
     .eq('id', id)
     .is('deleted_at', null)
     .maybeSingle();
-  return (data as unknown as JobDetail | null) ?? null;
+  if (!data) return null;
+  const row = data as unknown as Omit<JobDetail, 'parent'>;
+
+  // Resolve the parent job separately (see DETAIL_COLUMNS note).
+  let parent: JobDetail['parent'] = null;
+  if (row.parent_job_id) {
+    const { data: p } = await supabase
+      .from('jobs')
+      .select('id, job_number, stage')
+      .eq('id', row.parent_job_id)
+      .maybeSingle();
+    parent = (p as JobDetail['parent']) ?? null;
+  }
+
+  return { ...row, parent } as JobDetail;
 }
 
 export type JobStatusEntry = {

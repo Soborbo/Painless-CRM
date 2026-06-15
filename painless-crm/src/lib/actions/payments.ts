@@ -2,6 +2,7 @@
 
 import { requireRole } from '@/lib/auth/require-role';
 import { enqueueEventAutomation } from '@/lib/comms/automation-enqueue';
+import { emitEvent } from '@/lib/notifications/emit';
 import { RecordPaymentSchema } from '@/lib/schemas/payment';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -74,6 +75,16 @@ export async function recordPayment(
   } catch {
     // swallow — automation is never on the critical path
   }
+
+  // Notify subscribers a payment came in (ADR-040). Best-effort.
+  await emitEvent({
+    companyId: me.company_id,
+    eventKey: 'payment.recorded',
+    title: `Payment received: £${(amountPence / 100).toFixed(2)}`,
+    linkUrl: `/dashboard/invoices/${parsed.data.invoice_id}`,
+    relatedEntityType: 'invoice',
+    relatedEntityId: parsed.data.invoice_id,
+  });
 
   revalidatePath(`/dashboard/invoices/${parsed.data.invoice_id}`);
   revalidatePath('/dashboard/invoices');

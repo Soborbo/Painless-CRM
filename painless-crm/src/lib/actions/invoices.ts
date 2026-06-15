@@ -3,6 +3,7 @@
 import { requireRole } from '@/lib/auth/require-role';
 import { enqueueEventAutomation } from '@/lib/comms/automation-enqueue';
 import { nextInvoiceNumber } from '@/lib/invoices/create';
+import { emitEvent } from '@/lib/notifications/emit';
 import { type InvoiceStatus, canTransition } from '@/lib/invoices/status';
 import { InvoiceCreateSchema, InvoiceStatusSchema } from '@/lib/schemas/invoice';
 import { createClient } from '@/lib/supabase/server';
@@ -79,6 +80,16 @@ export async function createInvoice(
   } catch {
     // swallow — automation is never on the critical path
   }
+
+  // Notify subscribers an invoice was created (ADR-040). Best-effort.
+  await emitEvent({
+    companyId: me.company_id,
+    eventKey: 'invoice.created',
+    title: `Invoice created (${parsed.data.type})`,
+    linkUrl: `/dashboard/invoices/${createdId}`,
+    relatedEntityType: 'invoice',
+    relatedEntityId: createdId,
+  });
 
   revalidatePath('/dashboard/invoices');
   redirect(`/dashboard/invoices/${createdId}`);

@@ -65,5 +65,11 @@ crons = [
   "* * * * *",     # automation-queue — every minute, runs due automation actions
   "*/30 * * * *",  # stale-clock-in — every 30 min
   "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
-  "55 7 * * 1-5",  # daily-digest — weekday 07:55, per-user notification summary
+  # Notification email sweeps (ADR-040). Keep in lockstep with src/worker-cron/schedule.ts.
+  "*/5 * * * *",   # notify-immediate — emails "immediate"-frequency notifications + janitor
+  "0 * * * *",     # notify-hourly — emails "hourly"-frequency notifications
+  "5 8 * * *",     # daily-digest — fires 08:05 + 09:05 UTC; guard runs it only at 09:00 London
+  "5 9 * * *",     # daily-digest — (the winter/GMT trigger)
+  "5 8 * * 1",     # notify-weekly — Monday; guard runs it only at 09:00 London
+  "5 9 * * 1",     # notify-weekly — (the winter/GMT trigger)
 ]

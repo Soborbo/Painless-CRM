@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth/require-role';
 import { shouldAutoEscalate } from '@/lib/damages/escalation';
 import { notifyDamageEscalation } from '@/lib/damages/notify';
 import { type DamageStatus, canTransition, isTerminal } from '@/lib/damages/state-machine';
+import { emitEvent } from '@/lib/notifications/emit';
 import { DamageCreateSchema, DamageUpdateSchema } from '@/lib/schemas/damage';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -89,6 +90,17 @@ export async function createDamage(
   if (error) return { status: 'error', message: 'Could not create the damage claim' };
 
   await applyRepeatClaimFlag(supabase, (job as { customer_id: string }).customer_id);
+
+  // Notify subscribers a damage was reported (ADR-040). Best-effort.
+  await emitEvent({
+    companyId: me.company_id,
+    eventKey: 'damage.reported',
+    title: 'Damage claim reported',
+    linkUrl: `/dashboard/jobs/${parsed.data.job_id}/damages`,
+    relatedEntityType: 'job',
+    relatedEntityId: parsed.data.job_id,
+    priority: 'high',
+  });
 
   revalidatePath(`/dashboard/jobs/${parsed.data.job_id}/damages`);
   revalidatePath('/dashboard/damages');

@@ -1,6 +1,7 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { emitEvent } from '@/lib/notifications/emit';
 import { SurveyCreateSchema, SurveyUpdateSchema, parseComplications } from '@/lib/schemas/survey';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -58,6 +59,18 @@ export async function createSurvey(
     .single();
   if (error || !data) return { status: 'error', message: 'Could not create the survey' };
 
+  // Notify subscribers when a survey is created already-completed (ADR-040).
+  if (parsed.data.completed) {
+    await emitEvent({
+      companyId: me.company_id,
+      eventKey: 'survey.completed',
+      title: 'Survey completed',
+      linkUrl: `/dashboard/jobs/${parsed.data.job_id}/surveys`,
+      relatedEntityType: 'job',
+      relatedEntityId: parsed.data.job_id,
+    });
+  }
+
   revalidatePath(`/dashboard/jobs/${parsed.data.job_id}/surveys`);
   redirect(`/dashboard/jobs/${parsed.data.job_id}/surveys/${(data as { id: string }).id}`);
 }
@@ -66,7 +79,7 @@ export async function updateSurvey(
   _prev: SurveyActionState,
   form: FormData,
 ): Promise<SurveyActionState> {
-  await requireRole(SURVEY_ROLES);
+  const me = await requireRole(SURVEY_ROLES);
 
   const parsed = SurveyUpdateSchema.safeParse({
     id: form.get('id'),
@@ -120,6 +133,18 @@ export async function updateSurvey(
     .maybeSingle();
   if (error || !saved)
     return { status: 'error', message: 'Could not update the survey. Reload and retry.' };
+
+  // Notify on the first transition to completed (ADR-040). Best-effort.
+  if (!row.completed_at && completedAt) {
+    await emitEvent({
+      companyId: me.company_id,
+      eventKey: 'survey.completed',
+      title: 'Survey completed',
+      linkUrl: `/dashboard/jobs/${row.job_id}/surveys`,
+      relatedEntityType: 'job',
+      relatedEntityId: row.job_id,
+    });
+  }
 
   revalidatePath(`/dashboard/jobs/${row.job_id}/surveys/${parsed.data.id}`);
   revalidatePath(`/dashboard/jobs/${row.job_id}/surveys`);

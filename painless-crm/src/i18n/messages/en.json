@@ -204,13 +204,37 @@
       "title": "Notification settings",
       "intro": "Choose how you want to hear about activity in the CRM.",
       "backToCenter": "Notifications",
-      "emailDigest": "Daily email digest",
-      "emailDigestHint": "A weekday-morning email summarising the notifications you received overnight.",
+      "emailDigest": "Receive notification emails",
+      "emailDigestHint": "Master switch for all notification emails. Turn off to silence every email below while keeping in-app notifications.",
       "push": "Push notifications",
       "pushHint": "Browser and mobile push for assignments, mentions and urgent alerts.",
       "save": "Save preferences",
       "saving": "Saving…",
       "saved": "Saved"
+    },
+    "subs": {
+      "title": "Email me about…",
+      "intro": "Pick which events email you and how often. The daily and weekly summaries are sent at 09:00 UK time.",
+      "editFor": "Editing subscriptions for",
+      "myself": "Myself",
+      "view": "View",
+      "save": "Save subscriptions",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "groups": {
+        "sales": "Sales & leads",
+        "ops": "Operations",
+        "finance": "Finance",
+        "care": "Customer care",
+        "collab": "Collaboration"
+      },
+      "freq": {
+        "off": "Off",
+        "immediate": "Immediately",
+        "hourly": "Hourly",
+        "daily": "Daily (09:00)",
+        "weekly": "Weekly (Mon 09:00)"
+      }
     }
   },
   "theme": {
@@ -537,7 +561,21 @@
     "moneyPanel": "Money",
     "moneyEmpty": "No invoices raised yet.",
     "invoicedTotal": "Invoiced",
-    "outstandingTotal": "Outstanding"
+    "outstandingTotal": "Outstanding",
+    "subtitle": "Manage and track all moving jobs",
+    "viewGrid": "Cards",
+    "view": "View",
+    "created": "Created",
+    "movingFromLabel": "Moving from",
+    "movingToLabel": "Moving to",
+    "noAddressYet": "No address yet",
+    "floorN": "Floor {floor}",
+    "liftAvailable": "Lift available",
+    "noLift": "No lift",
+    "whatsapp": "WhatsApp",
+    "duplicate": "Duplicate",
+    "duplicateHint": "Copy this job into a new lead (customer, addresses, estimates)",
+    "clearFilters": "Clear"
   },
   "profitReview": {
     "title": "Profit review",

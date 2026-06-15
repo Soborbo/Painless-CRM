@@ -6,7 +6,7 @@ import { enqueueEventAutomation, enqueueStageAutomation } from '@/lib/comms/auto
 import { pickNextRep } from '@/lib/jobs/routing';
 import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { type JobStage, classifyTransition } from '@/lib/jobs/state-machine';
-import { createNotification } from '@/lib/notifications/create';
+import { emitEvent } from '@/lib/notifications/emit';
 import {
   getLastAssignedRepId,
   getNextJobNumber,
@@ -33,8 +33,6 @@ export type JobActionState =
   | { status: 'idle' }
   | { status: 'error'; message: string }
   | { status: 'ok'; id: string };
-
-const IDLE: JobActionState = { status: 'idle' };
 
 export async function createJob(_prev: JobActionState, form: FormData): Promise<JobActionState> {
   const me = await requireRole(SALES_ROLES);
@@ -67,8 +65,10 @@ export async function createJob(_prev: JobActionState, form: FormData): Promise<
   // number) instead of surfacing a spurious failure — mirrors createInvoiceWithLine
   // (audit).
   let data: { id: string } | null = null;
+  let createdJobNumber = '';
   for (let attempt = 0; attempt < 3 && !data; attempt += 1) {
     const jobNumber = await getNextJobNumber();
+    createdJobNumber = jobNumber;
     const res = await supabase
       .from('jobs')
       .insert({
@@ -117,6 +117,16 @@ export async function createJob(_prev: JobActionState, form: FormData): Promise<
   } catch {
     // swallow — automation is never on the critical path
   }
+
+  // Notify subscribers of the new lead (ADR-040). Best-effort.
+  await emitEvent({
+    companyId: me.company_id,
+    eventKey: 'lead.created',
+    title: `New lead ${createdJobNumber}`,
+    linkUrl: `/dashboard/jobs/${data.id}`,
+    relatedEntityType: 'job',
+    relatedEntityId: data.id,
+  });
 
   revalidatePath('/dashboard/jobs');
   redirect(`/dashboard/jobs/${data.id}`);
@@ -182,6 +192,45 @@ const STAGE_TIMESTAMP_COLUMN: Partial<Record<JobStage, string>> = {
   cancelled: 'cancelled_at',
 };
 
+// Milestone events for specific target stages (ADR-040). Other stages still
+// emit the generic job.stage_changed event (default frequency 'off').
+const STAGE_MILESTONE_EVENT: Partial<Record<JobStage, string>> = {
+  accepted: 'job.booked',
+  confirmed: 'job.booked',
+  completed: 'job.completed',
+  cancelled: 'job.cancelled',
+};
+
+async function emitStageEvents(
+  companyId: string,
+  jobId: string,
+  jobNumber: string,
+  fromStage: JobStage,
+  toStage: JobStage,
+): Promise<void> {
+  const link = `/dashboard/jobs/${jobId}`;
+  await emitEvent({
+    companyId,
+    eventKey: 'job.stage_changed',
+    title: `Job ${jobNumber}: ${fromStage} → ${toStage}`,
+    linkUrl: link,
+    relatedEntityType: 'job',
+    relatedEntityId: jobId,
+  });
+  const milestone = STAGE_MILESTONE_EVENT[toStage];
+  if (milestone) {
+    await emitEvent({
+      companyId,
+      eventKey: milestone,
+      title: `Job ${jobNumber} ${toStage}`,
+      linkUrl: link,
+      relatedEntityType: 'job',
+      relatedEntityId: jobId,
+      priority: toStage === 'cancelled' ? 'high' : 'normal',
+    });
+  }
+}
+
 export async function transitionJobStage(
   _prev: JobActionState,
   form: FormData,
@@ -204,7 +253,7 @@ export async function transitionJobStage(
   const supabase = await createClient();
   const { data: existing } = await supabase
     .from('jobs')
-    .select('stage, version, service_type')
+    .select('stage, version, service_type, job_number')
     .eq('id', parsed.data.id)
     .is('deleted_at', null)
     .maybeSingle();
@@ -289,6 +338,16 @@ export async function transitionJobStage(
     // best-effort — automation must never block the transition
   }
 
+  // Notify subscribers of the stage change (ADR-040). A generic stage-changed
+  // event plus the relevant milestone event; recipients subscribe to whichever.
+  await emitStageEvents(
+    me.company_id,
+    parsed.data.id,
+    (existing as { job_number?: string | null }).job_number ?? '',
+    fromStage,
+    parsed.data.target_stage,
+  );
+
   revalidatePath(`/dashboard/jobs/${parsed.data.id}`);
   revalidatePath('/dashboard/jobs');
   return { status: 'ok', id: parsed.data.id };
@@ -326,13 +385,13 @@ export async function assignJob(_prev: JobActionState, form: FormData): Promise<
     };
   }
 
-  // Notify the assignee — unless they assigned the job to themselves.
+  // Notify the assignee — unless they assigned the job to themselves (ADR-040).
   const assignee = parsed.data.assigned_to_id;
   if (assignee && assignee !== me.id) {
-    await createNotification({
+    await emitEvent({
       companyId: me.company_id,
+      eventKey: 'job.assigned',
       recipientUserId: assignee,
-      type: 'assignment',
       title: `You were assigned job ${data.job_number}`,
       linkUrl: `/dashboard/jobs/${data.id}`,
       relatedEntityType: 'job',
@@ -422,5 +481,3 @@ export async function softDeleteJob(
   revalidatePath('/dashboard/jobs');
   redirect('/dashboard/jobs');
 }
-
-export { IDLE as INITIAL_JOB_STATE };

@@ -1,68 +1,36 @@
-// Weekday 07:55 sweep: email each user a digest of the notifications they
-// received in the last 24h, honouring their email_digest_enabled preference.
-// Phase 15. Push delivery lands later (VAPID + service worker).
+// Daily notification digest (ADR-040). Fires at 08:00 and 09:00 UTC; the
+// London-local guard lets only the run where London time is 09:00 proceed, so
+// it lands at 09:00 BST in summer and 09:00 GMT in winter. Before sweeping, it
+// runs the high-value-uncontacted-lead scan so those notifications go out in
+// the same email. Emails the notifications whose recipients set the event to
+// "daily". Idempotent via notifications.email_sent_at.
 //
-// Same auth shape as the sla-digest cron: Cloudflare Cron POSTs an empty body
-// with an HMAC over the literal payload string, verified against
-// CRM_WEBHOOK_SECRET. The fixed payload means a leaked signature only ever
-// authorises this one endpoint.
+// HMAC-guarded like every /api/cron/* route: a leaked signature only ever
+// authorises this one endpoint (fixed CRON_PAYLOAD).
 
-import { serverEnv } from '@/lib/env';
-import { sendDailyDigestEmail } from '@/lib/integrations/resend/daily-digest';
-import { buildDailyDigests } from '@/lib/notifications/daily-digest';
-import { fetchDailyDigestData } from '@/lib/queries/daily-digest';
-import { isFreshTimestamp, verifyHmac } from '@/lib/webhooks/handler';
+import { guardCronRequest } from '@/lib/notifications/cron-route';
+import { planLondonFlush } from '@/lib/notifications/delivery';
+import { scanHighValueUncontactedLeads } from '@/lib/notifications/high-value-leads';
+import { runNotificationSweep } from '@/lib/notifications/sweep';
 import { NextResponse } from 'next/server';
 
 const CRON_PAYLOAD = 'daily-digest';
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 export async function POST(req: Request): Promise<Response> {
-  const env = serverEnv();
-  const secret = env.CRM_WEBHOOK_SECRET;
-  if (!secret) {
-    return NextResponse.json({ error: 'cron_disabled' }, { status: 503 });
-  }
-  const ts = req.headers.get('x-cron-timestamp');
-  if (!isFreshTimestamp(ts, Date.now())) {
-    return NextResponse.json({ error: 'stale_timestamp' }, { status: 401 });
-  }
-  const valid = await verifyHmac(
-    secret,
-    `${ts}.${CRON_PAYLOAD}`,
-    req.headers.get('x-cron-signature'),
-  );
-  if (!valid) {
-    return NextResponse.json({ error: 'invalid_signature' }, { status: 401 });
-  }
+  const denied = await guardCronRequest(req, CRON_PAYLOAD);
+  if (denied) return denied;
 
   try {
-    const since = new Date(Date.now() - DAY_MS).toISOString();
-    const data = await fetchDailyDigestData(since);
-    const digests = buildDailyDigests(data.notifications, data.recipients);
-
-    let emailsSent = 0;
-    for (const digest of digests) {
-      const sent = await sendDailyDigestEmail({
-        to: digest.recipients,
-        subject: digest.subject,
-        text: digest.text,
-      });
-      if (sent) emailsSent += 1;
+    const now = new Date();
+    if (!planLondonFlush(now).isDaily9am) {
+      return NextResponse.json({ ok: true, skipped: 'outside_london_window' });
     }
-
-    return NextResponse.json({
-      ok: true,
-      notifications: data.notifications.length,
-      usersNotified: digests.length,
-      emailsSent,
-    });
+    const scan = await scanHighValueUncontactedLeads();
+    const sweep = await runNotificationSweep('daily', now);
+    return NextResponse.json({ ok: true, highValueLeads: scan.notified, ...sweep });
   } catch (err) {
     return NextResponse.json(
-      {
-        error: 'digest_failed',
-        message: err instanceof Error ? err.message.slice(0, 200) : 'unknown',
-      },
+      { error: 'digest_failed', message: err instanceof Error ? err.message.slice(0, 200) : 'unknown' },
       { status: 500 },
     );
   }

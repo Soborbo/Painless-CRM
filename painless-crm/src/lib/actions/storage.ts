@@ -17,8 +17,6 @@ export type StorageActionState =
   | { status: 'error'; message: string }
   | { status: 'ok'; id: string };
 
-const IDLE: StorageActionState = { status: 'idle' };
-
 // Resolve an address row for a site, reusing an existing one if the company
 // already has a matching address (the addresses dedup index would reject a
 // duplicate insert). Returns the address id.
@@ -90,5 +88,3 @@ export async function createStorageSite(
   revalidatePath('/dashboard/storage');
   redirect(`/dashboard/storage/${data.id}`);
 }
-
-export { IDLE as INITIAL_STORAGE_STATE };

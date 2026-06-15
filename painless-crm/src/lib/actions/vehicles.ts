@@ -14,8 +14,6 @@ export type VehicleActionState =
   | { status: 'error'; message: string }
   | { status: 'ok'; id: string };
 
-const IDLE: VehicleActionState = { status: 'idle' };
-
 // The form collects monthly cost in pounds (user-friendly); the column stores
 // integer pence. Convert here so the schema only ever deals in pence.
 function poundsToPence(value: FormDataEntryValue | null): string {
@@ -148,5 +146,3 @@ export async function softDeleteVehicle(
   revalidatePath('/dashboard/vehicles');
   redirect('/dashboard/vehicles');
 }
-
-export { IDLE as INITIAL_VEHICLE_STATE };

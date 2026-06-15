@@ -15,8 +15,6 @@ export type WorkerActionState =
   | { status: 'error'; message: string }
   | { status: 'ok'; id: string };
 
-const IDLE: WorkerActionState = { status: 'idle' };
-
 // Hourly rate is entered in pounds; the column stores integer pence. Blank stays
 // '' (optional); a non-money token passes through so the schema rejects it.
 function penceFromPounds(value: FormDataEntryValue | null): string {
@@ -147,5 +145,3 @@ export async function softDeleteWorker(
   revalidatePath('/dashboard/workers');
   redirect('/dashboard/workers');
 }
-
-export { IDLE as INITIAL_WORKER_STATE };

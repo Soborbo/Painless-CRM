@@ -206,6 +206,29 @@ Each phase below follows the spec's phase-doc shape (Goal / Gap closed / Schema 
 **ADR:** ADR-035 — lead-provider mapping is config-driven into the existing intake/attribution path.
 **Est:** L.
 
+### Phase 27 — Job Workflow page parity (`client-view`)  ·  mostly UI over existing schema  ·  planned 2026-06-12
+> **Shipped 2026-06-12 — jobs list card grid (iMVE `job-view` parity + 2026 restyle):** card grid is the new default jobs view (grid/list/kanban toggle), cards show customer contact (mailto/tel/`wa.me`), **Moving From/To with property meta** (first dashboard consumer of `job_addresses` — pure `lib/jobs/card-format.ts`, bulk `lib/queries/job-addresses.ts`), move date/value/created facts, tags, SLA + stage badges, and always-at-hand quick actions (View/Edit/quick-stage/**Duplicate**/Delete-admin). `duplicateJob` action (`lib/actions/job-duplicate.ts`) copies customer/source/estimates/addresses into a fresh lead, intentionally NOT firing job.created automation. Filter bar auto-applies selects/dates + Clear; microinteractions are CSS-only (`motion-safe` hover lift/scale). 1043 tests.
+**Goal:** Close the gap between iMVE's single rich "Workflow" job page and our `/dashboard/jobs/[id]`. Audit (2026-06-12, against `references/views/client-view.png`) found most panels already exist; the real gaps are below. Slices ordered by value/cost:
+
+**27a — Moving From / Moving To** (the biggest visible gap). Schema ✅ (`job_addresses` role/property_type/floor/has_lift/has_parking/access_notes + `addresses`) but **zero dashboard UI** — only the worker app reads it. Build: From/To cards on the job page; address add/edit in job create+edit forms; add `job_addresses.bedrooms int` (small migration — not a spine table). Est: **M**.
+
+**27b — Job Details & edit-form enrichment.** `service_type`, `estimated_cubic_ft`, `arrival_window`, `estimated_hours/distance` exist on `jobs` but aren't displayed, and the edit form only covers 5 fields (source/move_date/assignee/surveyor/notes). Surface + make editable. iMVE's "Other Details" free-text facts (complications, property chain, date flexibility) map to the existing ADR-034 custom-fields engine — config, not code. Est: **S**.
+
+**27c — Money panel split: Deposit / Invoice / Custom Invoices.** All data exists (`invoices.type` deposit/final/custom, payments, allocation). Split the current single MoneyPanel into three iMVE-style cards: deposit status ("No deposit found" / paid state), invoice card with the "pay deposit first" gating message, custom-invoices list + add. Est: **S**.
+
+**27d — Surface sign-offs + admin job-sheet view.** `customer_signoffs` and `job_sheets` are written by the worker PWA but **invisible to the office**. Read-only "Company Sign Offs" panel + a per-job admin job-sheet view (incl. ADR-036 custom fields). Est: **S/M**.
+
+**27e — Resources Required.** No equivalent field. Add `jobs.resources jsonb` (crew size, vehicle count/type, materials) — spine-table column → needs a short ADR; panel + edit on the job page; later feeds dispatch. Est: **S**.
+
+**27f — Activity & comms log panel.** iMVE shows email sends with open status. We have the `activity_log` audit table (trigger-fed, never read by any UI) and automation `send_email` logs. Merge into one job-page timeline: stage history (already shown) + audit entries + outbound emails with sent/failed status. Email **open** tracking stays 🔒 (needs Resend webhooks). Est: **M**.
+
+**27g — Quick actions.** Client card: `wa.me` WhatsApp deep-link (free), manual "Send Email" compose-from-template via the existing Resend path; SMS 🔒. Header: "Add appointment" prefilled link (Phase 22 calendar), "Move to Storage" prefilled rental link (ADR-023). Est: **S/M**.
+
+**Layout note:** restyling into iMVE's two-column card grid is optional polish; do it while splitting `jobs/[id]/page.tsx` (already 465 lines, over the 200-line rule) into panel components.
+
+**🔒 stays gated:** voice notes, previously-damaged photo upload (Supabase Storage bucket — though the `documents` vault could carry them as an interim), email open tracking, SMS/WhatsApp send.
+**Already at parity (no work):** client info, tasks (19), admin/staff notes (19), quotes + acceptance audit + public quote URL, surveys + cubic sheet (10/25c), staff & vehicle allocation (rota), move date, stage transitions, damages module, custom fields (25a).
+
 ### Backlog (lowest priority / out of parity scope)
 Community/forum · Training videos · live drag-to-reassign on dispatcher board · vehicle photos.
 

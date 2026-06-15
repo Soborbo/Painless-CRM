@@ -16,8 +16,6 @@ export type CustomerActionState =
   | { status: 'duplicate'; candidates: { id: string; label: string }[] }
   | { status: 'ok'; id: string };
 
-const IDLE: CustomerActionState = { status: 'idle' };
-
 function readPayload(form: FormData) {
   return {
     customer_type: form.get('customer_type'),
@@ -167,5 +165,3 @@ export async function softDeleteCustomer(
   revalidatePath('/dashboard/customers');
   redirect('/dashboard/customers');
 }
-
-export { IDLE as INITIAL_CUSTOMER_STATE };

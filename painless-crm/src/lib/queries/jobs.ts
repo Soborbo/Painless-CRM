@@ -32,6 +32,7 @@ export type JobListRow = JobRow & {
     last_name: string | null;
     company_name: string | null;
     primary_email: string | null;
+    primary_phone: string | null;
   } | null;
   assigned_to: { id: string; full_name: string } | null;
   tags: string[];
@@ -49,7 +50,7 @@ const LIST_COLUMNS = `
   assigned_to_id, surveyor_id, move_date, enquiry_at, accepted_at, quote_total_pence,
   first_response_due_at, first_response_at,
   notes, created_at, updated_at, version,
-  customer:customers (id, customer_type, first_name, last_name, company_name, primary_email),
+  customer:customers (id, customer_type, first_name, last_name, company_name, primary_email, primary_phone),
   assigned_to:users!jobs_assigned_to_id_fkey (id, full_name),
   job_tags (tag)
 `;

@@ -19,8 +19,6 @@ export type RotaActionState =
   | { status: 'error'; message: string }
   | { status: 'ok' };
 
-const IDLE: RotaActionState = { status: 'idle' };
-
 function dayPath(date: string) {
   return `/dashboard/rota/${date}`;
 }
@@ -111,5 +109,3 @@ export async function removeAssignment(
   revalidatePath(dayPath(date));
   redirect(dayPath(date));
 }
-
-export { IDLE as INITIAL_ROTA_STATE };

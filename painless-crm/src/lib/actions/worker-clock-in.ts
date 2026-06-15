@@ -12,8 +12,6 @@ const WORKER_APP_ROLES = ['loader', 'surveyor', 'manager', 'admin', 'super_admin
 
 export type ClockInState = { status: 'idle' } | { status: 'error'; message: string };
 
-const IDLE: ClockInState = { status: 'idle' };
-
 // Online fallback path (non-queue submit). The PWA normally enqueues clock-ins
 // and replays them via /api/worker/clock-in; both share persistClockIn().
 export async function clockIn(_prev: ClockInState, form: FormData): Promise<ClockInState> {
@@ -46,5 +44,3 @@ export async function clockIn(_prev: ClockInState, form: FormData): Promise<Cloc
   revalidatePath(`/jobs/${parsed.data.job_id}`);
   redirect(`/jobs/${parsed.data.job_id}?clocked_in=1`);
 }
-
-export { IDLE as INITIAL_CLOCK_IN_STATE };

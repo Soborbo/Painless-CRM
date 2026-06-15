@@ -1,12 +1,16 @@
+import { requireUser } from '@/lib/auth/require-role';
 import { JOB_STAGES } from '@/lib/jobs/state-machine';
+import { listAddressesForJobs } from '@/lib/queries/job-addresses';
 import { listJobs, listJobsForKanban, listSalesReps } from '@/lib/queries/jobs';
 import { JOB_PAGE_SIZE, JobListFiltersSchema } from '@/lib/schemas/job';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { JobsFilters } from './jobs-filters';
+import { JobsGrid } from './jobs-grid';
 import { JobsTable } from './jobs-table';
-import { JobsViewToggle } from './jobs-view-toggle';
+import { type JobsView, JobsViewToggle } from './jobs-view-toggle';
 import { KanbanBoard } from './kanban-board';
+import { Pagination } from './pagination';
 
 type Props = {
   searchParams: Promise<{
@@ -30,7 +34,8 @@ export default async function JobsPage({ searchParams }: Props) {
     move_to: params.move_to,
     page: params.page,
   });
-  const view: 'list' | 'kanban' = params.view === 'kanban' ? 'kanban' : 'list';
+  const view: JobsView =
+    params.view === 'kanban' ? 'kanban' : params.view === 'list' ? 'list' : 'grid';
 
   const [reps, t] = await Promise.all([listSalesReps(), getTranslations('jobs')]);
 
@@ -43,24 +48,25 @@ export default async function JobsPage({ searchParams }: Props) {
   const exportHref = `/dashboard/jobs/export${exportParams.size ? `?${exportParams}` : ''}`;
 
   return (
-    <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
+    <main className="mx-auto flex max-w-7xl flex-col gap-5 px-6 py-8">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
+          <p className="mt-0.5 text-sm text-[var(--color-muted-foreground)]">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-3">
           <JobsViewToggle view={view} />
           <a
             href={exportHref}
-            className="rounded-md border px-3 py-2 text-sm hover:bg-[var(--color-muted)]"
+            className="rounded-lg border px-3 py-2 text-sm transition-colors hover:bg-[var(--color-muted)]"
           >
             {t('exportCsv')}
           </a>
           <Link
             href="/dashboard/jobs/new"
-            className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] transition-opacity hover:opacity-90"
+            className="rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] shadow-sm transition-all duration-150 hover:opacity-90 hover:shadow motion-safe:active:scale-95"
           >
-            {t('newJob')}
+            + {t('newJob')}
           </Link>
         </div>
       </header>
@@ -75,7 +81,7 @@ export default async function JobsPage({ searchParams }: Props) {
         reps={reps.map((r) => ({ id: r.id, full_name: r.full_name }))}
       />
 
-      {view === 'kanban' ? <KanbanView filters={filters} /> : <ListView filters={filters} />}
+      {view === 'kanban' ? <KanbanView filters={filters} /> : <PagedView filters={filters} view={view} />}
     </main>
   );
 }
@@ -94,21 +100,33 @@ async function KanbanView({
   return <KanbanBoard rows={rows} />;
 }
 
-async function ListView({
+async function PagedView({
   filters,
+  view,
 }: {
   filters: ReturnType<typeof JobListFiltersSchema.parse>;
+  view: 'grid' | 'list';
 }) {
-  const result = await listJobs(filters);
+  const [result, me, t] = await Promise.all([
+    listJobs(filters),
+    requireUser(),
+    getTranslations('jobs'),
+  ]);
   const lastPage = Math.max(1, Math.ceil(result.total / JOB_PAGE_SIZE));
-  const t = await getTranslations('jobs');
+  const isAdmin = me.role === 'admin' || me.role === 'super_admin';
+  const addresses =
+    view === 'grid' ? await listAddressesForJobs(result.rows.map((r) => r.id)) : {};
 
   return (
     <>
       <p className="text-sm text-[var(--color-muted-foreground)]">
         {t('totalCount', { count: result.total })}
       </p>
-      <JobsTable rows={result.rows} />
+      {view === 'grid' ? (
+        <JobsGrid rows={result.rows} addresses={addresses} isAdmin={isAdmin} />
+      ) : (
+        <JobsTable rows={result.rows} />
+      )}
       <Pagination
         page={filters.page}
         lastPage={lastPage}
@@ -117,66 +135,8 @@ async function ListView({
         assignedTo={filters.assigned_to_id}
         moveFrom={filters.move_from}
         moveTo={filters.move_to}
+        view={view}
       />
     </>
-  );
-}
-
-function Pagination({
-  page,
-  lastPage,
-  q,
-  stage,
-  assignedTo,
-  moveFrom,
-  moveTo,
-}: {
-  page: number;
-  lastPage: number;
-  q?: string;
-  stage?: string;
-  assignedTo?: string;
-  moveFrom?: string;
-  moveTo?: string;
-}) {
-  if (lastPage <= 1) return null;
-  const params = new URLSearchParams();
-  if (q) params.set('q', q);
-  if (stage) params.set('stage', stage);
-  if (assignedTo) params.set('assigned_to_id', assignedTo);
-  if (moveFrom) params.set('move_from', moveFrom);
-  if (moveTo) params.set('move_to', moveTo);
-  const link = (n: number) => {
-    const p = new URLSearchParams(params);
-    p.set('page', String(n));
-    return `/dashboard/jobs?${p.toString()}`;
-  };
-
-  return (
-    <nav className="flex items-center justify-center gap-3 text-sm">
-      {page > 1 ? (
-        <Link
-          href={link(page - 1)}
-          className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
-        >
-          ← Prev
-        </Link>
-      ) : (
-        <span className="rounded-md border px-3 py-1.5 opacity-40">← Prev</span>
-      )}
-      <span className="text-[var(--color-muted-foreground)]">
-        {page} / {lastPage}
-      </span>
-      {page < lastPage ? (
-        <Link
-          href={link(page + 1)}
-          className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
-        >
-          Next →
-        </Link>
-      ) : (
-        <span className="rounded-md border px-3 py-1.5 opacity-40">Next →</span>
-      )}
-    </nav>
   );
 }

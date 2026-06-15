@@ -134,6 +134,10 @@ export const JobTagSchema = z.object({
     .regex(/^[\w\-+ ]+$/, { message: 'Tag may only contain letters, numbers, spaces, -, +, _' }),
 });
 
+export const DuplicateJobSchema = z.object({
+  id: z.string().uuid(),
+});
+
 export const JobListFiltersSchema = z
   .object({
     q: z.string().trim().max(100).optional(),

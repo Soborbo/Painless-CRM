@@ -1121,6 +1121,7 @@
   },
   "callsInbox": {
     "title": "",
+    "live": "Élő",
     "subtitle": "",
     "empty": "",
     "unknownCaller": "",

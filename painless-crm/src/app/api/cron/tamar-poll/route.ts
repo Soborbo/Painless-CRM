@@ -14,6 +14,33 @@ import { NextResponse } from 'next/server';
 const CRON_PAYLOAD = 'tamar-poll';
 
 export async function POST(req: Request): Promise<Response> {
+  // TEMP DIAGNOSTIC: prove the self-fetch actually reaches this route (before any
+  // auth), via raw REST so it doesn't depend on serverEnv/admin client. Remove after.
+  try {
+    const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const k = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (u && k) {
+      await fetch(`${u}/rest/v1/tamar_poll_diag`, {
+        method: 'POST',
+        headers: {
+          apikey: k,
+          Authorization: `Bearer ${k}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({
+          result: {
+            marker: 'route-entered',
+            ts: req.headers.get('x-cron-timestamp'),
+            hasSig: Boolean(req.headers.get('x-cron-signature')),
+          },
+        }),
+      });
+    }
+  } catch {
+    // best-effort
+  }
+
   const env = serverEnv();
   const secret = env.CRM_WEBHOOK_SECRET;
   if (!secret) {

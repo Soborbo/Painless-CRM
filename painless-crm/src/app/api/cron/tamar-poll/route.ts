@@ -7,6 +7,7 @@
 
 import { serverEnv } from '@/lib/env';
 import { runTamarPoll } from '@/lib/integrations/tamar/poll';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { isFreshTimestamp, verifyHmac } from '@/lib/webhooks/handler';
 import { NextResponse } from 'next/server';
 
@@ -33,9 +34,14 @@ export async function POST(req: Request): Promise<Response> {
 
   try {
     const result = await runTamarPoll(new Date());
-    // Diagnostic (temporary): surface the poll outcome in Workers Logs so we can
-    // see reason/fetched/errors without the HMAC-gated response body.
+    // Diagnostic (temporary): surface the poll outcome both in Workers Logs and
+    // in a Supabase table we can read directly (the MCP can't tail CF logs).
     console.log('[tamar-poll]', JSON.stringify(result));
+    try {
+      await createAdminClient().from('tamar_poll_diag').insert({ result });
+    } catch {
+      // best-effort diagnostic write
+    }
     return NextResponse.json({ ok: true, result });
   } catch (err) {
     return NextResponse.json(

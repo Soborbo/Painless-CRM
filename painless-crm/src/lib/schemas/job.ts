@@ -11,6 +11,7 @@ export const ACQUISITION_SOURCES = [
   'affiliate',
   'walk_in',
   'phone',
+  'compare_my_move',
   'other',
 ] as const;
 export type AcquisitionSource = (typeof ACQUISITION_SOURCES)[number];

@@ -1,46 +1,17 @@
 // Polls Tamar's Call Stats API (CDRs) and ingests calls into phone_calls
 // (ADR-041). Pull-based — Tamar has no inbound webhook — so this runs on a
-// schedule (recommended every 5 minutes via wrangler cron). Same auth shape as
-// every other cron: HMAC over the literal payload string against
-// CRM_WEBHOOK_SECRET. No-ops (still 200) when the Tamar key/number/tenant env
-// is absent, so the schedule is safe to register before go-live.
+// schedule (every 2 min via wrangler cron). Same auth shape as every other
+// cron: HMAC over the literal payload string against CRM_WEBHOOK_SECRET.
+// No-ops (still 200) when the Tamar creds/number/tenant env is absent.
 
 import { serverEnv } from '@/lib/env';
 import { runTamarPoll } from '@/lib/integrations/tamar/poll';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { isFreshTimestamp, verifyHmac } from '@/lib/webhooks/handler';
 import { NextResponse } from 'next/server';
 
 const CRON_PAYLOAD = 'tamar-poll';
 
 export async function POST(req: Request): Promise<Response> {
-  // TEMP DIAGNOSTIC: prove the self-fetch actually reaches this route (before any
-  // auth), via raw REST so it doesn't depend on serverEnv/admin client. Remove after.
-  try {
-    const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const k = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (u && k) {
-      await fetch(`${u}/rest/v1/tamar_poll_diag`, {
-        method: 'POST',
-        headers: {
-          apikey: k,
-          Authorization: `Bearer ${k}`,
-          'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify({
-          result: {
-            marker: 'route-entered',
-            ts: req.headers.get('x-cron-timestamp'),
-            hasSig: Boolean(req.headers.get('x-cron-signature')),
-          },
-        }),
-      });
-    }
-  } catch {
-    // best-effort
-  }
-
   const env = serverEnv();
   const secret = env.CRM_WEBHOOK_SECRET;
   if (!secret) {
@@ -61,14 +32,6 @@ export async function POST(req: Request): Promise<Response> {
 
   try {
     const result = await runTamarPoll(new Date());
-    // Diagnostic (temporary): surface the poll outcome both in Workers Logs and
-    // in a Supabase table we can read directly (the MCP can't tail CF logs).
-    console.log('[tamar-poll]', JSON.stringify(result));
-    try {
-      await createAdminClient().from('tamar_poll_diag').insert({ result });
-    } catch {
-      // best-effort diagnostic write
-    }
     return NextResponse.json({ ok: true, result });
   } catch (err) {
     return NextResponse.json(

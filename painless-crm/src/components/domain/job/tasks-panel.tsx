@@ -1,13 +1,13 @@
-import { completeness } from '@/lib/jobs/tasks';
-import type { JobTaskRow, TaskAssigneeOption } from '@/lib/queries/job-tasks';
+import type { TaskAssignee, TaskRow } from '@/lib/queries/tasks';
+import { completeness } from '@/lib/tasks/model';
 import { getTranslations } from 'next-intl/server';
 import { AddTaskForm } from './add-task-form';
 import { TaskItem } from './task-item';
 
 interface Props {
   jobId: string;
-  rows: JobTaskRow[];
-  assignees?: TaskAssigneeOption[];
+  rows: TaskRow[];
+  assignees?: TaskAssignee[];
 }
 
 export async function TasksPanel({ jobId, rows, assignees }: Props) {
@@ -33,7 +33,7 @@ export async function TasksPanel({ jobId, rows, assignees }: Props) {
         ) : (
           <ul className="flex flex-col divide-y">
             {rows.map((task) => (
-              <TaskItem key={task.id} task={task} jobId={jobId} />
+              <TaskItem key={task.id} task={task} />
             ))}
           </ul>
         )}

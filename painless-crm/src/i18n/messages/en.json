@@ -34,6 +34,7 @@
     "calls": "Calls",
     "sla": "SLA",
     "callbacks": "Call-backs",
+    "tasks": "Tasks",
     "profit": "Profit",
     "reports": "Reports",
     "templates": "Templates",
@@ -313,7 +314,8 @@
     "overdue": "Overdue",
     "invoices": "{count, plural, =0 {No invoices} one {# invoice} other {# invoices}}",
     "profitReviewPending": "{count, plural, one {# completed job awaiting profit review} other {# completed jobs awaiting profit review}}",
-    "callbacksDueToday": "{count, plural, one {# call-back scheduled for today} other {# call-backs scheduled for today}}"
+    "callbacksDueToday": "{count, plural, one {# call-back scheduled for today} other {# call-backs scheduled for today}}",
+    "tasksDueToday": "{count, plural, one {# task due today} other {# tasks due today}}"
   },
   "users": {
     "navLabel": "Users",
@@ -1018,6 +1020,25 @@
     "progress": "{done}/{total} done ({percent}%)",
     "assignee": "Assignee",
     "unassigned": "Unassigned"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "subtitle": "Your follow-ups and call-backs across every customer, job and quote.",
+    "empty": "Nothing on your list.",
+    "scopeMine": "My tasks",
+    "scopeAll": "All tasks",
+    "showAll": "Show completed",
+    "showOpen": "Open only",
+    "add": "Add",
+    "titlePlaceholder": "What needs doing?",
+    "priority": "Priority",
+    "due": "Due date",
+    "assignees": "Assignees",
+    "open": "Open",
+    "delete": "Delete",
+    "priorityLow": "Low",
+    "priorityMedium": "Medium",
+    "priorityHigh": "High"
   },
   "documents": {
     "panelTitle": "Documents",

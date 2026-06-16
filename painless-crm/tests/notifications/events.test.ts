@@ -19,6 +19,13 @@ describe('notification event catalog', () => {
     }
   });
 
+  it('exposes the missed inbound call event (ADR-041) as a broadcast', () => {
+    const e = getEvent('call.missed');
+    expect(e).toBeDefined();
+    expect(e?.scope).toBe('broadcast');
+    expect(e?.defaultFreq).toBe('immediate');
+  });
+
   it('targeted events carry an intrinsic recipient (mention, job.assigned)', () => {
     expect(getEvent('mention')?.scope).toBe('targeted');
     expect(getEvent('job.assigned')?.scope).toBe('targeted');

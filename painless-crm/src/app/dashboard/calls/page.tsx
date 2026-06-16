@@ -1,4 +1,5 @@
 import { CallRowActions } from '@/components/domain/call/call-row-actions';
+import { CallsAutoRefresh } from '@/components/domain/call/calls-auto-refresh';
 import { requireUser } from '@/lib/auth/require-role';
 import { type CallInboxRow, listInboundCalls } from '@/lib/queries/calls-inbox';
 import { customerDisplayName, formatDateTime } from '@/lib/utils/format';
@@ -13,8 +14,15 @@ export default async function CallsPage() {
 
   return (
     <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10">
+      <CallsAutoRefresh />
       <header>
-        <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
+        <div className="flex items-center gap-2.5">
+          <h1 className="text-2xl font-semibold tracking-tight">{t('title')}</h1>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2 py-0.5 text-[11px] font-medium text-green-700">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500" aria-hidden />
+            {t('live')}
+          </span>
+        </div>
         <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">{t('subtitle')}</p>
       </header>
 

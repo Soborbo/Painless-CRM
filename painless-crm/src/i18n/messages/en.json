@@ -1121,6 +1121,7 @@
   },
   "callsInbox": {
     "title": "Calls",
+    "live": "Live",
     "subtitle": "Inbound calls from the main line. Open the matched job, create one if there isn't, and mark who called back with a note.",
     "empty": "No inbound calls yet.",
     "unknownCaller": "Withheld",

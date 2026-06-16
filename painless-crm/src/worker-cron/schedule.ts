@@ -29,9 +29,11 @@ export const CRON_SCHEDULE: Record<string, CronJob> = {
   '15 * * * *': { path: '/api/cron/review-requests', payload: 'review-requests' },
   '* * * * *': { path: '/api/cron/automation-queue', payload: 'automation-queue' },
   '*/30 * * * *': { path: '/api/cron/stale-clock-in', payload: 'stale-clock-in' },
-  // Tamar CDR poll (ADR-041) — every 5 min, offset by 2 so it doesn't share the
-  // `*/5` slot notify-immediate already owns (one route per cron expression).
-  '2-59/5 * * * *': { path: '/api/cron/tamar-poll', payload: 'tamar-poll' },
+  // Tamar CDR poll (ADR-041) — every 2 min for near-live call ingestion. Its own
+  // expression (one route per cron expression); `*/1` would collide with the
+  // automation-queue's `* * * * *` slot. The Calls page auto-refreshes, so a new
+  // call surfaces within the poll interval without a manual reload.
+  '*/2 * * * *': { path: '/api/cron/tamar-poll', payload: 'tamar-poll' },
   '0 7 * * 1': { path: '/api/cron/weekly-digest', payload: 'weekly-digest' },
   // Notification email sweeps (ADR-040). The daily/weekly digests fire at both
   // 08:05 and 09:05 UTC; the route's London-local guard runs the sweep only at

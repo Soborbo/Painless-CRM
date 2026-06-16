@@ -1023,7 +1023,9 @@
   },
   "tasks": {
     "title": "Tasks",
+    "panelTitle": "Tasks",
     "subtitle": "Your follow-ups and call-backs across every customer, job and quote.",
+    "newTaskCommand": "Create a task",
     "empty": "Nothing on your list.",
     "scopeMine": "My tasks",
     "scopeAll": "All tasks",

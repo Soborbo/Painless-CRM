@@ -48,6 +48,9 @@ export const EVENT_CATALOG: readonly NotificationEvent[] = [
   { key: 'signoff.completed', group: 'ops', scope: 'broadcast', defaultFreq: 'daily', labelEn: 'Job signed off', labelHu: 'Munka leigazolva' },
   { key: 'clock_in.stale', group: 'ops', scope: 'broadcast', defaultFreq: 'immediate', labelEn: 'Crew not clocked in', labelHu: 'A csapat nem jelentkezett be' },
   { key: 'vehicle.compliance_due', group: 'ops', scope: 'broadcast', defaultFreq: 'daily', labelEn: 'Vehicle compliance due', labelHu: 'Jármű ellenőrzés esedékes' },
+  { key: 'task.assigned', group: 'ops', scope: 'targeted', defaultFreq: 'immediate', labelEn: 'Task assigned to you', labelHu: 'Feladat hozzád rendelve' },
+  { key: 'task.due', group: 'ops', scope: 'targeted', defaultFreq: 'daily', labelEn: 'Task due today', labelHu: 'Feladat ma esedékes' },
+  { key: 'task.overdue', group: 'ops', scope: 'targeted', defaultFreq: 'daily', labelEn: 'Task overdue', labelHu: 'Feladat késésben van' },
   // Finance
   { key: 'invoice.created', group: 'finance', scope: 'broadcast', defaultFreq: 'off', labelEn: 'Invoice created', labelHu: 'Számla létrehozva' },
   { key: 'payment.recorded', group: 'finance', scope: 'broadcast', defaultFreq: 'daily', labelEn: 'Payment received', labelHu: 'Fizetés beérkezett' },

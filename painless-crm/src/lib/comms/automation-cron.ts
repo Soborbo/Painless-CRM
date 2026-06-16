@@ -96,6 +96,69 @@ async function buildVars(
   };
 }
 
+const TASK_PRIORITIES = new Set(['low', 'medium', 'high']);
+
+// Phase 27 follow-up (ADR-042) — the `create_task` automation action. Raises a
+// follow-up task linked to the rule's job, with the title rendered from the
+// same template vars as emails, an optional due-date offset, and an optional
+// assignee. Runs under the service-role admin client.
+async function runCreateTask(
+  supabase: AnyClient,
+  row: { company_id: string; rule_id: string; payload: { job_id?: string } | null },
+  rule: {
+    action_config: {
+      task_title?: string;
+      task_priority?: string;
+      task_due_offset_days?: number;
+      task_assigned_to_id?: string;
+    } | null;
+    run_count: number | null;
+  },
+  now: Date,
+): Promise<void> {
+  const cfg = rule.action_config ?? {};
+  const jobId = row.payload?.job_id ?? null;
+  const { vars, customerId } = await buildVars(supabase, row.payload ?? {});
+  const title = (renderTemplate(cfg.task_title ?? 'Follow up', vars).trim() || 'Follow up').slice(
+    0,
+    500,
+  );
+  const priority =
+    cfg.task_priority && TASK_PRIORITIES.has(cfg.task_priority) ? cfg.task_priority : 'medium';
+  const dueAt =
+    typeof cfg.task_due_offset_days === 'number'
+      ? new Date(now.getTime() + cfg.task_due_offset_days * 86_400_000).toISOString()
+      : null;
+
+  const { data: inserted } = await supabase
+    .from('tasks')
+    .insert({
+      company_id: row.company_id,
+      related_type: jobId ? 'job' : null,
+      related_id: jobId,
+      job_id: jobId,
+      customer_id: customerId,
+      kind: 'followup',
+      title,
+      priority,
+      due_at: dueAt,
+    })
+    .select('id')
+    .single();
+
+  const taskId = (inserted as { id: string } | null)?.id;
+  if (taskId && cfg.task_assigned_to_id) {
+    await supabase
+      .from('task_assignees')
+      .insert({ task_id: taskId, user_id: cfg.task_assigned_to_id, company_id: row.company_id });
+  }
+
+  await supabase
+    .from('automation_rules')
+    .update({ run_count: (rule.run_count ?? 0) + 1, last_run_at: now.toISOString() })
+    .eq('id', row.rule_id);
+}
+
 export async function runAutomationQueue(now: Date = new Date()): Promise<AutomationResult> {
   const supabase = createAdminClient();
   const result: AutomationResult = { due: 0, sent: 0, skipped: 0, failed: 0 };
@@ -148,16 +211,33 @@ export async function runAutomationQueue(now: Date = new Date()): Promise<Automa
         .maybeSingle();
       const rule = ruleRow as {
         action_type: string;
-        action_config: { template_id?: string; requires_stage?: string } | null;
+        action_config: {
+          template_id?: string;
+          requires_stage?: string;
+          task_title?: string;
+          task_priority?: string;
+          task_due_offset_days?: number;
+          task_assigned_to_id?: string;
+        } | null;
         run_count: number | null;
       } | null;
 
-      if (!rule || rule.action_type !== 'send_email') {
+      if (!rule) {
         result.skipped += 1;
-        await finish(
-          'skipped',
-          rule ? `action ${rule.action_type} not yet supported` : 'rule missing',
-        );
+        await finish('skipped', 'rule missing');
+        continue;
+      }
+
+      if (rule.action_type === 'create_task') {
+        await runCreateTask(supabase, row, rule, now);
+        result.sent += 1;
+        await finish('success');
+        continue;
+      }
+
+      if (rule.action_type !== 'send_email') {
+        result.skipped += 1;
+        await finish('skipped', `action ${rule.action_type} not yet supported`);
         continue;
       }
 

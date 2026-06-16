@@ -1,5 +1,7 @@
 import { DocumentVault } from '@/components/domain/document/document-vault';
+import { TasksEntityPanel } from '@/components/domain/task/tasks-entity-panel';
 import { requireUser } from '@/lib/auth/require-role';
+import { listTaskAssignees } from '@/lib/queries/tasks';
 import {
   getCustomerById,
   getCustomerJobs,
@@ -22,10 +24,11 @@ export default async function CustomerPage({ params }: Props) {
   const customer = await getCustomerById(id);
   if (!customer) notFound();
 
-  const [jobs, ltv, customerDocuments, t] = await Promise.all([
+  const [jobs, ltv, customerDocuments, taskAssignees, t] = await Promise.all([
     getCustomerJobs(id),
     getCustomerLifetimeValuePence(id),
     listDocumentsForCustomer(id),
+    listTaskAssignees(),
     getTranslations('customers'),
   ]);
   const tj = await getTranslations('jobs');
@@ -151,6 +154,13 @@ export default async function CustomerPage({ params }: Props) {
           )}
 
           <DocumentVault parentType="customer" parentId={id} rows={customerDocuments} />
+
+          <TasksEntityPanel
+            relatedType="customer"
+            relatedId={id}
+            customerId={id}
+            assignees={taskAssignees}
+          />
         </section>
       </div>
     </main>

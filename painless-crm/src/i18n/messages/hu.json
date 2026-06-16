@@ -34,6 +34,7 @@
     "calls": "",
     "sla": "",
     "callbacks": "",
+    "tasks": "",
     "profit": "",
     "reports": "",
     "templates": "",
@@ -313,7 +314,8 @@
     "overdue": "",
     "invoices": "{count, plural, =0 {} one {} other {}}",
     "profitReviewPending": "{count, plural, one {} other {}}",
-    "callbacksDueToday": "{count, plural, one {} other {}}"
+    "callbacksDueToday": "{count, plural, one {} other {}}",
+    "tasksDueToday": "{count, plural, one {} other {}}"
   },
   "users": {
     "navLabel": "",
@@ -1018,6 +1020,25 @@
     "progress": "",
     "assignee": "",
     "unassigned": ""
+  },
+  "tasks": {
+    "title": "",
+    "subtitle": "",
+    "empty": "",
+    "scopeMine": "",
+    "scopeAll": "",
+    "showAll": "",
+    "showOpen": "",
+    "add": "",
+    "titlePlaceholder": "",
+    "priority": "",
+    "due": "",
+    "assignees": "",
+    "open": "",
+    "delete": "",
+    "priorityLow": "",
+    "priorityMedium": "",
+    "priorityHigh": ""
   },
   "documents": {
     "panelTitle": "",

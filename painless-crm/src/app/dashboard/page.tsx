@@ -66,6 +66,15 @@ export default async function DashboardPage({ searchParams }: Props) {
         />
       ) : null}
 
+      {snapshot.tasksDueToday > 0 ? (
+        <Banner
+          tone="muted"
+          message={t('tasksDueToday', { count: snapshot.tasksDueToday })}
+          ctaHref="/dashboard/tasks"
+          ctaLabel={t('view')}
+        />
+      ) : null}
+
       <TodaysMovesSection rows={snapshot.todaysMoves} t={t} />
 
       <CashSection cash={snapshot.cash} t={t} />

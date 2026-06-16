@@ -13,7 +13,7 @@ import { isProfitReviewStage } from '@/lib/jobs/profit';
 import { isRequoteEligibleStage } from '@/lib/jobs/requote';
 import { listDocumentsForJob } from '@/lib/queries/documents';
 import { getInvoicesForJob } from '@/lib/queries/invoices';
-import { listTaskAssignees, listTasksForJob } from '@/lib/queries/job-tasks';
+import { listChecklistForJob, listTaskAssignees } from '@/lib/queries/tasks';
 import {
   getJobById,
   getJobStatusHistory,
@@ -72,7 +72,7 @@ export default async function JobPage({ params }: Props) {
     getJobAcceptanceAudits(id),
     listPhoneCallsForJob(id),
     listNotesForJob(id),
-    listTasksForJob(id),
+    listChecklistForJob(id),
     listDocumentsForJob(id),
     listChildJobs(id),
     listAssignmentsForJob(id),

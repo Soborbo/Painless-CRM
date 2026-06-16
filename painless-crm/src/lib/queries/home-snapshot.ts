@@ -61,6 +61,7 @@ export interface HomeSnapshot {
   cash: CashTotals;
   profitReviewPending: number;
   callbacksDueToday: number;
+  tasksDueToday: number;
 }
 
 export function bucketCashTotals(
@@ -182,6 +183,21 @@ async function countCallbacksDueToday(window: DayWindow): Promise<number> {
   return count ?? 0;
 }
 
+// Open unified tasks due inside today's window (Phase 27 / ADR-042). Mirrors
+// the call-back tile: a same-day nudge, not the full backlog.
+async function countTasksDueTodayLocal(window: DayWindow): Promise<number> {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from('tasks')
+    .select('id', { count: 'exact', head: true })
+    .is('deleted_at', null)
+    .in('status', ['open', 'in_progress'])
+    .not('due_at', 'is', null)
+    .gte('due_at', window.startIso)
+    .lt('due_at', window.endIso);
+  return count ?? 0;
+}
+
 async function countProfitReviewPending(): Promise<number> {
   const supabase = await createClient();
   const { count } = await supabase
@@ -205,6 +221,7 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     cash,
     profitReviewPending,
     callbacksDueToday,
+    tasksDueToday,
   ] = await Promise.all([
     countNewLeads(last24),
     countQuotesSent(last24),
@@ -214,6 +231,7 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     fetchCashTotals(now),
     countProfitReviewPending(),
     countCallbacksDueToday(today),
+    countTasksDueTodayLocal(today),
   ]);
   return {
     newLeadsCount,
@@ -224,5 +242,6 @@ export async function getHomeSnapshot(now: Date = new Date()): Promise<HomeSnaps
     cash,
     profitReviewPending,
     callbacksDueToday,
+    tasksDueToday,
   };
 }

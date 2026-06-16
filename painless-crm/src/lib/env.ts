@@ -29,6 +29,14 @@ const ServerEnv = z.object({
   // E.164 at read time. Used both to poll (?number=) and to classify a CDR's
   // direction (a call *to* one of these is inbound).
   TAMAR_NUMBERS: z.string().min(1).optional(),
+  // Compare My Move lead webhook (ADR-043). CMM signs each lead with
+  // HMAC-SHA256(timestamp + token) under a shared secret we agree with them and
+  // puts the digest in the body's `signature` field (NOT our first-party header
+  // scheme — hence the v3 body-signed handler). In CMM V3 the "unique token"
+  // shown in their Lead Manager IS this shared secret (one value), so verifying
+  // the HMAC with it is the complete auth — no separate token check is needed.
+  // Optional: absent => the route returns 503, like CRM_WEBHOOK_SECRET.
+  CMM_WEBHOOK_SECRET: z.string().min(16).optional(),
 });
 
 const ClientEnv = z.object({

@@ -33,6 +33,16 @@ export async function markCallReturned(
   _prev: CallInboxState,
   form: FormData,
 ): Promise<CallInboxState> {
+  try {
+    return await markCallReturnedImpl(form);
+  } catch (err) {
+    // TEMP DIAGNOSTIC: surface the real server error in the UI (prod hides it).
+    const msg = err instanceof Error ? `${err.message} :: ${err.stack ?? ''}` : String(err);
+    return { status: 'error', message: `DIAG: ${msg.slice(0, 400)}` };
+  }
+}
+
+async function markCallReturnedImpl(form: FormData): Promise<CallInboxState> {
   const me = await requireRole(SALES_ROLES);
 
   const parsed = MarkCallReturnedSchema.safeParse({

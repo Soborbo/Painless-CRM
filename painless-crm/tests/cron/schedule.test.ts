@@ -9,18 +9,23 @@ describe('cron schedule dispatch', () => {
     }
   });
 
-  it('only the London-9am digests share a route across two UTC triggers (DST, ADR-040)', () => {
-    // Each route is unique EXCEPT daily-digest and notify-weekly, which fire at
-    // both 08:05 and 09:05 UTC and let the route's London-local guard pick the
-    // single 09:00-London run. Any other duplicate path would be a wiring bug.
+  it('only the London-9am digests share a route across two UTC triggers (DST, ADR-040/042)', () => {
+    // Each route is unique EXCEPT daily-digest, notify-weekly and task-digest,
+    // which fire at both 08:xx and 09:xx UTC and let the route's London-local
+    // guard pick the single 09:00-London run. Any other duplicate path is a bug.
     const byPath = new Map<string, number>();
     for (const job of Object.values(CRON_SCHEDULE)) {
       byPath.set(job.path, (byPath.get(job.path) ?? 0) + 1);
     }
     const dualTrigger = [...byPath.entries()].filter(([, n]) => n > 1).map(([p]) => p).sort();
-    expect(dualTrigger).toEqual(['/api/cron/daily-digest', '/api/cron/notify-weekly']);
+    expect(dualTrigger).toEqual([
+      '/api/cron/daily-digest',
+      '/api/cron/notify-weekly',
+      '/api/cron/task-digest',
+    ]);
     expect(byPath.get('/api/cron/daily-digest')).toBe(2);
     expect(byPath.get('/api/cron/notify-weekly')).toBe(2);
+    expect(byPath.get('/api/cron/task-digest')).toBe(2);
   });
 
   it('routes the paid-review and complaint sweeps', () => {

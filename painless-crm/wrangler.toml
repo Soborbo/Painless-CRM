@@ -26,6 +26,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOi
 TAMAR_API_LOGIN = "1036402"
 TAMAR_NUMBERS = "0117 287 0082"
 
+# Server-only, non-secret tenant id that inbound webhooks (quote/contact/Compare
+# My Move…) belong to — the handler uses THIS over any body-supplied company_id
+# (audit H2). Not a secret (just the Painless tenant UUID), so it lives here in
+# [vars] to survive deploys rather than as a `wrangler secret`. NOT browser-baked
+# (only NEXT_PUBLIC_* are). See ADR-038 / ADR-043.
+WEBHOOK_COMPANY_ID = "00000000-0000-0000-0000-000000000001"
+
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
@@ -52,6 +59,7 @@ preview_id = "2b140e77774f414f912ed9f3cc1c064c"
 # Secrets — set on the Worker (dashboard or `wrangler secret put NAME`), NOT here:
 #   SUPABASE_SERVICE_ROLE_KEY  RESEND_API_KEY  SENTRY_AUTH_TOKEN
 #   CRM_WEBHOOK_SECRET  QUOTE_LINK_SECRET  ANTHROPIC_API_KEY
+#   CMM_WEBHOOK_SECRET (Compare My Move shared HMAC key, ADR-043)
 
 # Cloudflare Cron Triggers. Each expression fires the Worker's scheduled()
 # handler, which signs the matching /api/cron/* payload with CRM_WEBHOOK_SECRET
@@ -82,4 +90,6 @@ crons = [
   "5 9 * * *",     # daily-digest — (the winter/GMT trigger)
   "5 8 * * 1",     # notify-weekly — Monday; guard runs it only at 09:00 London
   "5 9 * * 1",     # notify-weekly — (the winter/GMT trigger)
+  "10 8 * * *",    # task-digest — fires 08:10 + 09:10 UTC; guard runs it only at 09:00 London
+  "10 9 * * *",    # task-digest — (the winter/GMT trigger)
 ]

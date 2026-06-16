@@ -1,7 +1,7 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
-import { createNotification } from '@/lib/notifications/create';
+import { emitEvent } from '@/lib/notifications/emit';
 import {
   CompleteTaskSchema,
   CreateTaskSchema,
@@ -76,14 +76,14 @@ async function notifyAssignees(
   const link = jobId ? `/dashboard/jobs/${jobId}` : '/dashboard/tasks';
   for (const recipientUserId of new Set(recipients)) {
     if (recipientUserId === actorId) continue;
-    await createNotification({
+    await emitEvent({
       companyId,
-      recipientUserId,
-      type: 'task.assigned',
+      eventKey: 'task.assigned',
       title,
       linkUrl: link,
       relatedEntityType: 'task',
       relatedEntityId: taskId,
+      recipientUserId,
     });
   }
 }

@@ -20,8 +20,10 @@ import { prepareCronDispatch } from './src/worker-cron/dispatch';
 interface CronEnv {
   CRM_WEBHOOK_SECRET?: string;
   NEXT_PUBLIC_APP_URL?: string;
-  NEXT_PUBLIC_SUPABASE_URL?: string;
-  SUPABASE_SERVICE_ROLE_KEY?: string;
+}
+
+interface OpenNextWorker {
+  fetch: (req: Request, env: unknown, ctx: ExecutionContext) => Response | Promise<Response>;
 }
 
 interface ScheduledEvent {
@@ -35,23 +37,6 @@ interface ExecutionContext {
 export default {
   ...openNextWorker,
   async scheduled(event: ScheduledEvent, env: CronEnv, ctx: ExecutionContext): Promise<void> {
-    // TEMP DIAGNOSTIC: prove scheduled() fires + capture the exact cron string
-    // Cloudflare passes (vs CRON_SCHEDULE keys). Direct Supabase REST insert so
-    // it does not depend on the self-fetch / route. Remove after diagnosis.
-    if (env.NEXT_PUBLIC_SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY) {
-      ctx.waitUntil(
-        fetch(`${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/tamar_poll_diag`, {
-          method: 'POST',
-          headers: {
-            apikey: env.SUPABASE_SERVICE_ROLE_KEY,
-            Authorization: `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
-            'Content-Type': 'application/json',
-            Prefer: 'return=minimal',
-          },
-          body: JSON.stringify({ result: { marker: 'scheduled-fired', cron: event.cron } }),
-        }).catch(() => {}),
-      );
-    }
     const dispatch = await prepareCronDispatch(event.cron, env, Date.now());
     if (dispatch.kind === 'skip') {
       if (dispatch.reason === 'no_secret') {
@@ -59,19 +44,24 @@ export default {
       }
       return;
     }
+    // Invoke the cron route IN-PROCESS via the OpenNext fetch handler. A plain
+    // fetch() to our own public hostname does NOT loop back to this Worker
+    // (Cloudflare self-fetch), so the route never ran and every cron was a silent
+    // no-op. Calling the handler directly runs the Next.js route in this isolate
+    // (OpenNext populates process.env from env); the HMAC headers still auth it.
+    const req = new Request(dispatch.url, {
+      method: 'POST',
+      headers: {
+        'x-cron-signature': dispatch.signature,
+        'x-cron-timestamp': dispatch.timestamp,
+      },
+    });
     ctx.waitUntil(
-      fetch(dispatch.url, {
-        method: 'POST',
-        headers: {
-          'x-cron-signature': dispatch.signature,
-          'x-cron-timestamp': dispatch.timestamp,
-        },
-        body: '',
-      })
+      Promise.resolve((openNextWorker as OpenNextWorker).fetch(req, env, ctx))
         .then((res) => {
           if (!res.ok) console.error('[cron] %s -> %d', dispatch.url, res.status);
         })
-        .catch((err) => console.error('[cron] %s failed: %o', dispatch.url, err)),
+        .catch((err: unknown) => console.error('[cron] %s failed: %o', dispatch.url, err)),
     );
   },
 };

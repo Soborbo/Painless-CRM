@@ -93,3 +93,9 @@ crons = [
   "10 8 * * *",    # task-digest — fires 08:10 + 09:10 UTC; guard runs it only at 09:00 London
   "10 9 * * *",    # task-digest — (the winter/GMT trigger)
 ]
+
+# Workers Logs — lets us inspect the cron/scheduled handler + Tamar poll
+# output (console.* in worker.ts / runTamarPoll) in the dashboard + via API.
+[observability.logs]
+enabled = true
+invocation_logs = true

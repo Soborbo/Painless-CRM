@@ -52,6 +52,9 @@ export async function listCdrs(params: ListCdrsParams): Promise<ListCdrsResult> 
       error: err instanceof Error ? err.message.slice(0, 200) : 'fetch_error',
     };
   }
+  // Diagnostic (temporary): the exact URL queried (shows the number format sent)
+  // + the HTTP status, so we can tell auth (401) from an empty result.
+  console.log('[tamar] GET', url.toString(), '->', res.status);
   if (!res.ok) {
     return { ok: false, reason: 'request_failed', error: `http_${res.status}` };
   }

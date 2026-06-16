@@ -33,6 +33,9 @@ export async function POST(req: Request): Promise<Response> {
 
   try {
     const result = await runTamarPoll(new Date());
+    // Diagnostic (temporary): surface the poll outcome in Workers Logs so we can
+    // see reason/fetched/errors without the HMAC-gated response body.
+    console.log('[tamar-poll]', JSON.stringify(result));
     return NextResponse.json({ ok: true, result });
   } catch (err) {
     return NextResponse.json(

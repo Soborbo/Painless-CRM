@@ -1022,7 +1022,9 @@
   },
   "tasks": {
     "title": "",
+    "panelTitle": "",
     "subtitle": "",
+    "newTaskCommand": "",
     "empty": "",
     "scopeMine": "",
     "scopeAll": "",

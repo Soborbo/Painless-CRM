@@ -7,7 +7,7 @@ import { RECENT_SEARCHES_KEY, addRecentSearch, parseRecentSearches } from '@/lib
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import { RecentSearches, SearchResults } from './global-search-results';
+import { SearchResults } from './global-search-results';
 
 const DEBOUNCE_MS = 180;
 
@@ -15,6 +15,7 @@ const EMPTY: GlobalSearchResults = { customers: [], jobs: [], quotes: [], query:
 
 export function GlobalSearch() {
   const t = useTranslations('search');
+  const tt = useTranslations('tasks');
   const router = useRouter();
   const [q, setQ] = useState('');
   const [results, setResults] = useState<GlobalSearchResults>(EMPTY);
@@ -109,9 +110,10 @@ export function GlobalSearch() {
 
   const hasQuery = q.trim().length >= 2;
   // With a live query we show results; with the box focused but empty we
-  // surface recent searches (if any) so a click re-runs them.
+  // surface a command-palette panel: a "Create a task" quick action plus any
+  // recent searches.
   const showResults = open && hasQuery;
-  const showRecent = open && !hasQuery && recent.length > 0;
+  const showCommands = open && !hasQuery;
 
   function onSelectHit() {
     rememberSearch(results.query || q);
@@ -159,15 +161,52 @@ export function GlobalSearch() {
       <kbd className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded border bg-[var(--color-muted)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--color-muted-foreground)]">
         {t('shortcutHint')}
       </kbd>
-      {showRecent ? (
-        <RecentSearches
-          recent={recent}
-          onPick={(term) => {
-            setQ(term);
-            setOpen(true);
-          }}
-          onClear={clearRecent}
-        />
+      {showCommands ? (
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-[60vh] overflow-y-auto rounded-md border bg-white shadow-lg">
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              router.push('/dashboard/tasks');
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-[var(--color-muted)]"
+          >
+            <span className="text-base leading-none text-[var(--color-primary)]">＋</span>
+            {tt('newTaskCommand')}
+          </button>
+          {recent.length > 0 ? (
+            <div className="border-t">
+              <div className="flex items-center justify-between bg-[var(--color-muted)] px-3 py-1">
+                <p className="text-[10px] uppercase tracking-wide text-[var(--color-muted-foreground)]">
+                  {t('recent')}
+                </p>
+                <button
+                  type="button"
+                  onClick={clearRecent}
+                  className="text-[10px] uppercase tracking-wide text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)]"
+                >
+                  {t('clearRecent')}
+                </button>
+              </div>
+              <ul className="divide-y">
+                {recent.map((term) => (
+                  <li key={term}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQ(term);
+                        setOpen(true);
+                      }}
+                      className="flex w-full px-3 py-2 text-left text-sm hover:bg-[var(--color-muted)]"
+                    >
+                      {term}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+        </div>
       ) : null}
       {showResults ? (
         <SearchResults

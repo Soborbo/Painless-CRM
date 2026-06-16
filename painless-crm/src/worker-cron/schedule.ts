@@ -40,6 +40,10 @@ export const CRON_SCHEDULE: Record<string, CronJob> = {
   '5 9 * * *': { path: '/api/cron/daily-digest', payload: 'daily-digest' },
   '5 8 * * 1': { path: '/api/cron/notify-weekly', payload: 'notify-weekly' },
   '5 9 * * 1': { path: '/api/cron/notify-weekly', payload: 'notify-weekly' },
+  // Task due/overdue digest (ADR-042). Same 08:xx+09:xx double-fire + London-9am
+  // guard as daily-digest; :10 avoids the :05 daily-digest slot.
+  '10 8 * * *': { path: '/api/cron/task-digest', payload: 'task-digest' },
+  '10 9 * * *': { path: '/api/cron/task-digest', payload: 'task-digest' },
 };
 
 export function resolveCronJob(cron: string): CronJob | null {

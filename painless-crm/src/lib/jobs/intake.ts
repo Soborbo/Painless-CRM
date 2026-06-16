@@ -99,6 +99,15 @@ export interface CreateLeadInput {
   notes?: string | null;
   quoteTotalPence?: number | null;
   reason: string;
+  // Optional rich intake fields (quote webhook). All additive — other callers
+  // (contact/callback) simply omit them.
+  moveDate?: string | null;
+  serviceType?: 'removal' | 'waste_clearance' | 'storage' | null;
+  estimatedCubicFt?: number | null;
+  estimatedDistanceMiles?: number | null;
+  estimatedHours?: number | null;
+  /** Lossless map of every entered item with no dedicated column (jobs.intake_details). */
+  intakeDetails?: Record<string, unknown> | null;
 }
 
 export async function createLeadJob(input: CreateLeadInput): Promise<string> {
@@ -119,6 +128,16 @@ export async function createLeadJob(input: CreateLeadInput): Promise<string> {
       first_response_due_at: firstResponseDueAt,
       quote_total_pence: input.quoteTotalPence ?? null,
       notes: input.notes ?? null,
+      ...(input.moveDate ? { move_date: input.moveDate } : {}),
+      ...(input.serviceType ? { service_type: input.serviceType } : {}),
+      ...(input.estimatedCubicFt != null ? { estimated_cubic_ft: input.estimatedCubicFt } : {}),
+      ...(input.estimatedDistanceMiles != null
+        ? { estimated_distance_miles: input.estimatedDistanceMiles }
+        : {}),
+      ...(input.estimatedHours != null ? { estimated_hours: input.estimatedHours } : {}),
+      ...(input.intakeDetails && Object.keys(input.intakeDetails).length > 0
+        ? { intake_details: input.intakeDetails }
+        : {}),
     })
     .select('id')
     .single();
@@ -133,4 +152,94 @@ export async function createLeadJob(input: CreateLeadInput): Promise<string> {
     reason: input.reason,
   });
   return data.id as string;
+}
+
+export interface IntakeAddress {
+  formatted?: string;
+  line1?: string;
+  line2?: string | null;
+  city?: string;
+  postcode: string;
+  floor?: number;
+  has_lift?: boolean;
+  property_type?: string;
+  access_notes?: string;
+}
+
+/**
+ * Find-or-create an `addresses` row (respecting the company+dedup_key unique
+ * index) and return its id. line1/city are required-not-null on the table, so
+ * the calculator's single `formatted` string is used as line1 when no
+ * structured line1 is supplied.
+ */
+async function findOrCreateAddress(
+  companyId: string,
+  addr: IntakeAddress,
+): Promise<string | null> {
+  const supabase = createAdminClient();
+  const line1 = (addr.line1 || addr.formatted || addr.postcode).slice(0, 160);
+  const city = (addr.city || '').slice(0, 80);
+  const insert = {
+    company_id: companyId,
+    line1,
+    line2: addr.line2 ?? null,
+    city,
+    postcode: addr.postcode,
+  };
+  const { data, error } = await supabase
+    .from('addresses')
+    .insert(insert)
+    .select('id')
+    .single();
+  if (!error && data) return data.id as string;
+
+  // Unique-violation on (company_id, dedup_key) → fetch the existing row.
+  if (error?.code === '23505') {
+    const dedupLine1 = line1.replace(/\s+/g, '').toLowerCase();
+    const dedupPost = addr.postcode.replace(/\s+/g, '').toLowerCase();
+    const { data: existing } = await supabase
+      .from('addresses')
+      .select('id')
+      .eq('company_id', companyId)
+      .eq('dedup_key', `${dedupLine1}|${dedupPost}`)
+      .is('deleted_at', null)
+      .maybeSingle();
+    if (existing) return existing.id as string;
+  }
+  console.warn('address create failed', error?.message);
+  return null;
+}
+
+/**
+ * Attach a `from`/`to` address pair to a job: creates/links the addresses and
+ * stores per-leg access metadata (floor, lift, property type, notes) on
+ * job_addresses. Best-effort — a failure here never rolls back the lead.
+ */
+export async function attachJobAddresses(args: {
+  companyId: string;
+  jobId: string;
+  from?: IntakeAddress;
+  to?: IntakeAddress;
+}): Promise<void> {
+  const supabase = createAdminClient();
+  const legs: Array<{ role: 'from' | 'to'; addr: IntakeAddress }> = [];
+  if (args.from) legs.push({ role: 'from', addr: args.from });
+  if (args.to) legs.push({ role: 'to', addr: args.to });
+
+  for (const [sequence, { role, addr }] of legs.entries()) {
+    const addressId = await findOrCreateAddress(args.companyId, addr);
+    if (!addressId) continue;
+    const { error } = await supabase.from('job_addresses').insert({
+      company_id: args.companyId,
+      job_id: args.jobId,
+      address_id: addressId,
+      role,
+      sequence,
+      property_type: addr.property_type ?? null,
+      floor: addr.floor ?? null,
+      has_lift: addr.has_lift ?? null,
+      access_notes: addr.access_notes ?? null,
+    });
+    if (error) console.warn('job_address link failed', role, error.message);
+  }
 }

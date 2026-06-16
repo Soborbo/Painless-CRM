@@ -17,6 +17,18 @@ const ServerEnv = z.object({
   WEBHOOK_COMPANY_ID: z.string().uuid().optional(),
   QUOTE_LINK_SECRET: z.string().min(32).optional(),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
+  // Tamar Call Stats (CDR) API — ADR-041. The cron polls Tamar for call records
+  // on our hosted number(s) and ingests them as inbound calls. Tamar uses HTTP
+  // Basic auth: base64(login:token), so it needs BOTH the account code and the
+  // API token. All optional: missing creds => the poll degrades to a no-op (like
+  // RESEND_API_KEY). Non-OAuth API creds live in env per ADR-009 rule 16.
+  TAMAR_API_LOGIN: z.string().min(1).optional(),
+  TAMAR_API_TOKEN: z.string().min(1).optional(),
+  TAMAR_API_BASE: z.string().url().optional(),
+  // Our Tamar-hosted number(s), comma-separated, any format — normalised to
+  // E.164 at read time. Used both to poll (?number=) and to classify a CDR's
+  // direction (a call *to* one of these is inbound).
+  TAMAR_NUMBERS: z.string().min(1).optional(),
 });
 
 const ClientEnv = z.object({

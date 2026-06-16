@@ -70,3 +70,18 @@ export const CallbackCompletionSchema = z.object({
 });
 
 export type CallbackCompletionInput = z.infer<typeof CallbackCompletionSchema>;
+
+// Call inbox (ADR-041): "I called this person back". Stamps returned_by/at on
+// the inbound call from the authenticated user; the optional note is written to
+// the linked job so it lands on the job sheet + timeline.
+export const MarkCallReturnedSchema = z.object({
+  phone_call_id: z.string().uuid(),
+  note: optionalTrimmed(2000),
+});
+export type MarkCallReturnedInput = z.infer<typeof MarkCallReturnedSchema>;
+
+// Call inbox: create a lead job from an unmatched inbound call.
+export const CreateJobFromCallSchema = z.object({
+  phone_call_id: z.string().uuid(),
+});
+export type CreateJobFromCallInput = z.infer<typeof CreateJobFromCallSchema>;

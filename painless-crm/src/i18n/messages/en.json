@@ -31,6 +31,7 @@
     "jobs": "Jobs",
     "quotes": "Quotes",
     "messages": "Messages",
+    "calls": "Calls",
     "sla": "SLA",
     "callbacks": "Call-backs",
     "profit": "Profit",
@@ -1095,6 +1096,28 @@
       "job": "Job",
       "action": "Next action",
       "outcome": "Last outcome"
+    }
+  },
+  "callsInbox": {
+    "title": "Calls",
+    "subtitle": "Inbound calls from the main line. Open the matched job, create one if there isn't, and mark who called back with a note.",
+    "empty": "No inbound calls yet.",
+    "unknownCaller": "Withheld",
+    "noMatch": "No match",
+    "openJob": "Open",
+    "repeat": "×{count}",
+    "returnedBy": "Called back by {name}",
+    "markReturned": "Mark called back",
+    "createJob": "Create job",
+    "notePlaceholder": "What happened on the call",
+    "retry": "Retry",
+    "columns": {
+      "when": "When",
+      "caller": "Caller",
+      "customer": "Customer",
+      "job": "Job",
+      "returned": "Called back",
+      "actions": "Actions"
     }
   },
   "smoke": {

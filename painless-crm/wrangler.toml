@@ -64,6 +64,7 @@ crons = [
   "15 * * * *",    # review-requests — hourly (send +24h after paid, follow up +7d/+14d)
   "* * * * *",     # automation-queue — every minute, runs due automation actions
   "*/30 * * * *",  # stale-clock-in — every 30 min
+  "2-59/5 * * * *", # tamar-poll — every 5 min (offset 2), polls Tamar CDRs (ADR-041)
   "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
   # Notification email sweeps (ADR-040). Keep in lockstep with src/worker-cron/schedule.ts.
   "*/5 * * * *",   # notify-immediate — emails "immediate"-frequency notifications + janitor

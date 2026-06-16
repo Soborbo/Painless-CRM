@@ -43,6 +43,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           'admin',
           'super_admin',
         ]),
+        ...link('/dashboard/calls', t('calls')),
         ...link('/dashboard/sla', t('sla')),
         ...link('/dashboard/callbacks', t('callbacks')),
       ],

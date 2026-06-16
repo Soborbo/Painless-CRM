@@ -16,6 +16,12 @@ routes = [
 NEXT_PUBLIC_APP_URL = "https://crm.painlessremovals.com"
 NEXT_PUBLIC_SUPABASE_URL = "https://hlstzddzrsxtjjvlltzh.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhsc3R6ZGR6cnN4dGpqdmxsdHpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNjkzMzUsImV4cCI6MjA5NTg0NTMzNX0.hO8D5ItHtRLmjdKIm9LQJY4O_bKyjh22sUoGiREKn1A"
+# Tamar Call Stats (ADR-041). Non-secret config kept here so `wrangler deploy`
+# (which resets [vars]) never drops them. The API token stays a Secret in the
+# dashboard. TAMAR_API_LOGIN = Tamar account code (Basic-auth username half);
+# TAMAR_NUMBERS = our hosted line(s), any format (normalised to E.164 in code).
+TAMAR_API_LOGIN = "1036402"
+TAMAR_NUMBERS = "0117 287 0082"
 
 [assets]
 directory = ".open-next/assets"

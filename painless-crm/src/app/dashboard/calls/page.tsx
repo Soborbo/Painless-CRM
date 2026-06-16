@@ -1,4 +1,4 @@
-import { CallRowActions } from '@/components/domain/call/call-row-actions';
+import { CallDetailModal } from '@/components/domain/call/call-detail-modal';
 import { CallsAutoRefresh } from '@/components/domain/call/calls-auto-refresh';
 import { requireUser } from '@/lib/auth/require-role';
 import { type CallInboxRow, listInboundCalls } from '@/lib/queries/calls-inbox';
@@ -103,7 +103,19 @@ function CallRow({
         )}
       </td>
       <td className="px-4 py-2 text-right">
-        <CallRowActions callId={row.id} hasJob={Boolean(row.job_id)} returned={Boolean(row.returned_at)} />
+        <CallDetailModal
+          callId={row.id}
+          caller={row.caller_number}
+          occurredAt={row.occurred_at}
+          durationSeconds={row.duration_seconds}
+          repeatCount={row.repeatCount}
+          customerName={row.customer ? customerDisplayName(row.customer) : null}
+          customerId={row.customer_id}
+          jobId={row.job_id}
+          jobNumber={row.job_number}
+          returnedAt={row.returned_at}
+          returnedByName={row.returned_by?.full_name ?? null}
+        />
       </td>
     </tr>
   );

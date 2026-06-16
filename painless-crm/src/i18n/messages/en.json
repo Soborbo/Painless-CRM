@@ -1134,6 +1134,10 @@
     "markReturned": "Mark called back",
     "createJob": "Create job",
     "notePlaceholder": "What happened on the call",
+    "whatHappened": "What happened on the call",
+    "details": "Details",
+    "close": "Close",
+    "duration": "Duration",
     "retry": "Retry",
     "columns": {
       "when": "When",

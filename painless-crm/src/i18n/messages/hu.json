@@ -1134,6 +1134,10 @@
     "markReturned": "",
     "createJob": "",
     "notePlaceholder": "",
+    "whatHappened": "",
+    "details": "",
+    "close": "",
+    "duration": "",
     "retry": "",
     "columns": {
       "when": "",

@@ -1,30 +1,21 @@
 // Custom Worker entry that adds a Cloudflare Cron `scheduled` handler on top of
-// the OpenNext-generated fetch worker. It wraps the generated default export and
-// re-exports the same Durable Object classes the generated worker does (required
-// so wrangler can find them).
+// the OpenNext-generated fetch worker. It wraps the generated default export
+// (`fetch`) and adds `scheduled`, which dispatches each firing cron expression
+// to its HMAC-guarded /api/cron/* route (see worker-cron/dispatch.ts).
 //
-// NOT YET WIRED: this becomes the Worker entry only once the OpenNext Cloudflare
-// pipeline is initialized. To activate cron firing:
-//   1. `pnpm exec opennextjs-cloudflare migrate`  → creates open-next.config.ts
-//      (+ patches next.config.ts). NOTE: OpenNext build is unsupported on native
-//      Windows — run the build/deploy from WSL or CI.
-//   2. In wrangler.toml set `main = "worker.ts"` (currently ".open-next/worker.js").
-//   3. Confirm the three DO re-export paths below match the generated
-//      .open-next/worker.js (they mirror the OpenNext worker template).
-//   4. Set the secrets (CRM_WEBHOOK_SECRET, etc.) and verify on `pnpm preview`.
-// Until then the [triggers] in wrangler.toml fire scheduled() on the generated
-// worker, which has no scheduled handler — a harmless no-op.
+// This IS the Worker entry: wrangler.toml `main = "worker.ts"`. The OpenNext
+// build (`opennextjs-cloudflare build`, run in CI — unsupported on native
+// Windows) produces ./.open-next/worker.js, which esbuild resolves at deploy.
+//
+// No Durable Object re-exports: open-next.config.ts is defineCloudflareConfig({})
+// (in-worker caching, no DO queue/cache) and wrangler.toml declares no DO
+// bindings, so the empty-config build emits no durable-objects to re-export. Add
+// them back here (matching the generated worker) only if a future config enables
+// the OpenNext DO cache/queue together with their wrangler bindings.
 
 // @ts-expect-error — resolved by wrangler/esbuild at build time.
 import openNextWorker from './.open-next/worker.js';
 import { prepareCronDispatch } from './src/worker-cron/dispatch';
-
-// @ts-expect-error — resolved by wrangler/esbuild at build time.
-export { DOQueueHandler } from './.open-next/.build/durable-objects/queue.js';
-// @ts-expect-error — resolved by wrangler/esbuild at build time.
-export { DOShardedTagCache } from './.open-next/.build/durable-objects/sharded-tag-cache.js';
-// @ts-expect-error — resolved by wrangler/esbuild at build time.
-export { BucketCachePurge } from './.open-next/.build/durable-objects/bucket-cache-purge.js';
 
 interface CronEnv {
   CRM_WEBHOOK_SECRET?: string;

@@ -1,5 +1,8 @@
 name = "painlesscrm"
-main = ".open-next/worker.js"
+# worker.ts wraps the OpenNext fetch worker (./.open-next/worker.js) and adds the
+# Cron `scheduled` handler that dispatches /api/cron/* (ADR-041 / Phase 17). The
+# OpenNext build still produces .open-next/worker.js, which worker.ts imports.
+main = "worker.ts"
 compatibility_date = "2026-04-01"
 compatibility_flags = ["nodejs_compat"]
 

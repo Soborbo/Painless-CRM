@@ -1,4 +1,10 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import type { ColumnDef } from '@tanstack/react-table';
+import { useTranslations } from 'next-intl';
+import { useMemo } from 'react';
+
+import { DataTable } from '@/components/ui/data-table';
 
 type UserRow = {
   id: string;
@@ -9,48 +15,47 @@ type UserRow = {
   created_at: string;
 };
 
-export async function UsersList({
-  rows,
-  currentUserId,
-}: {
-  rows: UserRow[];
-  currentUserId: string;
-}) {
-  const t = await getTranslations('users');
+export function UsersList({ rows, currentUserId }: { rows: UserRow[]; currentUserId: string }) {
+  const t = useTranslations('users');
+  const tSearch = useTranslations('search');
 
-  if (rows.length === 0) {
-    return <p className="text-sm text-[var(--color-muted-foreground)]">{t('noTeamMembers')}</p>;
-  }
+  const columns = useMemo<ColumnDef<UserRow>[]>(
+    () => [
+      {
+        accessorKey: 'full_name',
+        header: t('fullName'),
+        cell: ({ row }) => (
+          <>
+            {row.original.full_name}
+            {row.original.id === currentUserId ? (
+              <span className="ml-1 text-xs text-[var(--color-muted-foreground)]">
+                ({t('you')})
+              </span>
+            ) : null}
+          </>
+        ),
+      },
+      { accessorKey: 'email', header: t('inviteEmail') },
+      {
+        accessorKey: 'role',
+        header: t('inviteRole'),
+        cell: ({ getValue }) => t(`roles.${String(getValue())}` as never),
+      },
+      {
+        accessorKey: 'active',
+        header: t('status'),
+        cell: ({ getValue }) => (getValue() ? t('statusActive') : t('statusInactive')),
+      },
+    ],
+    [t, currentUserId],
+  );
 
   return (
-    <div className="overflow-x-auto rounded-md border">
-      <table className="w-full text-left text-sm">
-        <thead className="bg-[var(--color-muted)]">
-          <tr>
-            <th className="px-3 py-2 font-medium">{t('fullName')}</th>
-            <th className="px-3 py-2 font-medium">{t('inviteEmail')}</th>
-            <th className="px-3 py-2 font-medium">{t('inviteRole')}</th>
-            <th className="px-3 py-2 font-medium">{t('status')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className="border-t">
-              <td className="px-3 py-2">
-                {row.full_name}
-                {row.id === currentUserId ? (
-                  <span className="ml-1 text-xs text-[var(--color-muted-foreground)]">
-                    ({t('you')})
-                  </span>
-                ) : null}
-              </td>
-              <td className="px-3 py-2">{row.email}</td>
-              <td className="px-3 py-2">{t(`roles.${row.role}` as never)}</td>
-              <td className="px-3 py-2">{row.active ? t('statusActive') : t('statusInactive')}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <DataTable
+      columns={columns}
+      data={rows}
+      filterPlaceholder={tSearch('label')}
+      emptyMessage={t('noTeamMembers')}
+    />
   );
 }

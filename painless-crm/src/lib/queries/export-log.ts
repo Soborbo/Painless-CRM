@@ -1,4 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
+// Re-exported so existing importers keep working; the implementation lives in a
+// server-free module so client components can use it. See export-log-format.ts.
+export { summarizeFilters } from './export-log-format';
 
 // Export-audit read surface (Phase 06b §8 follow-up / ADR-021, SECURITY_MODEL
 // T4). The `data_export_log` table records every bulk export — who pulled
@@ -35,15 +38,6 @@ function embedOne<T>(raw: unknown): T | null {
 // Compact, deterministic one-line summary of the applied filters for display
 // (e.g. "from: 2026-01-01 · search: smith"). Skips empty values and sorts keys
 // so the same filter set always renders identically. Pure — unit-tested.
-export function summarizeFilters(filters: unknown): string {
-  if (!filters || typeof filters !== 'object' || Array.isArray(filters)) return '';
-  return Object.entries(filters as Record<string, unknown>)
-    .filter(([, value]) => value !== null && value !== undefined && value !== '')
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}: ${String(value)}`)
-    .join(' · ');
-}
-
 // Pure flatten — exported so the PostgREST embed-shape normalisation (actor
 // arriving as an object or a single-element array) is unit-testable without a
 // live Supabase connection. inet comes back as a string; coerce defensively.

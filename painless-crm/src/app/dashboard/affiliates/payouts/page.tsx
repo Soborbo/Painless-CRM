@@ -1,9 +1,10 @@
-import { CommissionActions } from '@/components/domain/affiliate/commission-actions';
 import { requireRole } from '@/lib/auth/require-role';
 import { listCommissions } from '@/lib/queries/commissions';
-import { formatDate, formatPence } from '@/lib/utils/format';
+import { formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+
+import { PayoutsTable } from './payouts-table';
 
 const BILLING_ROLES = ['accounts', 'manager', 'admin', 'super_admin'] as const;
 const STATUSES = ['all', 'pending', 'approved', 'paid', 'cancelled'] as const;
@@ -65,49 +66,7 @@ export default async function PayoutsPage({ searchParams }: Props) {
         ))}
       </nav>
 
-      {rows.length === 0 ? (
-        <p className="rounded-md border bg-[var(--color-muted)]/40 px-4 py-10 text-center text-sm text-[var(--color-muted-foreground)]">
-          {t('empty')}
-        </p>
-      ) : (
-        <div className="overflow-x-auto rounded-md border">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-[var(--color-muted)]">
-              <tr>
-                <th className="px-3 py-2 font-medium">{t('cols.affiliate')}</th>
-                <th className="px-3 py-2 font-medium">{t('cols.job')}</th>
-                <th className="px-3 py-2 text-right font-medium">{t('cols.amount')}</th>
-                <th className="px-3 py-2 font-medium">{t('cols.status')}</th>
-                <th className="px-3 py-2 font-medium">{t('cols.created')}</th>
-                <th className="px-3 py-2 text-right font-medium">{t('cols.actions')}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((c) => (
-                <tr key={c.id} className="border-t hover:bg-[var(--color-muted)]/40">
-                  <td className="px-3 py-2 font-medium">
-                    <Link
-                      href={`/dashboard/affiliates/${c.affiliate_id}`}
-                      className="hover:underline"
-                    >
-                      {c.affiliate_name ?? '—'}
-                    </Link>
-                  </td>
-                  <td className="px-3 py-2">{c.job_number != null ? `#${c.job_number}` : '—'}</td>
-                  <td className="px-3 py-2 text-right tabular-nums">
-                    {formatPence(c.amount_pence)}
-                  </td>
-                  <td className="px-3 py-2">{t(`statuses.${c.status}`)}</td>
-                  <td className="px-3 py-2">{formatDate(c.created_at)}</td>
-                  <td className="px-3 py-2">
-                    <CommissionActions id={c.id} status={c.status} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <PayoutsTable rows={rows} />
     </main>
   );
 }

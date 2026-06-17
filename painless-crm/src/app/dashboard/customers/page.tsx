@@ -12,6 +12,8 @@ type Props = {
     created_from?: string;
     created_to?: string;
     page?: string;
+    sort?: string;
+    dir?: string;
   }>;
 };
 
@@ -23,6 +25,8 @@ export default async function CustomersPage({ searchParams }: Props) {
     created_from: params.created_from,
     created_to: params.created_to,
     page: params.page,
+    sort: params.sort,
+    dir: params.dir,
   });
 
   const result = await listCustomers(filters);
@@ -68,7 +72,17 @@ export default async function CustomersPage({ searchParams }: Props) {
         initialCreatedTo={filters.created_to ?? ''}
       />
 
-      <CustomerTable rows={result.rows} />
+      <CustomerTable
+        rows={result.rows}
+        sort={filters.sort}
+        dir={filters.dir}
+        params={{
+          q: filters.q,
+          type: filters.type,
+          created_from: filters.created_from ?? undefined,
+          created_to: filters.created_to ?? undefined,
+        }}
+      />
 
       <Pagination
         page={filters.page}
@@ -77,6 +91,8 @@ export default async function CustomersPage({ searchParams }: Props) {
         type={filters.type}
         createdFrom={filters.created_from}
         createdTo={filters.created_to}
+        sort={filters.sort}
+        dir={filters.dir}
       />
     </main>
   );
@@ -89,6 +105,8 @@ function Pagination({
   type,
   createdFrom,
   createdTo,
+  sort,
+  dir,
 }: {
   page: number;
   lastPage: number;
@@ -96,6 +114,8 @@ function Pagination({
   type?: string;
   createdFrom?: string;
   createdTo?: string;
+  sort?: string;
+  dir?: string;
 }) {
   if (lastPage <= 1) return null;
   const params = new URLSearchParams();
@@ -103,6 +123,8 @@ function Pagination({
   if (type) params.set('type', type);
   if (createdFrom) params.set('created_from', createdFrom);
   if (createdTo) params.set('created_to', createdTo);
+  if (sort) params.set('sort', sort);
+  if (dir) params.set('dir', dir);
   const link = (n: number) => {
     const p = new URLSearchParams(params);
     p.set('page', String(n));

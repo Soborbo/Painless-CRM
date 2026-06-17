@@ -45,10 +45,22 @@ export const VehicleVersionSchema = z.coerce.number().int().min(1);
 
 export const VEHICLE_PAGE_SIZE = 50;
 
+// Allow-list of sortable columns (real DB columns — prevents order-by injection).
+export const VEHICLE_SORT_COLUMNS = [
+  'registration',
+  'type',
+  'capacity_cubic_ft',
+  'monthly_cost_pence',
+  'created_at',
+] as const;
+export type VehicleSortColumn = (typeof VEHICLE_SORT_COLUMNS)[number];
+
 export const VehicleListFiltersSchema = z.object({
   type: z.enum(VEHICLE_TYPES).optional(),
   active: z.enum(['all', 'active', 'inactive']).default('active'),
   page: z.coerce.number().int().min(1).default(1),
+  sort: z.enum(VEHICLE_SORT_COLUMNS).default('registration'),
+  dir: z.enum(['asc', 'desc']).default('asc'),
 });
 
 export type VehicleListFilters = z.infer<typeof VehicleListFiltersSchema>;

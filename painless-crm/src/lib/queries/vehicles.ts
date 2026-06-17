@@ -42,7 +42,9 @@ export async function listVehicles(filters: VehicleListFilters): Promise<Vehicle
     .from('vehicles')
     .select(COLUMNS, { count: 'exact' })
     .is('deleted_at', null)
-    .order('registration', { ascending: true })
+    .order(filters.sort, { ascending: filters.dir === 'asc', nullsFirst: false })
+    // Stable tie-breaker so paging is deterministic when sort values collide.
+    .order('id', { ascending: true })
     .range(from, to);
 
   if (filters.type) query = query.eq('type', filters.type);

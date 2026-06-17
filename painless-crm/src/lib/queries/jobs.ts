@@ -93,7 +93,9 @@ export async function listJobs(filters: JobListFilters): Promise<JobListResult> 
     .from('jobs')
     .select(LIST_COLUMNS, { count: 'exact' })
     .is('deleted_at', null)
-    .order('created_at', { ascending: false })
+    .order(filters.sort, { ascending: filters.dir === 'asc', nullsFirst: false })
+    // Stable tie-breaker so paging is deterministic when sort values collide.
+    .order('id', { ascending: true })
     .range(from, to);
 
   if (filters.stage) query = query.eq('stage', filters.stage);
@@ -115,14 +117,14 @@ export async function listJobs(filters: JobListFilters): Promise<JobListResult> 
   };
 }
 
-export type KanbanFilters = Omit<JobListFilters, 'page' | 'stage'>;
+export type KanbanFilters = Omit<JobListFilters, 'page' | 'stage' | 'sort' | 'dir'>;
 
 export const KANBAN_PER_STAGE_LIMIT = 200;
 
 export const JOBS_EXPORT_MAX = 10_000;
 
 export async function listJobsForExport(
-  filters: Omit<JobListFilters, 'page'>,
+  filters: Omit<JobListFilters, 'page' | 'sort' | 'dir'>,
 ): Promise<JobListRow[]> {
   const supabase = await createClient();
   let query = supabase

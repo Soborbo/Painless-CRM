@@ -43,11 +43,14 @@ export async function listCustomers(filters: CustomerListFilters): Promise<Custo
   const from = (page - 1) * CUSTOMER_PAGE_SIZE;
   const to = from + CUSTOMER_PAGE_SIZE - 1;
 
+  const ascending = filters.dir === 'asc';
   let query = supabase
     .from('customers')
     .select(LIST_COLUMNS, { count: 'exact' })
     .is('deleted_at', null)
-    .order('created_at', { ascending: false })
+    .order(filters.sort, { ascending, nullsFirst: false })
+    // Stable tie-breaker so paging is deterministic when sort values collide.
+    .order('id', { ascending: true })
     .range(from, to);
 
   if (filters.type) query = query.eq('customer_type', filters.type);
@@ -94,7 +97,7 @@ export type CustomerExportRow = {
 };
 
 export async function listCustomersForExport(
-  filters: Omit<CustomerListFilters, 'page'>,
+  filters: Omit<CustomerListFilters, 'page' | 'sort' | 'dir'>,
 ): Promise<CustomerExportRow[]> {
   const supabase = await createClient();
   let query = supabase

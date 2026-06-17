@@ -6,7 +6,13 @@ import Link from 'next/link';
 import { VehicleTable } from './vehicle-table';
 
 type Props = {
-  searchParams: Promise<{ type?: string; active?: string; page?: string }>;
+  searchParams: Promise<{
+    type?: string;
+    active?: string;
+    page?: string;
+    sort?: string;
+    dir?: string;
+  }>;
 };
 
 export default async function VehiclesPage({ searchParams }: Props) {
@@ -16,6 +22,8 @@ export default async function VehiclesPage({ searchParams }: Props) {
     type: params.type,
     active: params.active,
     page: params.page,
+    sort: params.sort,
+    dir: params.dir,
   });
 
   const result = await listVehicles(filters);
@@ -41,13 +49,20 @@ export default async function VehiclesPage({ searchParams }: Props) {
 
       <ActiveFilter current={filters.active} />
 
-      <VehicleTable rows={result.rows} />
+      <VehicleTable
+        rows={result.rows}
+        sort={filters.sort}
+        dir={filters.dir}
+        params={{ type: filters.type, active: filters.active }}
+      />
 
       <Pagination
         page={filters.page}
         lastPage={lastPage}
         type={filters.type}
         active={filters.active}
+        sort={filters.sort}
+        dir={filters.dir}
       />
     </main>
   );
@@ -84,17 +99,23 @@ function Pagination({
   lastPage,
   type,
   active,
+  sort,
+  dir,
 }: {
   page: number;
   lastPage: number;
   type?: string;
   active: string;
+  sort?: string;
+  dir?: string;
 }) {
   if (lastPage <= 1) return null;
   const link = (n: number) => {
     const p = new URLSearchParams();
     if (type) p.set('type', type);
     p.set('active', active);
+    if (sort) p.set('sort', sort);
+    if (dir) p.set('dir', dir);
     p.set('page', String(n));
     return `/dashboard/vehicles?${p.toString()}`;
   };

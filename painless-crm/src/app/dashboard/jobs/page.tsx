@@ -21,6 +21,8 @@ type Props = {
     move_to?: string;
     page?: string;
     view?: string;
+    sort?: string;
+    dir?: string;
   }>;
 };
 
@@ -33,6 +35,8 @@ export default async function JobsPage({ searchParams }: Props) {
     move_from: params.move_from,
     move_to: params.move_to,
     page: params.page,
+    sort: params.sort,
+    dir: params.dir,
   });
   const view: JobsView =
     params.view === 'kanban' ? 'kanban' : params.view === 'list' ? 'list' : 'grid';
@@ -81,7 +85,11 @@ export default async function JobsPage({ searchParams }: Props) {
         reps={reps.map((r) => ({ id: r.id, full_name: r.full_name }))}
       />
 
-      {view === 'kanban' ? <KanbanView filters={filters} /> : <PagedView filters={filters} view={view} />}
+      {view === 'kanban' ? (
+        <KanbanView filters={filters} />
+      ) : (
+        <PagedView filters={filters} view={view} />
+      )}
     </main>
   );
 }
@@ -114,8 +122,7 @@ async function PagedView({
   ]);
   const lastPage = Math.max(1, Math.ceil(result.total / JOB_PAGE_SIZE));
   const isAdmin = me.role === 'admin' || me.role === 'super_admin';
-  const addresses =
-    view === 'grid' ? await listAddressesForJobs(result.rows.map((r) => r.id)) : {};
+  const addresses = view === 'grid' ? await listAddressesForJobs(result.rows.map((r) => r.id)) : {};
 
   return (
     <>
@@ -125,7 +132,19 @@ async function PagedView({
       {view === 'grid' ? (
         <JobsGrid rows={result.rows} addresses={addresses} isAdmin={isAdmin} />
       ) : (
-        <JobsTable rows={result.rows} />
+        <JobsTable
+          rows={result.rows}
+          sort={filters.sort}
+          dir={filters.dir}
+          params={{
+            q: filters.q,
+            stage: filters.stage,
+            assigned_to_id: filters.assigned_to_id,
+            move_from: filters.move_from ?? undefined,
+            move_to: filters.move_to ?? undefined,
+            view,
+          }}
+        />
       )}
       <Pagination
         page={filters.page}
@@ -136,6 +155,8 @@ async function PagedView({
         moveFrom={filters.move_from}
         moveTo={filters.move_to}
         view={view}
+        sort={filters.sort}
+        dir={filters.dir}
       />
     </>
   );

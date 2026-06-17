@@ -1,9 +1,28 @@
+import { SortableHeader } from '@/components/ui/sortable-header';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import type { CustomerRow } from '@/lib/queries/customers';
 import { customerDisplayName, formatDate } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
-export async function CustomerTable({ rows }: { rows: CustomerRow[] }) {
+export async function CustomerTable({
+  rows,
+  sort,
+  dir,
+  params,
+}: {
+  rows: CustomerRow[];
+  sort?: string;
+  dir?: 'asc' | 'desc';
+  params?: Record<string, string | undefined>;
+}) {
   const t = await getTranslations('customers');
 
   if (rows.length === 0) {
@@ -14,36 +33,48 @@ export async function CustomerTable({ rows }: { rows: CustomerRow[] }) {
     );
   }
 
+  const sortProps = { sort, dir, params };
+
   return (
-    <div className="overflow-x-auto rounded-md border">
-      <table className="w-full text-left text-sm">
-        <thead className="bg-[var(--color-muted)]">
-          <tr>
-            <th className="px-3 py-2 font-medium">{t('columns.name')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.type')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.email')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.phone')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.created')}</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader className="bg-[var(--color-muted)]">
+          <TableRow>
+            <TableHead>
+              <SortableHeader label={t('columns.name')} column="last_name" {...sortProps} />
+            </TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.type')} column="customer_type" {...sortProps} />
+            </TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.email')} column="primary_email" {...sortProps} />
+            </TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.phone')} column="primary_phone" {...sortProps} />
+            </TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.created')} column="created_at" {...sortProps} />
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {rows.map((row) => (
-            <tr key={row.id} className="border-t hover:bg-[var(--color-muted)]/40">
-              <td className="px-3 py-2">
+            <TableRow key={row.id}>
+              <TableCell>
                 <Link href={`/dashboard/customers/${row.id}`} className="hover:underline">
                   {customerDisplayName(row)}
                 </Link>
-              </td>
-              <td className="px-3 py-2">
+              </TableCell>
+              <TableCell>
                 <TypeBadge type={row.customer_type} />
-              </td>
-              <td className="px-3 py-2">{row.primary_email ?? '—'}</td>
-              <td className="px-3 py-2">{row.primary_phone ?? '—'}</td>
-              <td className="px-3 py-2">{formatDate(row.created_at)}</td>
-            </tr>
+              </TableCell>
+              <TableCell>{row.primary_email ?? '—'}</TableCell>
+              <TableCell>{row.primary_phone ?? '—'}</TableCell>
+              <TableCell>{formatDate(row.created_at)}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

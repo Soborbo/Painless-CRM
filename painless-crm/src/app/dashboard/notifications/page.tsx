@@ -73,7 +73,7 @@ function NotificationItem({
       <span
         aria-hidden
         className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-          unread ? (urgent ? 'bg-red-500' : 'bg-[var(--color-accent)]') : 'bg-transparent'
+          unread ? (urgent ? 'bg-red-500' : 'bg-[var(--color-brand)]') : 'bg-transparent'
         }`}
       />
       <div className="min-w-0 flex-1">

@@ -118,12 +118,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex min-h-screen">
         <aside className="sticky top-0 flex h-screen w-56 shrink-0 flex-col bg-[var(--color-sidebar)] text-[var(--color-sidebar-foreground)]">
           {/* Brand tick: a 2px orange rule across the top edge. */}
-          <div className="h-0.5 w-full shrink-0 bg-[var(--color-accent)]" aria-hidden />
+          <div className="h-0.5 w-full shrink-0 bg-[var(--color-brand)]" aria-hidden />
 
           <div className="border-b border-white/10 px-4 pb-4 pt-4">
             <Link
               href="/dashboard"
-              className="block rounded-[3px] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+              className="block rounded-[3px] outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]"
             >
               <Image
                 src="/logo.svg"
@@ -148,7 +148,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 <p className="truncate text-xs font-medium text-[var(--color-sidebar-foreground)]/85">
                   {profile.full_name}
                 </p>
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-accent)]/90">
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-[var(--color-brand)]/90">
                   {profile.role}
                 </p>
               </div>

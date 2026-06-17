@@ -44,7 +44,7 @@ export function SidebarNav({ groups }: { groups: NavGroup[] }) {
                   <Link
                     href={link.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`group relative flex items-center rounded-[3px] py-1.5 pl-3 pr-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
+                    className={`group relative flex items-center rounded-[3px] py-1.5 pl-3 pr-3 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] ${
                       active
                         ? 'bg-white/[0.07] font-semibold text-white'
                         : 'font-normal text-[var(--color-sidebar-foreground)]/75 hover:bg-white/[0.05] hover:text-[var(--color-sidebar-foreground)]'
@@ -56,7 +56,7 @@ export function SidebarNav({ groups }: { groups: NavGroup[] }) {
                       aria-hidden
                       className={`absolute left-0 top-1/2 h-4 -translate-y-1/2 rounded-full transition-all ${
                         active
-                          ? 'w-[3px] bg-[var(--color-accent)]'
+                          ? 'w-[3px] bg-[var(--color-brand)]'
                           : 'w-[3px] bg-transparent group-hover:bg-white/20'
                       }`}
                     />

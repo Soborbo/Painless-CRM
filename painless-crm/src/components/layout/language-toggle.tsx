@@ -30,7 +30,7 @@ export function LanguageToggle({ current }: { current: string }) {
         value={LOCALES.includes(current as (typeof LOCALES)[number]) ? current : 'en'}
         onChange={onChange}
         disabled={pending}
-        className="rounded-[3px] border border-current/25 bg-transparent px-2 py-1.5 text-xs outline-none transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] disabled:opacity-50"
+        className="rounded-[3px] border border-current/25 bg-transparent px-2 py-1.5 text-xs outline-none transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-[var(--color-brand)] disabled:opacity-50"
       >
         {LOCALES.map((l) => (
           <option key={l} value={l}>

@@ -6,21 +6,48 @@
      engineered rather than flat grey, and pairs with the teal. */
   --color-background: oklch(1 0 0);
   --color-foreground: oklch(0.16 0.012 250);
+  /* Surfaces (shadcn semantics): card = raised panels, popover = floating menus. */
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.16 0.012 250);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.16 0.012 250);
   --color-muted: oklch(0.968 0.005 245);
   --color-muted-foreground: oklch(0.5 0.02 248);
+  /* secondary = quiet filled buttons/badges; accent = subtle hover surface
+     (dropdown item hover, ghost button). NOT the brand orange — see --color-brand. */
+  --color-secondary: oklch(0.955 0.006 245);
+  --color-secondary-foreground: oklch(0.21 0.015 250);
+  --color-accent: oklch(0.955 0.006 245);
+  --color-accent-foreground: oklch(0.21 0.015 250);
   --color-border: oklch(0.905 0.006 245);
+  --color-input: oklch(0.905 0.006 245);
+  --color-ring: #f16b21;
   /* Painless Removals brand: dark teal + orange (from painlessremovals.com). */
   --color-primary: #0e3c54;
   --color-primary-foreground: #ffffff;
-  --color-accent: #f16b21;
-  --color-accent-foreground: #ffffff;
+  --color-destructive: oklch(0.6 0.22 27);
+  --color-destructive-foreground: oklch(0.985 0 0);
+  /* Brand orange — referenced directly via var(--color-brand) for focus rings,
+     active sidebar markers, badges. Distinct from shadcn's `accent` hover token. */
+  --color-brand: #f16b21;
+  --color-brand-foreground: #ffffff;
   /* Brand sidebar — always teal, independent of light/dark theme. */
   --color-sidebar: #0e3c54;
   --color-sidebar-foreground: #eef3f6;
   --color-success: oklch(0.65 0.18 145);
   --color-danger: oklch(0.6 0.22 27);
   --color-warning: oklch(0.78 0.16 85);
+  /* Categorical chart palette (Recharts) — distinguishable, brand-anchored. */
+  --color-chart-1: oklch(0.55 0.12 240);
+  --color-chart-2: oklch(0.68 0.17 45);
+  --color-chart-3: oklch(0.62 0.13 160);
+  --color-chart-4: oklch(0.6 0.16 300);
+  --color-chart-5: oklch(0.72 0.15 90);
   --radius: 0.5rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     sans-serif;
 }
@@ -33,9 +60,24 @@
 :root.dark {
   --color-background: oklch(0.165 0.012 250);
   --color-foreground: oklch(0.985 0 0);
+  --color-card: oklch(0.205 0.012 250);
+  --color-card-foreground: oklch(0.985 0 0);
+  --color-popover: oklch(0.205 0.012 250);
+  --color-popover-foreground: oklch(0.985 0 0);
   --color-muted: oklch(0.225 0.012 248);
   --color-muted-foreground: oklch(0.715 0.018 245);
+  --color-secondary: oklch(0.255 0.012 248);
+  --color-secondary-foreground: oklch(0.985 0 0);
+  --color-accent: oklch(0.255 0.012 248);
+  --color-accent-foreground: oklch(0.985 0 0);
   --color-border: oklch(0.285 0.012 248);
+  --color-input: oklch(0.285 0.012 248);
+  /* Lifted chart palette for legibility on the dark canvas. */
+  --color-chart-1: oklch(0.65 0.13 240);
+  --color-chart-2: oklch(0.74 0.17 45);
+  --color-chart-3: oklch(0.7 0.13 160);
+  --color-chart-4: oklch(0.68 0.16 300);
+  --color-chart-5: oklch(0.78 0.15 90);
   /* Lift the brand teal so filled buttons stay legible on the dark canvas. */
   --color-primary: #1b6087;
   color-scheme: dark;
@@ -45,9 +87,23 @@
   :root:not(.light):not(.dark) {
     --color-background: oklch(0.165 0.012 250);
     --color-foreground: oklch(0.985 0 0);
+    --color-card: oklch(0.205 0.012 250);
+    --color-card-foreground: oklch(0.985 0 0);
+    --color-popover: oklch(0.205 0.012 250);
+    --color-popover-foreground: oklch(0.985 0 0);
     --color-muted: oklch(0.225 0.012 248);
     --color-muted-foreground: oklch(0.715 0.018 245);
+    --color-secondary: oklch(0.255 0.012 248);
+    --color-secondary-foreground: oklch(0.985 0 0);
+    --color-accent: oklch(0.255 0.012 248);
+    --color-accent-foreground: oklch(0.985 0 0);
     --color-border: oklch(0.285 0.012 248);
+    --color-input: oklch(0.285 0.012 248);
+    --color-chart-1: oklch(0.65 0.13 240);
+    --color-chart-2: oklch(0.74 0.17 45);
+    --color-chart-3: oklch(0.7 0.13 160);
+    --color-chart-4: oklch(0.68 0.16 300);
+    --color-chart-5: oklch(0.78 0.15 90);
     --color-primary: #1b6087;
     color-scheme: dark;
   }
@@ -73,10 +129,10 @@ body {
 
 /* Considered details — keyboard-first focus + on-brand selection. */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-brand);
   outline-offset: 2px;
 }
 ::selection {
-  background: var(--color-accent);
+  background: var(--color-brand);
   color: #fff;
 }

@@ -1,5 +1,8 @@
-// Phase 21 — dependency-free horizontal bar chart (CSS widths). Pure
-// presentational server component. See ADR-030.
+'use client';
+
+// Horizontal bar chart backed by Recharts. Public API unchanged from the
+// previous CSS-only version so existing call sites need no edits. See ADR-030.
+import { Bar, LabelList, BarChart as RBarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 export interface BarDatum {
   label: string;
@@ -16,26 +19,32 @@ export function BarChart({
   if (data.length === 0) {
     return <p className="text-sm text-[var(--color-muted-foreground)]">—</p>;
   }
-  const max = Math.max(1, ...data.map((d) => d.value));
+  const height = Math.max(96, data.length * 32 + 8);
 
   return (
-    <div className="flex flex-col gap-1.5">
-      {data.map((d) => (
-        <div key={d.label} className="grid grid-cols-[7rem_1fr_auto] items-center gap-2 text-xs">
-          <span className="truncate" title={d.label}>
-            {d.label}
-          </span>
-          <span className="h-2.5 rounded bg-[var(--color-muted)]">
-            <span
-              className="block h-2.5 rounded bg-[var(--color-primary)]"
-              style={{ width: `${(d.value / max) * 100}%` }}
-            />
-          </span>
-          <span className="tabular-nums text-[var(--color-muted-foreground)]">
-            {formatValue ? formatValue(d.value) : d.value}
-          </span>
-        </div>
-      ))}
-    </div>
+    <ResponsiveContainer width="100%" height={height}>
+      <RBarChart data={data} layout="vertical" margin={{ top: 4, right: 52, bottom: 4, left: 4 }}>
+        <XAxis type="number" hide />
+        <YAxis
+          type="category"
+          dataKey="label"
+          width={112}
+          tickLine={false}
+          axisLine={false}
+          tick={{ fontSize: 12, fill: 'var(--color-muted-foreground)' }}
+        />
+        <Bar dataKey="value" fill="var(--color-primary)" radius={[0, 3, 3, 0]} maxBarSize={14}>
+          <LabelList
+            dataKey="value"
+            position="right"
+            fill="var(--color-muted-foreground)"
+            fontSize={12}
+            formatter={(value) =>
+              formatValue ? formatValue(Number(value ?? 0)) : String(value ?? '')
+            }
+          />
+        </Bar>
+      </RBarChart>
+    </ResponsiveContainer>
   );
 }

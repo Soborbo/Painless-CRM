@@ -1,5 +1,8 @@
-// Phase 21 — dependency-free donut chart (inline SVG via stroke-dasharray).
-// Pure presentational server component; no client JS. See ADR-030.
+'use client';
+
+// Donut chart backed by Recharts <PieChart>. Public API unchanged from the
+// previous inline-SVG version so existing call sites need no edits. See ADR-030.
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 
 export interface DonutSegment {
   label: string;
@@ -7,17 +10,14 @@ export interface DonutSegment {
   color: string;
 }
 
-// A fixed palette so every breakdown chart is colour-consistent. Pages map
-// their category keys onto this in order.
+// Theme-anchored categorical palette (maps onto --color-chart-* tokens).
+// Pages map their category keys onto this in order; it cycles past the fifth.
 export const CHART_COLORS = [
-  '#0066cc',
-  '#16a34a',
-  '#f59e0b',
-  '#db2777',
-  '#7c3aed',
-  '#0891b2',
-  '#dc2626',
-  '#65a30d',
+  'var(--color-chart-1)',
+  'var(--color-chart-2)',
+  'var(--color-chart-3)',
+  'var(--color-chart-4)',
+  'var(--color-chart-5)',
 ] as const;
 
 export function Donut({
@@ -29,55 +29,36 @@ export function Donut({
   size?: number;
   thickness?: number;
 }) {
-  const total = segments.reduce((sum, s) => sum + s.value, 0);
-  const radius = (size - thickness) / 2;
-  const circ = 2 * Math.PI * radius;
-  const cx = size / 2;
+  const outer = size / 2;
+  const inner = outer - thickness;
+  const data = segments.filter((s) => s.value > 0);
   const description = segments.map((s) => `${s.label}: ${s.value}`).join(', ');
-
-  let offset = 0;
+  // When there is no data, render a single full track ring so the chart still
+  // occupies its slot rather than collapsing.
+  const cells: DonutSegment[] =
+    data.length === 0 ? [{ label: '__track__', value: 1, color: 'var(--color-muted)' }] : data;
 
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      role="img"
-      aria-label={description}
-    >
-      <title>{description}</title>
-      <g transform={`rotate(-90 ${cx} ${cx})`}>
-        {/* Track ring — also the whole chart when there is no data. */}
-        <circle
-          cx={cx}
-          cy={cx}
-          r={radius}
-          fill="none"
-          stroke="var(--color-muted)"
-          strokeWidth={thickness}
-        />
-        {total > 0
-          ? segments.map((seg) => {
-              const len = (seg.value / total) * circ;
-              const dash = `${len} ${circ - len}`;
-              const el = (
-                <circle
-                  key={seg.label}
-                  cx={cx}
-                  cy={cx}
-                  r={radius}
-                  fill="none"
-                  stroke={seg.color}
-                  strokeWidth={thickness}
-                  strokeDasharray={dash}
-                  strokeDashoffset={-offset}
-                />
-              );
-              offset += len;
-              return el;
-            })
-          : null}
-      </g>
-    </svg>
+    <ResponsiveContainer width={size} height={size}>
+      <PieChart role="img" aria-label={description}>
+        <Pie
+          data={cells}
+          dataKey="value"
+          nameKey="label"
+          cx="50%"
+          cy="50%"
+          innerRadius={inner}
+          outerRadius={outer}
+          startAngle={90}
+          endAngle={-270}
+          stroke="none"
+          isAnimationActive={false}
+        >
+          {cells.map((seg) => (
+            <Cell key={seg.label} fill={seg.color} />
+          ))}
+        </Pie>
+      </PieChart>
+    </ResponsiveContainer>
   );
 }

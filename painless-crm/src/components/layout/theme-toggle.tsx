@@ -44,7 +44,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label={label}
       title={label}
-      className="rounded-[3px] border border-current/25 px-2 py-1.5 text-xs outline-none transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+      className="rounded-[3px] border border-current/25 px-2 py-1.5 text-xs outline-none transition-colors hover:bg-current/10 focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]"
     >
       <span aria-hidden>{!mounted ? '🌓' : theme === 'dark' ? '☀️' : '🌙'}</span>
     </button>

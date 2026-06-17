@@ -30,7 +30,7 @@ export async function NotificationBell() {
         <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
       </svg>
       {count > 0 ? (
-        <span className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[10px] font-semibold leading-4 text-white tabular-nums">
+        <span className="absolute -right-1 -top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-[var(--color-brand)] px-1 text-[10px] font-semibold leading-4 text-white tabular-nums">
           {capped}
         </span>
       ) : null}

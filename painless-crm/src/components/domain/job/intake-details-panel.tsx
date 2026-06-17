@@ -1,5 +1,6 @@
+import { formatIntakeBreakdown } from '@/lib/jobs/intake-breakdown';
 import { getJobIntake, type IntakeAddressLeg } from '@/lib/queries/intake';
-import { formatDate, formatPence } from '@/lib/utils/format';
+import { formatDate } from '@/lib/utils/format';
 
 // Read-only card surfacing the full website-calculator intake captured on a
 // job (addresses, move date, resources, flags, consent, price breakdown,
@@ -66,6 +67,7 @@ export async function IntakeDetailsPanel({ jobId }: { jobId: string }) {
   const flags = asRecord(d.flags);
   const consent = asRecord(d.consent);
   const breakdown = asRecord(d.breakdown);
+  const breakdownRows = breakdown ? formatIntakeBreakdown(breakdown) : [];
   const extras = asRecord(d.extras);
 
   return (
@@ -133,16 +135,25 @@ export async function IntakeDetailsPanel({ jobId }: { jobId: string }) {
           </div>
         ) : null}
 
-        {/* Price breakdown */}
-        {breakdown ? (
+        {/* Price breakdown — labelled + unit-aware (calculator emits pounds, plus
+            a margin multiplier and an extra-crew count that are not currency). */}
+        {breakdownRows.length > 0 ? (
           <div>
             <div className="mb-1 text-xs uppercase tracking-wide text-[var(--color-muted-foreground)]">
               Price breakdown
             </div>
-            {Object.entries(breakdown).map(([k, v]) =>
-              typeof v === 'number' ? (
-                <Row key={k} label={k.replace(/_/g, ' ')} value={formatPence(Math.round(v))} />
-              ) : null,
+            {breakdownRows.map((r) =>
+              r.emphasis ? (
+                <div
+                  key={r.key}
+                  className="mt-1 flex justify-between gap-4 border-t border-[var(--color-border)] pt-1 text-sm font-semibold"
+                >
+                  <span>{r.label}</span>
+                  <span className="text-right">{r.display}</span>
+                </div>
+              ) : (
+                <Row key={r.key} label={r.label} value={r.display} />
+              ),
             )}
           </div>
         ) : null}

@@ -86,6 +86,16 @@ export type CustomerInput = z.infer<typeof CustomerSchema>;
 export const CustomerIdSchema = z.string().uuid();
 export const CustomerVersionSchema = z.coerce.number().int().min(1);
 
+// Allow-list of sortable columns (real DB columns — prevents order-by injection).
+export const CUSTOMER_SORT_COLUMNS = [
+  'created_at',
+  'last_name',
+  'customer_type',
+  'primary_email',
+  'primary_phone',
+] as const;
+export type CustomerSortColumn = (typeof CUSTOMER_SORT_COLUMNS)[number];
+
 export const CustomerListFiltersSchema = z
   .object({
     q: z.string().trim().max(100).optional(),
@@ -94,6 +104,8 @@ export const CustomerListFiltersSchema = z
     created_from: optionalDateFilter,
     created_to: optionalDateFilter,
     page: z.coerce.number().int().min(1).default(1),
+    sort: z.enum(CUSTOMER_SORT_COLUMNS).default('created_at'),
+    dir: z.enum(['asc', 'desc']).default('desc'),
   })
   .refine((v) => !v.created_from || !v.created_to || v.created_from <= v.created_to, {
     message: 'created_from must not be after created_to',

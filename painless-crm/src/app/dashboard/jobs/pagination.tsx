@@ -9,6 +9,8 @@ export function Pagination({
   moveFrom,
   moveTo,
   view,
+  sort,
+  dir,
 }: {
   page: number;
   lastPage: number;
@@ -18,6 +20,8 @@ export function Pagination({
   moveFrom?: string;
   moveTo?: string;
   view?: 'grid' | 'list';
+  sort?: string;
+  dir?: string;
 }) {
   if (lastPage <= 1) return null;
   const params = new URLSearchParams();
@@ -27,6 +31,8 @@ export function Pagination({
   if (moveFrom) params.set('move_from', moveFrom);
   if (moveTo) params.set('move_to', moveTo);
   if (view && view !== 'grid') params.set('view', view);
+  if (sort) params.set('sort', sort);
+  if (dir) params.set('dir', dir);
   const link = (n: number) => {
     const p = new URLSearchParams(params);
     p.set('page', String(n));

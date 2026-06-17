@@ -1,13 +1,32 @@
 import { SLABadge } from '@/components/domain/job/sla-badge';
 import { StageBadge } from '@/components/domain/job/stage-badge';
 import { TagChip } from '@/components/domain/job/tag-chip';
+import { SortableHeader } from '@/components/ui/sortable-header';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { computeSLAStatus } from '@/lib/jobs/sla';
 import type { JobListRow } from '@/lib/queries/jobs';
 import { customerDisplayName, formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
-export async function JobsTable({ rows }: { rows: JobListRow[] }) {
+export async function JobsTable({
+  rows,
+  sort,
+  dir,
+  params,
+}: {
+  rows: JobListRow[];
+  sort?: string;
+  dir?: 'asc' | 'desc';
+  params?: Record<string, string | undefined>;
+}) {
   const t = await getTranslations('jobs');
 
   if (rows.length === 0) {
@@ -18,21 +37,35 @@ export async function JobsTable({ rows }: { rows: JobListRow[] }) {
     );
   }
 
+  const sortProps = { sort, dir, params };
+
   return (
-    <div className="overflow-x-auto rounded-md border">
-      <table className="w-full text-left text-sm">
-        <thead className="bg-[var(--color-muted)]">
-          <tr>
-            <th className="px-3 py-2 font-medium">{t('columns.number')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.customer')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.stage')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.assigned')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.moveDate')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.value')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.tags')}</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader className="bg-[var(--color-muted)]">
+          <TableRow>
+            <TableHead>
+              <SortableHeader label={t('columns.number')} column="job_number" {...sortProps} />
+            </TableHead>
+            <TableHead>{t('columns.customer')}</TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.stage')} column="stage" {...sortProps} />
+            </TableHead>
+            <TableHead>{t('columns.assigned')}</TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.moveDate')} column="move_date" {...sortProps} />
+            </TableHead>
+            <TableHead>
+              <SortableHeader
+                label={t('columns.value')}
+                column="quote_total_pence"
+                {...sortProps}
+              />
+            </TableHead>
+            <TableHead>{t('columns.tags')}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {rows.map((row) => {
             const sla = computeSLAStatus({
               firstResponseDueAt: row.first_response_due_at,
@@ -40,16 +73,16 @@ export async function JobsTable({ rows }: { rows: JobListRow[] }) {
               enquiryAt: row.enquiry_at,
             });
             return (
-              <tr key={row.id} className="border-t hover:bg-[var(--color-muted)]/40">
-                <td className="px-3 py-2 font-mono">
+              <TableRow key={row.id}>
+                <TableCell className="font-mono">
                   <div className="flex items-center gap-2">
                     <Link href={`/dashboard/jobs/${row.id}`} className="hover:underline">
                       {row.job_number}
                     </Link>
                     <SLABadge status={sla} />
                   </div>
-                </td>
-                <td className="px-3 py-2">
+                </TableCell>
+                <TableCell>
                   {row.customer ? (
                     <Link
                       href={`/dashboard/customers/${row.customer.id}`}
@@ -60,13 +93,13 @@ export async function JobsTable({ rows }: { rows: JobListRow[] }) {
                   ) : (
                     '—'
                   )}
-                </td>
-                <td className="px-3 py-2">
+                </TableCell>
+                <TableCell>
                   <StageBadge stage={row.stage} />
-                </td>
-                <td className="px-3 py-2">{row.assigned_to?.full_name ?? '—'}</td>
-                <td className="px-3 py-2">{formatDate(row.move_date)}</td>
-                <td className="px-3 py-2">
+                </TableCell>
+                <TableCell>{row.assigned_to?.full_name ?? '—'}</TableCell>
+                <TableCell>{formatDate(row.move_date)}</TableCell>
+                <TableCell>
                   <span className="inline-flex items-center gap-1.5">
                     {formatPence(row.quote_total_pence)}
                     {row.accepted_at ? (
@@ -78,8 +111,8 @@ export async function JobsTable({ rows }: { rows: JobListRow[] }) {
                       </span>
                     ) : null}
                   </span>
-                </td>
-                <td className="px-3 py-2">
+                </TableCell>
+                <TableCell>
                   {row.tags.length === 0 ? (
                     '—'
                   ) : (
@@ -89,12 +122,12 @@ export async function JobsTable({ rows }: { rows: JobListRow[] }) {
                       ))}
                     </div>
                   )}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             );
           })}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

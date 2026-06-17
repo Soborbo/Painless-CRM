@@ -139,6 +139,16 @@ export const DuplicateJobSchema = z.object({
   id: z.string().uuid(),
 });
 
+// Allow-list of sortable columns (real DB columns — prevents order-by injection).
+export const JOB_SORT_COLUMNS = [
+  'created_at',
+  'job_number',
+  'stage',
+  'move_date',
+  'quote_total_pence',
+] as const;
+export type JobSortColumn = (typeof JOB_SORT_COLUMNS)[number];
+
 export const JobListFiltersSchema = z
   .object({
     q: z.string().trim().max(100).optional(),
@@ -148,6 +158,8 @@ export const JobListFiltersSchema = z
     move_from: optionalDateFilter,
     move_to: optionalDateFilter,
     page: z.coerce.number().int().min(1).default(1),
+    sort: z.enum(JOB_SORT_COLUMNS).default('created_at'),
+    dir: z.enum(['asc', 'desc']).default('desc'),
   })
   .refine((v) => !v.move_from || !v.move_to || v.move_from <= v.move_to, {
     message: 'move_from must not be after move_to',

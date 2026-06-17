@@ -1,3 +1,12 @@
+import { SortableHeader } from '@/components/ui/sortable-header';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import type { VehicleRow } from '@/lib/queries/vehicles';
 import { formatPence } from '@/lib/utils/format';
 import { type ComplianceState, complianceStatus } from '@/lib/vehicles/compliance';
@@ -20,7 +29,17 @@ function worstState(vehicle: VehicleRow, today: Date): ComplianceState {
   );
 }
 
-export async function VehicleTable({ rows }: { rows: VehicleRow[] }) {
+export async function VehicleTable({
+  rows,
+  sort,
+  dir,
+  params,
+}: {
+  rows: VehicleRow[];
+  sort?: string;
+  dir?: 'asc' | 'desc';
+  params?: Record<string, string | undefined>;
+}) {
   const t = await getTranslations('vehicles');
   const today = new Date();
 
@@ -32,22 +51,44 @@ export async function VehicleTable({ rows }: { rows: VehicleRow[] }) {
     );
   }
 
+  const sortProps = { sort, dir, params };
+
   return (
-    <div className="overflow-x-auto rounded-md border">
-      <table className="w-full text-left text-sm">
-        <thead className="bg-[var(--color-muted)]">
-          <tr>
-            <th className="px-3 py-2 font-medium">{t('columns.registration')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.type')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.capacity')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.monthlyCost')}</th>
-            <th className="px-3 py-2 font-medium">{t('columns.compliance')}</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader className="bg-[var(--color-muted)]">
+          <TableRow>
+            <TableHead>
+              <SortableHeader
+                label={t('columns.registration')}
+                column="registration"
+                {...sortProps}
+              />
+            </TableHead>
+            <TableHead>
+              <SortableHeader label={t('columns.type')} column="type" {...sortProps} />
+            </TableHead>
+            <TableHead>
+              <SortableHeader
+                label={t('columns.capacity')}
+                column="capacity_cubic_ft"
+                {...sortProps}
+              />
+            </TableHead>
+            <TableHead>
+              <SortableHeader
+                label={t('columns.monthlyCost')}
+                column="monthly_cost_pence"
+                {...sortProps}
+              />
+            </TableHead>
+            <TableHead>{t('columns.compliance')}</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {rows.map((row) => (
-            <tr key={row.id} className="border-t hover:bg-[var(--color-muted)]/40">
-              <td className="px-3 py-2 font-medium">
+            <TableRow key={row.id}>
+              <TableCell className="font-medium">
                 <Link href={`/dashboard/vehicles/${row.id}`} className="hover:underline">
                   {row.registration}
                 </Link>
@@ -56,24 +97,22 @@ export async function VehicleTable({ rows }: { rows: VehicleRow[] }) {
                     ({t('inactiveBadge')})
                   </span>
                 ) : null}
-              </td>
-              <td className="px-3 py-2">
-                {row.type ? t(`types.${row.type.replace('.', '_')}`) : '—'}
-              </td>
-              <td className="px-3 py-2">
+              </TableCell>
+              <TableCell>{row.type ? t(`types.${row.type.replace('.', '_')}`) : '—'}</TableCell>
+              <TableCell>
                 {row.capacity_cubic_ft != null ? `${row.capacity_cubic_ft} ft³` : '—'}
-              </td>
-              <td className="px-3 py-2">{formatPence(row.monthly_cost_pence)}</td>
-              <td className="px-3 py-2">
+              </TableCell>
+              <TableCell>{formatPence(row.monthly_cost_pence)}</TableCell>
+              <TableCell>
                 {(() => {
                   const state = worstState(row, today);
                   return <ComplianceBadge state={state} text={t(`complianceState.${state}`)} />;
                 })()}
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

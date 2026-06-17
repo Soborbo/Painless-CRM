@@ -39,6 +39,15 @@ const config: NextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: SECURITY_HEADERS }];
   },
+  // Behind Cloudflare's proxy the forwarded Host can differ from the request
+  // Origin, so Next's Server Action CSRF check (Origin === Host) aborts EVERY
+  // server action before it runs (a 500 with the action body never executing).
+  // Allow the production origin so form actions work. See ADR-041.
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['crm.painlessremovals.com'],
+    },
+  },
 };
 
 export default withNextIntl(config);

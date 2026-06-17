@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useActionState, useEffect, useState } from 'react';
 
-export interface CallDetailProps {
+export interface CallCardProps {
   callId: string;
   caller: string | null;
   occurredAt: string;
@@ -33,11 +33,11 @@ function formatDuration(s: number | null): string {
   return ss === 0 ? `${m}m` : `${m}m ${ss}s`;
 }
 
-// Click-to-open call detail dialog (ADR-041). The inbox row stays a compact
-// summary; opening it gives the full call data room and a proper multi-line
-// "what happened" note for the called-back action. Self-contained modal — no UI
-// dependency — closes on backdrop, ✕, Escape, or a successful action.
-export function CallDetailModal(props: CallDetailProps) {
+// A whole-call clickable card (ADR-041). The row IS the trigger — clicking it
+// anywhere opens the detail dialog with the full call data and a proper
+// multi-line "what happened" note. Hover lifts the card slightly. Self-contained
+// modal: closes on backdrop, ✕, Escape, or a successful action.
+export function CallCard(props: CallCardProps) {
   const t = useTranslations('callsInbox');
   const [open, setOpen] = useState(false);
   const returned = Boolean(props.returnedAt);
@@ -61,7 +61,6 @@ export function CallDetailModal(props: CallDetailProps) {
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
-  // Close once the call-back is recorded (the page revalidates behind us).
   useEffect(() => {
     if (returnState.status === 'ok') setOpen(false);
   }, [returnState.status]);
@@ -71,9 +70,45 @@ export function CallDetailModal(props: CallDetailProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded border border-[var(--color-border)] px-2.5 py-1 text-xs font-medium hover:bg-[var(--color-muted)]"
+        className={`group block w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-3.5 text-left transition-all duration-150 hover:-translate-y-0.5 hover:border-[var(--color-accent)]/50 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
+          returned ? 'opacity-65' : ''
+        }`}
       >
-        {t('details')}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="font-mono text-base font-medium">
+              {props.caller ?? t('unknownCaller')}
+            </span>
+            {props.repeatCount > 1 ? (
+              <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800">
+                {t('repeat', { count: props.repeatCount })}
+              </span>
+            ) : null}
+            {returned ? (
+              <span className="rounded-full bg-[var(--color-muted)] px-2 py-0.5 text-[10px] font-medium text-[var(--color-muted-foreground)]">
+                {t('markReturned')}
+              </span>
+            ) : null}
+          </div>
+          <time className="shrink-0 text-xs text-[var(--color-muted-foreground)] tabular-nums">
+            {formatDateTime(props.occurredAt)}
+          </time>
+        </div>
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--color-muted-foreground)]">
+          <span className={props.customerName ? '' : 'italic'}>
+            {props.customerName ?? t('noMatch')}
+          </span>
+          {props.jobNumber ? (
+            <>
+              <span aria-hidden>·</span>
+              <span className="font-mono">
+                {t('columns.job')} {props.jobNumber}
+              </span>
+            </>
+          ) : null}
+          <span aria-hidden>·</span>
+          <span className="tabular-nums">{formatDuration(props.durationSeconds)}</span>
+        </div>
       </button>
 
       {open ? (

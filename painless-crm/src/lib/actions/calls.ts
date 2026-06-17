@@ -13,7 +13,6 @@ import {
 } from '@/lib/queries/jobs';
 import { CreateJobFromCallSchema, MarkCallReturnedSchema } from '@/lib/schemas/phone-call';
 import { createClient } from '@/lib/supabase/server';
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 const SALES_ROLES = ['sales', 'manager', 'admin', 'super_admin'] as const;
@@ -33,16 +32,6 @@ export async function markCallReturned(
   _prev: CallInboxState,
   form: FormData,
 ): Promise<CallInboxState> {
-  try {
-    return await markCallReturnedImpl(form);
-  } catch (err) {
-    // TEMP DIAGNOSTIC: surface the real server error in the UI (prod hides it).
-    const msg = err instanceof Error ? `${err.message} :: ${err.stack ?? ''}` : String(err);
-    return { status: 'error', message: `DIAG: ${msg.slice(0, 400)}` };
-  }
-}
-
-async function markCallReturnedImpl(form: FormData): Promise<CallInboxState> {
   const me = await requireRole(SALES_ROLES);
 
   const parsed = MarkCallReturnedSchema.safeParse({
@@ -79,10 +68,11 @@ async function markCallReturnedImpl(form: FormData): Promise<CallInboxState> {
       is_customer_visible: false,
       created_by_id: me.id,
     });
-    revalidatePath(`/dashboard/jobs/${call.job_id}`);
   }
 
-  revalidatePath('/dashboard/calls');
+  // NOTE: no revalidatePath — the dashboard is force-dynamic (+ the Calls page
+  // auto-refreshes), and OpenNext on Cloudflare has no tag cache configured, so
+  // revalidatePath throws in the post-action flush (500). See ADR-041 follow-up.
   return { status: 'ok' };
 }
 
@@ -199,7 +189,7 @@ export async function createJobFromCall(
     relatedEntityId: jobId,
   });
 
-  revalidatePath('/dashboard/calls');
-  revalidatePath('/dashboard/jobs');
+  // No revalidatePath (see markCallReturned note); the redirect lands on the
+  // force-dynamic job page which renders fresh.
   redirect(`/dashboard/jobs/${jobId}`);
 }

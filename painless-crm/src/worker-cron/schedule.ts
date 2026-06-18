@@ -34,6 +34,11 @@ export const CRON_SCHEDULE: Record<string, CronJob> = {
   // automation-queue's `* * * * *` slot. The Calls page auto-refreshes, so a new
   // call surfaces within the poll interval without a manual reload.
   '*/2 * * * *': { path: '/api/cron/tamar-poll', payload: 'tamar-poll' },
+  // Gmail inbound-mail poll (ADR-044) — every 5 min. Offset to minute 4 (its own
+  // expression, one route per cron) so it never shares a firing slot with the
+  // `*/5` notify-immediate sweep. Pull-based ingestion of inbound email into the
+  // customer timeline + an email.received notification.
+  '4-59/5 * * * *': { path: '/api/cron/gmail-poll', payload: 'gmail-poll' },
   '0 7 * * 1': { path: '/api/cron/weekly-digest', payload: 'weekly-digest' },
   // Notification email sweeps (ADR-040). The daily/weekly digests fire at both
   // 08:05 and 09:05 UTC; the route's London-local guard runs the sweep only at

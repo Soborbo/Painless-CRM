@@ -28,6 +28,13 @@ describe('cron schedule dispatch', () => {
     expect(byPath.get('/api/cron/task-digest')).toBe(2);
   });
 
+  it('routes the Gmail inbound-mail poll (ADR-044) on its offset-4 slot', () => {
+    expect(resolveCronJob('4-59/5 * * * *')).toEqual({
+      path: '/api/cron/gmail-poll',
+      payload: 'gmail-poll',
+    });
+  });
+
   it('routes the paid-review and complaint sweeps', () => {
     expect(resolveCronJob('15 * * * *')).toEqual({
       path: '/api/cron/review-requests',

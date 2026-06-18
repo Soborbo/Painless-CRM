@@ -29,6 +29,18 @@ const ServerEnv = z.object({
   // E.164 at read time. Used both to poll (?number=) and to classify a CDR's
   // direction (a call *to* one of these is inbound).
   TAMAR_NUMBERS: z.string().min(1).optional(),
+  // Gmail inbound-mail ingestion (ADR-044). A service account with domain-wide
+  // delegation impersonates the shared mailbox (GMAIL_MAILBOX) and the cron polls
+  // the Gmail API read-only. The SA private key is a static service credential
+  // (env secret, like RESEND_API_KEY), NOT a per-user OAuth token — so rule 16 /
+  // ADR-009 (integration_credentials) does not apply (see ADR-044). All optional:
+  // missing creds => the poll degrades to a typed no-op. Tenant via
+  // WEBHOOK_COMPANY_ID (reused).
+  GMAIL_SA_CLIENT_EMAIL: z.string().min(1).optional(),
+  GMAIL_SA_PRIVATE_KEY: z.string().min(1).optional(),
+  GMAIL_MAILBOX: z.string().min(1).optional(),
+  // First-run / cursor-purged backfill window (Gmail search `newer_than:Nd`).
+  GMAIL_BACKFILL_DAYS: z.coerce.number().int().positive().default(7),
   // Compare My Move lead webhook (ADR-043). CMM signs each lead with
   // HMAC-SHA256(timestamp + token) under a shared secret we agree with them and
   // puts the digest in the body's `signature` field (NOT our first-party header

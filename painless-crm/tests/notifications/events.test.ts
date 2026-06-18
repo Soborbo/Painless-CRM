@@ -26,6 +26,14 @@ describe('notification event catalog', () => {
     expect(e?.defaultFreq).toBe('immediate');
   });
 
+  it('exposes the inbound email event (ADR-044) as an immediate broadcast', () => {
+    const e = getEvent('email.received');
+    expect(e).toBeDefined();
+    expect(e?.scope).toBe('broadcast');
+    expect(e?.defaultFreq).toBe('immediate');
+    expect(e?.group).toBe('sales');
+  });
+
   it('targeted events carry an intrinsic recipient (mention, job.assigned)', () => {
     expect(getEvent('mention')?.scope).toBe('targeted');
     expect(getEvent('job.assigned')?.scope).toBe('targeted');

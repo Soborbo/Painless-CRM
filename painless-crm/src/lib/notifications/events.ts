@@ -32,6 +32,7 @@ export const EVENT_CATALOG: readonly NotificationEvent[] = [
   { key: 'lead.high_value_uncontacted', group: 'sales', scope: 'broadcast', defaultFreq: 'daily', labelEn: 'High-value lead, no callback', labelHu: 'Magas értékű lead, nincs visszahívás' },
   { key: 'lead.sla_breach', group: 'sales', scope: 'broadcast', defaultFreq: 'immediate', labelEn: 'Lead past first-response SLA', labelHu: 'Lead túllépte a válaszidőt' },
   { key: 'call.missed', group: 'sales', scope: 'broadcast', defaultFreq: 'immediate', labelEn: 'Missed inbound call', labelHu: 'Nem fogadott bejövő hívás' },
+  { key: 'email.received', group: 'sales', scope: 'broadcast', defaultFreq: 'immediate', labelEn: 'New inbound email', labelHu: 'Új bejövő e-mail' },
   { key: 'quote.created', group: 'sales', scope: 'broadcast', defaultFreq: 'daily', labelEn: 'Quote raised', labelHu: 'Árajánlat készült' },
   { key: 'quote.sent', group: 'sales', scope: 'broadcast', defaultFreq: 'off', labelEn: 'Quote sent', labelHu: 'Árajánlat elküldve' },
   { key: 'quote.accepted', group: 'sales', scope: 'broadcast', defaultFreq: 'immediate', labelEn: 'Quote accepted', labelHu: 'Árajánlat elfogadva' },

@@ -328,6 +328,29 @@ Auth: Liveswitch application key + secret. Stored in env vars (not `integration_
 
 ---
 
+## 12. Gmail (inbound mail ingestion — ADR-044)
+
+**Purpose:** Pull inbound mail to the shared Painless mailbox into the CRM, matched to a customer, onto the timeline, with a notification — the email counterpart of the Tamar call inbox.
+
+**Direction:** Gmail → CRM (pull-based poll; no push subscription in round 1)
+**Auth:** Service account + domain-wide delegation. RS256 JWT (`iss`=SA, `sub`=impersonated mailbox, `scope`=`https://www.googleapis.com/auth/gmail.readonly`) → access token at `https://oauth2.googleapis.com/token`.
+**Credentials location:** env (non-OAuth service key, per ADR-044 / rule 16). Secrets `GMAIL_SA_CLIENT_EMAIL`, `GMAIL_SA_PRIVATE_KEY`; `[vars]` `GMAIL_MAILBOX`, `GMAIL_BACKFILL_DAYS`; tenant `WEBHOOK_COMPANY_ID`.
+**Endpoints:** `users.getProfile`, `users.history.list` (incremental delta, `historyTypes=messageAdded`), `users.messages.list` (`q=newer_than:Nd` backfill), `users.messages.get` (`format=full`).
+
+**Cron:** HMAC-guarded `POST /api/cron/gmail-poll`, scheduled `4-59/5 * * * *` (every 5 min). `runGmailPoll`:
+- Reads the `email_sync_state` cursor for (company, mailbox). With a cursor → `history.list` delta; without (first run) or on a `404` "historyId too old" → backfill `newer_than:{GMAIL_BACKFILL_DAYS}d` and re-seed the cursor from `getProfile`.
+- `messages.get` each new id → parse (headers + base64url body, text/plain preferred) → ingest.
+
+**Ingestion → `email_messages`:** unique `(company_id, gmail_msg_id)` (idempotent re-poll). Sender matched to `customers.primary_email` (case-insensitive); unmatched inbound creates an `individual` contact. Summary note on `notes.parent_type='customer'`. Broadcast `email.received` notification (ADR-040) on each genuinely-new inbound message.
+
+**Failure handling:** every layer degrades to a typed no-op — missing creds/mailbox/tenant ⇒ `runGmailPoll` returns `{ok:false, reason}` and the route still 200s; token/API failures are surfaced in the result's `errors[]` and never throw. The "seen" set + unique index make the note + notification fire exactly once.
+
+**Migration:** 60 (`email_sync_state`, `email_messages`). Both `company_id NOT NULL` + RLS `company_id = current_user_company_id()`.
+
+**Deferred:** outbound capture, thread stitching (`In-Reply-To` / `Message-ID` stored for it), Gmail push (Pub/Sub `watch`), and the szello D1 port of the portable core.
+
+---
+
 ## Summary table
 
 | Provider | Type | Direction | Auth | Credentials location | v0.x |
@@ -343,3 +366,4 @@ Auth: Liveswitch application key + secret. Stored in env vars (not `integration_
 | Tamar Telecom | call tracking | Tamar → CRM | email parsing or OAuth | env or `integration_credentials` | v0.3 (OD-1) |
 | Liveswitch | video survey | CRM ⇄ Liveswitch | API key | env: `LIVESWITCH_KEY` | v0.2 (OD-3) |
 | Anthropic API | AI | CRM → Anthropic | API key | env: `ANTHROPIC_API_KEY` | v0.1 |
+| Gmail | inbound mail | Gmail → CRM | service account + DWD (JWT) | env: `GMAIL_SA_PRIVATE_KEY` (+ `GMAIL_SA_CLIENT_EMAIL`) | v0.3 (ADR-044) |

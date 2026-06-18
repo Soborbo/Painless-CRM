@@ -26,6 +26,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOi
 TAMAR_API_LOGIN = "1036402"
 TAMAR_NUMBERS = "0117 287 0082"
 
+# Gmail inbound-mail ingestion (ADR-044). Non-secret config kept here so
+# `wrangler deploy` (which resets [vars]) never drops it. GMAIL_MAILBOX = the
+# shared mailbox the service account impersonates; GMAIL_BACKFILL_DAYS = the
+# first-run / cursor-purged resync window. The SA email + private key are
+# Secrets (below). Set GMAIL_MAILBOX before go-live.
+GMAIL_MAILBOX = "info@painlessremovals.com"
+GMAIL_BACKFILL_DAYS = "7"
+
 # Server-only, non-secret tenant id that inbound webhooks (quote/contact/Compare
 # My Move…) belong to — the handler uses THIS over any body-supplied company_id
 # (audit H2). Not a secret (just the Painless tenant UUID), so it lives here in
@@ -60,6 +68,7 @@ preview_id = "2b140e77774f414f912ed9f3cc1c064c"
 #   SUPABASE_SERVICE_ROLE_KEY  RESEND_API_KEY  SENTRY_AUTH_TOKEN
 #   CRM_WEBHOOK_SECRET  QUOTE_LINK_SECRET  ANTHROPIC_API_KEY
 #   CMM_WEBHOOK_SECRET (Compare My Move shared HMAC key, ADR-043)
+#   GMAIL_SA_CLIENT_EMAIL  GMAIL_SA_PRIVATE_KEY (Gmail service account, ADR-044)
 
 # Cloudflare Cron Triggers. Each expression fires the Worker's scheduled()
 # handler, which signs the matching /api/cron/* payload with CRM_WEBHOOK_SECRET
@@ -82,6 +91,7 @@ crons = [
   "* * * * *",     # automation-queue — every minute, runs due automation actions
   "*/30 * * * *",  # stale-clock-in — every 30 min
   "*/2 * * * *",   # tamar-poll — every 2 min, near-live Tamar CDR ingestion (ADR-041)
+  "4-59/5 * * * *", # gmail-poll — every 5 min (offset 4), inbound mail ingestion (ADR-044)
   "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
   # Notification email sweeps (ADR-040). Keep in lockstep with src/worker-cron/schedule.ts.
   "*/5 * * * *",   # notify-immediate — emails "immediate"-frequency notifications + janitor

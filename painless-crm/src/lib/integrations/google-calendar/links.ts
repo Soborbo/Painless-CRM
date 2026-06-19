@@ -135,3 +135,48 @@ export async function markLinkDeleted(
     .eq('id', link.id)
     .eq('version', link.version);
 }
+
+// Producer side of the drain: flag an entity as needing a push. Upserts a
+// 'pending' link (keeping an existing event id so the drain patches, not
+// re-inserts). Best-effort — the caller wraps it so a failure never breaks the
+// originating mutation.
+export async function markCalendarDirty(
+  supabase: AnyClient,
+  args: { companyId: string; entityType: CalendarEntityType; entityId: string; calendarId: string },
+  now: Date,
+): Promise<void> {
+  const existing = await readCalendarLink(supabase, args.companyId, args.entityType, args.entityId);
+  if (existing) {
+    await supabase
+      .from(TABLE)
+      .update({ status: 'pending', last_error: null, version: existing.version + 1 })
+      .eq('id', existing.id)
+      .eq('version', existing.version);
+    return;
+  }
+  await supabase.from(TABLE).insert({
+    company_id: args.companyId,
+    entity_type: args.entityType,
+    entity_id: args.entityId,
+    provider: PROVIDER,
+    calendar_id: args.calendarId,
+    status: 'pending',
+  });
+}
+
+export interface PendingLink {
+  entity_type: CalendarEntityType;
+  entity_id: string;
+}
+
+// Consumer side: the entities the drain cron still needs to push, oldest first.
+export async function listPendingLinks(supabase: AnyClient, limit: number): Promise<PendingLink[]> {
+  const { data } = await supabase
+    .from(TABLE)
+    .select('entity_type, entity_id')
+    .is('deleted_at', null)
+    .in('status', ['pending', 'failed'])
+    .order('updated_at', { ascending: true })
+    .limit(limit);
+  return (data as PendingLink[] | null) ?? [];
+}

@@ -364,7 +364,7 @@ Auth: Liveswitch application key + secret. Stored in env vars (not `integration_
 - ENTER `survey_scheduled` → upsert an event on `GOOGLE_CALENDAR_ID_SURVEYS` (crew-audience brief; start from `surveys.scheduled_at`).
 - ENTER `accepted` (where `move_date` first locks, STATE_MACHINE §3) → upsert an event on `GOOGLE_CALENDAR_ID_MOVES`; re-`patch` on `confirmed` and on any move-date / arrival-window / address / brief edit.
 - ENTER `cancelled` / `declined`, or a survey reschedule/cancel → `delete` the linked event.
-- Wired as automation `action_type='calendar_sync'` (ADR-024), drained by the existing per-minute `automation-queue` cron; best-effort enqueue never blocks the transition.
+- Wired as a dirty-flag + drain, NOT the email `automation_queue` (calendar sync is a system behaviour, not a user rule): producers call best-effort `markEntityDirty` (upserts the `calendar_links` row to `status='pending'`), and a dedicated per-minute cron (`/api/cron/calendar-sync`) drains pending/failed links via `drainCalendarSync` → `syncEntityCalendar` → `runCalendarSync`. The request path never makes a Google call; transient failures retry on the next tick.
 
 **Idempotency + lifecycle:** `calendar_links` (migration 61) maps `(company_id, provider='google', entity_type ∈ {survey, job_move}, entity_id)` → `external_event_id` + `etag` + `status`, unique per entity, so a re-run patches the existing event instead of duplicating. Event carries `extendedProperties.private.crm_entity` for back-reference.
 

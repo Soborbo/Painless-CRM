@@ -5,12 +5,14 @@ import { CALENDAR_SCOPE } from './auth';
 import { type CalendarClientConfig, deleteEvent, insertEvent, patchEvent } from './client';
 import {
   type CalendarEntityType,
+  listPendingLinks,
   markLinkDeleted,
   markLinkFailed,
   markLinkSynced,
   readCalendarLink,
   upsertCalendarLink,
 } from './links';
+import { buildEntityEvent } from './load';
 
 // Orchestrates one entity's calendar push (ADR-045), mirroring runGmailPoll's
 // shape. Given a pre-built event (assembled by the caller via assembleJobBrief +
@@ -111,4 +113,64 @@ export async function runCalendarSync(args: CalendarSyncArgs): Promise<CalendarS
     now,
   });
   return { ok: true, action: 'inserted', eventId: inserted.data.id, errors };
+}
+
+const DRAIN_MAX = 200;
+
+export interface CalendarDrainResult {
+  due: number;
+  inserted: number;
+  updated: number;
+  deleted: number;
+  noop: number;
+  skipped: number;
+}
+
+// Rebuild an entity's event from current DB state, then push it. The single
+// entry a manual "Sync now" button and the drain both call.
+export async function syncEntityCalendar(
+  entityType: CalendarEntityType,
+  entityId: string,
+  now: Date = new Date(),
+): Promise<CalendarSyncResult> {
+  const supabase = createAdminClient();
+  const event = await buildEntityEvent(supabase, entityType, entityId);
+  return runCalendarSync({ entityType, entityId, event, now });
+}
+
+// Drain the pending / failed calendar_links (the cron entry). Each entity is
+// rebuilt and pushed; runCalendarSync flips its link to synced / failed /
+// deleted, so a transient failure is retried on the next tick. Skips the DB scan
+// entirely when creds are absent (no-op, like the Gmail poll).
+export async function drainCalendarSync(now: Date = new Date()): Promise<CalendarDrainResult> {
+  const out: CalendarDrainResult = {
+    due: 0,
+    inserted: 0,
+    updated: 0,
+    deleted: 0,
+    noop: 0,
+    skipped: 0,
+  };
+  const env = serverEnv();
+  if (
+    !env.GMAIL_SA_CLIENT_EMAIL ||
+    !env.GMAIL_SA_PRIVATE_KEY ||
+    !env.GOOGLE_CALENDAR_ORGANIZER ||
+    !env.WEBHOOK_COMPANY_ID
+  ) {
+    return out;
+  }
+
+  const supabase = createAdminClient();
+  const pending = await listPendingLinks(supabase, DRAIN_MAX);
+  out.due = pending.length;
+  for (const link of pending) {
+    const res = await syncEntityCalendar(link.entity_type, link.entity_id, now);
+    if (!res.ok) {
+      out.skipped += 1;
+      continue;
+    }
+    out[res.action] += 1;
+  }
+  return out;
 }

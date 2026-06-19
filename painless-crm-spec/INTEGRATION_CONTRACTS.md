@@ -351,6 +351,33 @@ Auth: Liveswitch application key + secret. Stored in env vars (not `integration_
 
 ---
 
+## 13. Google Calendar (job + survey push — ADR-045)
+
+**Purpose:** Push the full job brief — not just date/time — to calendars the whole crew already has on their phones, so the van team sees customer name + number, from/to addresses with access/property detail, dismantle + reassembly, the kit to bring, notes and the "not going" list. Replaces iMVE's date-only import that only Jay and Tom can see.
+
+**Direction:** CRM → Google Calendar (write; two-way *event lifecycle* — insert/patch/delete — but one-way data flow in v1; reading Google → CRM is deferred).
+**Auth:** Service account + domain-wide delegation (DWD), **reusing the ADR-044 primitive** — the exported `getAccessToken` from `integrations/gmail/auth.ts` (DO-NOT-MODIFY, imported not edited) with `scope=https://www.googleapis.com/auth/calendar` and `sub=GOOGLE_CALENDAR_ORGANIZER`. The SA's existing Workspace DWD client-ID must have the `calendar` scope added alongside `gmail.readonly`.
+**Credentials location:** env (non-OAuth service key, per ADR-009 / rule 16, same as Gmail). Secrets reuse `GMAIL_SA_CLIENT_EMAIL` / `GMAIL_SA_PRIVATE_KEY`; `[vars]` `GOOGLE_CALENDAR_ORGANIZER`, `GOOGLE_CALENDAR_ID_SURVEYS`, `GOOGLE_CALENDAR_ID_MOVES`; tenant `WEBHOOK_COMPANY_ID`.
+**Endpoints used:** `POST /calendar/v3/calendars/{calendarId}/events` (insert), `PATCH …/events/{eventId}` (update), `DELETE …/events/{eventId}` (cancel). Access token minted/cached in-isolate exactly as Gmail.
+
+**Sync model (role-segmented calendars):**
+- ENTER `survey_scheduled` → upsert an event on `GOOGLE_CALENDAR_ID_SURVEYS` (crew-audience brief; start from `surveys.scheduled_at`).
+- ENTER `accepted` (where `move_date` first locks, STATE_MACHINE §3) → upsert an event on `GOOGLE_CALENDAR_ID_MOVES`; re-`patch` on `confirmed` and on any move-date / arrival-window / address / brief edit.
+- ENTER `cancelled` / `declined`, or a survey reschedule/cancel → `delete` the linked event.
+- Wired as a dirty-flag + drain, NOT the email `automation_queue` (calendar sync is a system behaviour, not a user rule): producers call best-effort `markEntityDirty` (upserts the `calendar_links` row to `status='pending'`), and a dedicated per-minute cron (`/api/cron/calendar-sync`) drains pending/failed links via `drainCalendarSync` → `syncEntityCalendar` → `runCalendarSync`. The request path never makes a Google call; transient failures retry on the next tick.
+
+**Idempotency + lifecycle:** `calendar_links` (migration 61) maps `(company_id, provider='google', entity_type ∈ {survey, job_move}, entity_id)` → `external_event_id` + `etag` + `status`, unique per entity, so a re-run patches the existing event instead of duplicating. Event carries `extendedProperties.private.crm_entity` for back-reference.
+
+**PII boundary:** only the crew/internal audience brief is pushed to these internal calendars (full detail). A sparse customer-audience brief exists in the pure core for a future customer-facing `.ics` (deferred).
+
+**Failure handling:** every layer degrades to a typed no-op (`no_credentials` / `no_calendar` / `no_company`) — missing creds/calendars/tenant ⇒ `runCalendarSync` returns `{ok:false, reason}` and the transition still succeeds; token/API failures are surfaced in `errors[]`, stamped on `calendar_links.last_error`, retried on the next drain, never thrown.
+
+**Migration:** 61 (`calendar_links`, `job_brief_items`, `cubic_sheet_items.reassembly_required`). All tenant tables `company_id NOT NULL` + RLS `company_id = current_user_company_id()`.
+
+**Deferred:** customer-facing `.ics` email attachment (rides on a not-yet-built survey-confirmation email), per-surveyor individual calendars, and true two-way read (Google → CRM).
+
+---
+
 ## Summary table
 
 | Provider | Type | Direction | Auth | Credentials location | v0.x |
@@ -367,3 +394,4 @@ Auth: Liveswitch application key + secret. Stored in env vars (not `integration_
 | Liveswitch | video survey | CRM ⇄ Liveswitch | API key | env: `LIVESWITCH_KEY` | v0.2 (OD-3) |
 | Anthropic API | AI | CRM → Anthropic | API key | env: `ANTHROPIC_API_KEY` | v0.1 |
 | Gmail | inbound mail | Gmail → CRM | service account + DWD (JWT) | env: `GMAIL_SA_PRIVATE_KEY` (+ `GMAIL_SA_CLIENT_EMAIL`) | v0.3 (ADR-044) |
+| Google Calendar | job + survey push | CRM → Google | service account + DWD (JWT, reuses Gmail SA) | env: `GMAIL_SA_PRIVATE_KEY` + `GOOGLE_CALENDAR_ID_*` | v0.3 (ADR-045) |

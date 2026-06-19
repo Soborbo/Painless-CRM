@@ -41,6 +41,15 @@ const ServerEnv = z.object({
   GMAIL_MAILBOX: z.string().min(1).optional(),
   // First-run / cursor-purged backfill window (Gmail search `newer_than:Nd`).
   GMAIL_BACKFILL_DAYS: z.coerce.number().int().positive().default(7),
+  // Google Calendar push (ADR-045). Reuses the Gmail service-account secrets
+  // (same SA) with the calendar scope; the SA impersonates
+  // GOOGLE_CALENDAR_ORGANIZER (domain-wide delegation) and writes to two
+  // role-segmented calendars (surveys vs moves). All optional: missing
+  // creds/calendars => runCalendarSync degrades to a typed no-op. Tenant via
+  // WEBHOOK_COMPANY_ID (reused).
+  GOOGLE_CALENDAR_ORGANIZER: z.string().min(1).optional(),
+  GOOGLE_CALENDAR_ID_SURVEYS: z.string().min(1).optional(),
+  GOOGLE_CALENDAR_ID_MOVES: z.string().min(1).optional(),
   // Compare My Move lead webhook (ADR-043). CMM signs each lead with
   // HMAC-SHA256(timestamp + token) under a shared secret we agree with them and
   // puts the digest in the body's `signature` field (NOT our first-party header

@@ -3,6 +3,7 @@
 import { recordCommissionForPaidJob } from '@/lib/affiliates/record';
 import { requireRole, requireUser } from '@/lib/auth/require-role';
 import { enqueueEventAutomation, enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
+import { markEntityDirty } from '@/lib/integrations/google-calendar/dirty';
 import { pickNextRep } from '@/lib/jobs/routing';
 import { computeFirstResponseDueAt } from '@/lib/jobs/sla-deadline';
 import { type JobStage, classifyTransition } from '@/lib/jobs/state-machine';
@@ -172,6 +173,9 @@ export async function updateJob(_prev: JobActionState, form: FormData): Promise<
       message: 'This job was edited elsewhere. Reload to see the latest.',
     };
   }
+  // The move date / notes may have changed → re-sync the calendar event.
+  await markEntityDirty('job_move', parsed.data.id, me.company_id);
+
   revalidatePath(`/dashboard/jobs/${parsed.data.id}`);
   revalidatePath('/dashboard/jobs');
   redirect(`/dashboard/jobs/${parsed.data.id}`);
@@ -337,6 +341,10 @@ export async function transitionJobStage(
   } catch {
     // best-effort — automation must never block the transition
   }
+
+  // Re-sync the move's calendar event (ADR-045). The loader decides insert vs
+  // delete from the new stage (cancelled/declined → delete). Never throws.
+  await markEntityDirty('job_move', parsed.data.id, me.company_id);
 
   // Notify subscribers of the stage change (ADR-040). A generic stage-changed
   // event plus the relevant milestone event; recipients subscribe to whichever.

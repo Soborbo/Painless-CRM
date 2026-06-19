@@ -5,10 +5,12 @@ import {
   getWorkerForUser,
   getWorkerJobDetail,
 } from '@/lib/queries/worker-app';
+import { getWorkerBrief } from '@/lib/queries/worker-brief';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ClockInButton } from './clock-in-button';
+import { WorkerBriefCard } from './job-brief';
 import { TimeEntrySteps } from './time-entry-steps';
 
 type Props = { params: Promise<{ id: string }> };
@@ -25,6 +27,7 @@ export default async function WorkerJobPage({ params }: Props) {
 
   const recorded = job.clocked_in ? await getRecordedTimeEntries(worker.id, id, today) : [];
   const assignedVehicle = await getAssignedVehicle(worker.id, id);
+  const brief = await getWorkerBrief(id);
   const t = await getTranslations('workerApp');
   const mapsQuery = job.from_address
     ? encodeURIComponent(
@@ -71,6 +74,8 @@ export default async function WorkerJobPage({ params }: Props) {
           ) : null}
         </section>
       ) : null}
+
+      <WorkerBriefCard brief={brief} />
 
       <section className="rounded-lg border p-4">
         <h2 className="mb-2 font-medium">{t('clockInHeading')}</h2>

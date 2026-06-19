@@ -2,6 +2,7 @@
 
 import { enqueueStageAutomation } from '@/lib/comms/automation-enqueue';
 import { serverEnv } from '@/lib/env';
+import { markEntityDirty } from '@/lib/integrations/google-calendar/dirty';
 import { sendQuoteAcceptedEmail } from '@/lib/integrations/resend/quote';
 import { depositAmountPence, shouldCreateDeposit } from '@/lib/invoices/auto-create';
 import { createInvoiceWithLine, jobHasInvoiceOfType } from '@/lib/invoices/create';
@@ -181,6 +182,10 @@ export async function acceptQuote(
     } catch {
       // best-effort
     }
+
+    // Book the move onto the calendar once accepted (ADR-045). Best-effort; the
+    // drain no-ops until a move_date is set, then inserts the event.
+    await markEntityDirty('job_move', quote.job_id, quote.company_id);
   }
 
   const acceptedTotal = acceptedTotalPence ?? quote.total_pence;

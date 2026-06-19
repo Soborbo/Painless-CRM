@@ -3,6 +3,7 @@ import { CallsPanel } from '@/components/domain/job/calls-panel';
 import { CustomFieldsPanel } from '@/components/domain/job/custom-fields-panel';
 import { IntakeDetailsPanel } from '@/components/domain/job/intake-details-panel';
 import { LogCallForm } from '@/components/domain/job/log-call-form';
+import { MoveBriefPanel } from '@/components/domain/job/move-brief-panel';
 import { NotesPanel } from '@/components/domain/job/notes-panel';
 import { QuotesPanel } from '@/components/domain/job/quotes-panel';
 import { RequoteButton } from '@/components/domain/job/requote-button';
@@ -13,7 +14,7 @@ import { isProfitReviewStage } from '@/lib/jobs/profit';
 import { isRequoteEligibleStage } from '@/lib/jobs/requote';
 import { listDocumentsForJob } from '@/lib/queries/documents';
 import { getInvoicesForJob } from '@/lib/queries/invoices';
-import { listChecklistForJob, listTaskAssignees } from '@/lib/queries/tasks';
+import { getJobCalendarStatus, listBriefItemsForJob } from '@/lib/queries/job-brief';
 import {
   getJobById,
   getJobStatusHistory,
@@ -26,6 +27,7 @@ import { listNotesForJob } from '@/lib/queries/notes';
 import { listPhoneCallsForJob } from '@/lib/queries/phone-calls';
 import { getJobAcceptanceAudits, listQuotesForJob } from '@/lib/queries/quotes';
 import { type JobScheduleEntry, listAssignmentsForJob } from '@/lib/queries/rota';
+import { listChecklistForJob, listTaskAssignees } from '@/lib/queries/tasks';
 import { pickHeadlineQuote } from '@/lib/quotes/headline';
 import { customerDisplayName, formatDate, formatDateTime, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
@@ -62,6 +64,8 @@ export default async function JobPage({ params }: Props) {
     assignments,
     invoices,
     taskAssignees,
+    brief,
+    calStatus,
     t,
   ] = await Promise.all([
     getJobStatusHistory(id),
@@ -78,6 +82,8 @@ export default async function JobPage({ params }: Props) {
     listAssignmentsForJob(id),
     getInvoicesForJob(id),
     listTaskAssignees(),
+    listBriefItemsForJob(id),
+    getJobCalendarStatus(id),
     getTranslations('jobs'),
   ]);
 
@@ -289,6 +295,13 @@ export default async function JobPage({ params }: Props) {
           ) : null}
 
           <TasksPanel jobId={job.id} rows={jobTasks} assignees={taskAssignees} />
+
+          <MoveBriefPanel
+            jobId={job.id}
+            kit={brief.kit}
+            excluded={brief.excluded}
+            status={calStatus}
+          />
 
           <IntakeDetailsPanel jobId={job.id} />
 

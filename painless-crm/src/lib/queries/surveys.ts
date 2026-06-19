@@ -30,6 +30,7 @@ export interface CubicItem {
   cubic_ft_total: number | null;
   fragile: boolean | null;
   dismantle_required: boolean | null;
+  reassembly_required: boolean | null;
   notes: string | null;
 }
 
@@ -117,7 +118,7 @@ export async function getSurvey(
   const { data: itemRows } = await supabase
     .from('cubic_sheet_items')
     .select(
-      'id, room, item, quantity, cubic_ft_each, cubic_ft_total, fragile, dismantle_required, notes',
+      'id, room, item, quantity, cubic_ft_each, cubic_ft_total, fragile, dismantle_required, reassembly_required, notes',
     )
     .eq('survey_id', id)
     .order('room', { ascending: true });

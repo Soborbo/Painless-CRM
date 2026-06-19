@@ -1,6 +1,7 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
+import { markEntityDirty } from '@/lib/integrations/google-calendar/dirty';
 import { emitEvent } from '@/lib/notifications/emit';
 import { SurveyCreateSchema, SurveyUpdateSchema, parseComplications } from '@/lib/schemas/survey';
 import { createClient } from '@/lib/supabase/server';
@@ -70,6 +71,9 @@ export async function createSurvey(
       relatedEntityId: parsed.data.job_id,
     });
   }
+
+  // Flag the survey for a calendar push (ADR-045). Best-effort, never throws.
+  await markEntityDirty('survey', (data as { id: string }).id, me.company_id);
 
   revalidatePath(`/dashboard/jobs/${parsed.data.job_id}/surveys`);
   redirect(`/dashboard/jobs/${parsed.data.job_id}/surveys/${(data as { id: string }).id}`);
@@ -146,6 +150,9 @@ export async function updateSurvey(
     });
   }
 
+  // Re-sync the survey's calendar event (scheduled_at may have changed).
+  await markEntityDirty('survey', parsed.data.id, me.company_id);
+
   revalidatePath(`/dashboard/jobs/${row.job_id}/surveys/${parsed.data.id}`);
   revalidatePath(`/dashboard/jobs/${row.job_id}/surveys`);
   return { status: 'ok' };
@@ -155,7 +162,7 @@ export async function softDeleteSurvey(
   _prev: SurveyActionState,
   form: FormData,
 ): Promise<SurveyActionState> {
-  await requireRole(DELETE_ROLES);
+  const me = await requireRole(DELETE_ROLES);
   const id = form.get('id');
   const jobId = form.get('job_id');
   const versionRaw = form.get('version');
@@ -175,6 +182,9 @@ export async function softDeleteSurvey(
     .select('id')
     .maybeSingle();
   if (error || !data) return { status: 'error', message: 'Could not delete the survey' };
+
+  // The survey is gone → drain will delete its calendar event.
+  await markEntityDirty('survey', id, me.company_id);
 
   revalidatePath(`/dashboard/jobs/${jobId}/surveys`);
   redirect(`/dashboard/jobs/${jobId}/surveys`);

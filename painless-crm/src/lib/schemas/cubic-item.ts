@@ -18,6 +18,7 @@ export const CubicItemSchema = z.object({
   cubic_ft_each: z.coerce.number().min(0).max(100_000),
   fragile: z.coerce.boolean().optional().default(false),
   dismantle_required: z.coerce.boolean().optional().default(false),
+  reassembly_required: z.coerce.boolean().optional().default(false),
   notes: optionalText,
 });
 

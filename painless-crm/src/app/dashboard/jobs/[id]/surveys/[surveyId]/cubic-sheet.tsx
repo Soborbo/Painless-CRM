@@ -64,7 +64,11 @@ export function CubicSheet({
                 <td className="py-1 text-right tabular-nums">{it.cubic_ft_each ?? 0}</td>
                 <td className="py-1 text-right tabular-nums">{it.cubic_ft_total ?? 0}</td>
                 <td className="py-1 text-xs text-[var(--color-muted-foreground)]">
-                  {[it.fragile ? 'fragile' : null, it.dismantle_required ? 'dismantle' : null]
+                  {[
+                    it.fragile ? 'fragile' : null,
+                    it.dismantle_required ? 'dismantle' : null,
+                    it.reassembly_required ? 'reassemble' : null,
+                  ]
                     .filter(Boolean)
                     .join(', ')}
                 </td>
@@ -140,11 +144,14 @@ export function CubicSheet({
         >
           {adding ? 'Adding…' : 'Add'}
         </button>
-        <label className="flex items-center gap-1 md:col-span-3">
+        <label className="flex items-center gap-1 md:col-span-2">
           <input type="checkbox" name="fragile" className="h-4 w-4" /> Fragile
         </label>
-        <label className="flex items-center gap-1 md:col-span-3">
+        <label className="flex items-center gap-1 md:col-span-2">
           <input type="checkbox" name="dismantle_required" className="h-4 w-4" /> Needs dismantling
+        </label>
+        <label className="flex items-center gap-1 md:col-span-2">
+          <input type="checkbox" name="reassembly_required" className="h-4 w-4" /> Needs reassembly
         </label>
       </form>
       {addState.status === 'error' ? (

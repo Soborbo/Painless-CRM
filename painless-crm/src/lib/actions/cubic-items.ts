@@ -42,6 +42,7 @@ export async function addCubicItem(
     cubic_ft_each: form.get('cubic_ft_each'),
     fragile: form.get('fragile') || undefined,
     dismantle_required: form.get('dismantle_required') || undefined,
+    reassembly_required: form.get('reassembly_required') || undefined,
     notes: form.get('notes') || undefined,
   });
   if (!parsed.success) {
@@ -61,6 +62,7 @@ export async function addCubicItem(
     cubic_ft_each: parsed.data.cubic_ft_each,
     fragile: parsed.data.fragile,
     dismantle_required: parsed.data.dismantle_required,
+    reassembly_required: parsed.data.reassembly_required,
     notes: parsed.data.notes ?? null,
   });
   if (error) return { status: 'error', message: 'Could not add the item' };

@@ -123,7 +123,11 @@ export async function markLinkFailed(
     .eq('version', link.version);
 }
 
-// Event removed upstream (cancel / unschedule): soft delete the link and mark it.
+// Event removed upstream (cancel / unschedule). calendar_links is sync STATE,
+// not user content, so we KEEP the row (status='deleted') and clear the event id
+// rather than soft-deleting it: the unique (company, provider, entity) slot is
+// then reused by an in-place update if the entity is later re-activated
+// (markCalendarDirty), and a fresh insert follows since external_event_id is null.
 export async function markLinkDeleted(
   supabase: AnyClient,
   link: CalendarLinkRow,
@@ -131,7 +135,13 @@ export async function markLinkDeleted(
 ): Promise<void> {
   await supabase
     .from(TABLE)
-    .update({ status: 'deleted', deleted_at: now.toISOString(), version: link.version + 1 })
+    .update({
+      status: 'deleted',
+      external_event_id: null,
+      etag: null,
+      last_synced_at: now.toISOString(),
+      version: link.version + 1,
+    })
     .eq('id', link.id)
     .eq('version', link.version);
 }

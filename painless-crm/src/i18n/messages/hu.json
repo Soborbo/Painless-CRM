@@ -991,6 +991,25 @@
       "callback_requested": ""
     }
   },
+  "jobBrief": {
+    "title": "",
+    "kitTitle": "",
+    "excludedTitle": "",
+    "itemPlaceholder": "",
+    "qtyPlaceholder": "",
+    "add": "",
+    "remove": "",
+    "emptyKit": "",
+    "emptyExcluded": "",
+    "syncNow": "",
+    "syncing": "",
+    "viewEvent": "",
+    "notSynced": "",
+    "status_pending": "",
+    "status_synced": "",
+    "status_failed": "",
+    "status_deleted": ""
+  },
   "notes": {
     "panelTitle": "",
     "empty": "",

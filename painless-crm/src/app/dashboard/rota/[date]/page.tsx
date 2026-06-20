@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AssignForm } from './assign-form';
-import { PrintButton } from './print-button';
+import { AutoAssignButton } from './auto-assign-button';
 import { RemoveAssignmentButton } from './remove-button';
 
 type Props = { params: Promise<{ date: string }> };
@@ -51,7 +51,12 @@ export default async function RotaDayPage({ params }: Props) {
           >
             {t('nextDay')} →
           </Link>
-          <PrintButton />
+          <Link
+            href={`/dashboard/rota/${date}/print`}
+            className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('print')}
+          </Link>
         </div>
       </header>
 
@@ -92,12 +97,15 @@ export default async function RotaDayPage({ params }: Props) {
                       ))}
                     </ul>
                   )}
-                  <AssignForm
-                    jobId={job.id}
-                    date={date}
-                    workers={day.workers}
-                    vehicles={day.vehicles}
-                  />
+                  <div className="flex flex-wrap items-start gap-2">
+                    <AssignForm
+                      jobId={job.id}
+                      date={date}
+                      workers={day.workers}
+                      vehicles={day.vehicles}
+                    />
+                    <AutoAssignButton jobId={job.id} date={date} />
+                  </div>
                 </div>
               </section>
             );

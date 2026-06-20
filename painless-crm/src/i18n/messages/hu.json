@@ -1365,6 +1365,7 @@
     "prevDay": "",
     "nextDay": "",
     "print": "",
+    "crewSheet": "",
     "noJobs": "",
     "noneAssigned": "",
     "worker": "",
@@ -1373,7 +1374,10 @@
     "role": "",
     "start": "",
     "end": "",
+    "time": "",
     "assign": "",
+    "autoAssign": "",
+    "autoAssigning": "",
     "remove": "",
     "selectWorker": "",
     "roles": {

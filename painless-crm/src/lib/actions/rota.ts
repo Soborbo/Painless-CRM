@@ -1,11 +1,14 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
-import { getAssignmentSlotsForDate } from '@/lib/queries/rota';
+import { getAssignmentSlotsForDate, getRotaDay, getWorkerLoadsForRange } from '@/lib/queries/rota';
+import { LOAD_WINDOW_DAYS, pickNextWorker } from '@/lib/rota/auto-assign';
 import { findWorkerConflict } from '@/lib/rota/conflicts';
+import { addDaysYmd } from '@/lib/rota/dates';
 import {
   AssignmentIdSchema,
   AssignmentVersionSchema,
+  AutoAssignSchema,
   JobAssignmentSchema,
 } from '@/lib/schemas/job-assignment';
 import { createClient } from '@/lib/supabase/server';
@@ -76,6 +79,57 @@ export async function assignWorker(
 
   revalidatePath(dayPath(data.date));
   redirect(dayPath(data.date));
+}
+
+export async function autoAssignWorker(
+  _prev: RotaActionState,
+  form: FormData,
+): Promise<RotaActionState> {
+  const me = await requireRole(ROTA_ROLES);
+
+  const parsed = AutoAssignSchema.safeParse({
+    job_id: form.get('job_id'),
+    date: form.get('date'),
+  });
+  if (!parsed.success) {
+    return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Invalid input' };
+  }
+  const { job_id, date } = parsed.data;
+
+  const day = await getRotaDay(date);
+  if (day.workers.length === 0) {
+    return { status: 'error', message: 'No active crew to assign.' };
+  }
+
+  // An auto-assigned slot is all-day (no time window), so it can't coexist with
+  // any other booking that worker already holds that day — on this job or
+  // another. Treat everyone already booked that date as unavailable, which both
+  // honours the conflict rule and stops auto-assign re-picking the same crew.
+  const slots = await getAssignmentSlotsForDate(date);
+  const unavailable = new Set(slots.map((s) => s.worker_id));
+
+  const loads = await getWorkerLoadsForRange(date, addDaysYmd(date, LOAD_WINDOW_DAYS - 1));
+  const candidate = pickNextWorker(
+    day.workers.map((w) => ({ id: w.id, full_name: w.label })),
+    day.workers.map((w) => ({ worker_id: w.id, count: loads.get(w.id) ?? 0 })),
+    unavailable,
+  );
+  if (!candidate) {
+    return { status: 'error', message: 'Every crew member is already booked that day.' };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from('job_assignments').insert({
+    company_id: me.company_id,
+    job_id,
+    worker_id: candidate.id,
+    date,
+    role: 'loader',
+  });
+  if (error) return { status: 'error', message: 'Could not auto-assign a crew member' };
+
+  revalidatePath(dayPath(date));
+  redirect(dayPath(date));
 }
 
 export async function removeAssignment(

@@ -50,3 +50,12 @@ export type JobAssignmentInput = z.infer<typeof JobAssignmentSchema>;
 
 export const AssignmentIdSchema = z.string().uuid('Invalid assignment id');
 export const AssignmentVersionSchema = z.coerce.number().int().min(1);
+
+// Auto-assign just needs to know which job, on which day; the crew member is
+// chosen server-side by the load-balancer.
+export const AutoAssignSchema = z.object({
+  job_id: z.string().uuid('Select a job'),
+  date: isoDate,
+});
+
+export type AutoAssignInput = z.infer<typeof AutoAssignSchema>;

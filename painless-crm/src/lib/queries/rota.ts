@@ -174,6 +174,27 @@ export async function getAssignmentSlotsForDate(date: string): Promise<Assignmen
   }));
 }
 
+// Per-worker assignment counts across [fromDate, toDate], for load-balanced
+// auto-assignment. Counts live (non-deleted) slots only; a worker absent from
+// the map has no bookings in the window.
+export async function getWorkerLoadsForRange(
+  fromDate: string,
+  toDate: string,
+): Promise<Map<string, number>> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('job_assignments')
+    .select('worker_id')
+    .gte('date', fromDate)
+    .lte('date', toDate)
+    .is('deleted_at', null);
+  const counts = new Map<string, number>();
+  for (const row of (data ?? []) as Array<{ worker_id: string }>) {
+    counts.set(row.worker_id, (counts.get(row.worker_id) ?? 0) + 1);
+  }
+  return counts;
+}
+
 export type DayCount = { date: string; jobCount: number };
 
 // Per-day scheduled-job counts across [fromDate, toDate], for the rota index.

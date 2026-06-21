@@ -367,6 +367,8 @@
     "merging": "",
     "mergeConfirm": "",
     "mergeDone": "{count, plural, one {} other {}}",
+    "storageSection": "",
+    "storageSummary": "{count, plural, =0 {} one {} other {}}",
     "newSubtitle": "",
     "search": "",
     "searchPlaceholder": "",

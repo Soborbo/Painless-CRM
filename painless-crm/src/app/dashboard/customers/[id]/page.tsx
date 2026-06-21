@@ -1,18 +1,19 @@
 import { DocumentVault } from '@/components/domain/document/document-vault';
 import { TasksEntityPanel } from '@/components/domain/task/tasks-entity-panel';
 import { requireUser } from '@/lib/auth/require-role';
-import { listTaskAssignees } from '@/lib/queries/tasks';
 import {
   getCustomerById,
   getCustomerJobs,
   getCustomerLifetimeValuePence,
 } from '@/lib/queries/customers';
 import { listDocumentsForCustomer } from '@/lib/queries/documents';
+import { listTaskAssignees } from '@/lib/queries/tasks';
 import { customerDisplayName, formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DeleteCustomerButton } from './delete-button';
+import { StorageRentalsSection } from './storage-rentals-section';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -152,6 +153,8 @@ export default async function CustomerPage({ params }: Props) {
               </table>
             </div>
           )}
+
+          <StorageRentalsSection customerId={id} />
 
           <DocumentVault parentType="customer" parentId={id} rows={customerDocuments} />
 

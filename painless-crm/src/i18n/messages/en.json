@@ -367,6 +367,8 @@
     "merging": "Merging…",
     "mergeConfirm": "Merge these records into the kept one? Their jobs, quotes and invoices move across and the duplicates are removed. This can't be undone from here.",
     "mergeDone": "{count, plural, one {# record merged} other {# records merged}}",
+    "storageSection": "Storage",
+    "storageSummary": "{count, plural, =0 {No active rentals} one {# active · {total}/mo} other {# active · {total}/mo}}",
     "newSubtitle": "Create an individual or business customer.",
     "search": "Search",
     "searchPlaceholder": "Name, email, phone, postcode…",

@@ -5,6 +5,8 @@ import { listJobs, listJobsForKanban, listSalesReps } from '@/lib/queries/jobs';
 import { JOB_PAGE_SIZE, JobListFiltersSchema } from '@/lib/schemas/job';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import { JobsBulkToolbar } from './bulk/bulk-toolbar';
+import { JobSelectionProvider } from './bulk/selection-context';
 import { JobsFilters } from './jobs-filters';
 import { JobsGrid } from './jobs-grid';
 import { JobsTable } from './jobs-table';
@@ -88,7 +90,11 @@ export default async function JobsPage({ searchParams }: Props) {
       {view === 'kanban' ? (
         <KanbanView filters={filters} />
       ) : (
-        <PagedView filters={filters} view={view} />
+        <PagedView
+          filters={filters}
+          view={view}
+          reps={reps.map((r) => ({ id: r.id, full_name: r.full_name }))}
+        />
       )}
     </main>
   );
@@ -111,9 +117,11 @@ async function KanbanView({
 async function PagedView({
   filters,
   view,
+  reps,
 }: {
   filters: ReturnType<typeof JobListFiltersSchema.parse>;
   view: 'grid' | 'list';
+  reps: { id: string; full_name: string }[];
 }) {
   const [result, me, t] = await Promise.all([
     listJobs(filters),
@@ -122,7 +130,18 @@ async function PagedView({
   ]);
   const lastPage = Math.max(1, Math.ceil(result.total / JOB_PAGE_SIZE));
   const isAdmin = me.role === 'admin' || me.role === 'super_admin';
+  const canAssign = isAdmin || me.role === 'manager';
+  const canBulk = canAssign || me.role === 'sales';
   const addresses = view === 'grid' ? await listAddressesForJobs(result.rows.map((r) => r.id)) : {};
+
+  const tableParams = {
+    q: filters.q,
+    stage: filters.stage,
+    assigned_to_id: filters.assigned_to_id,
+    move_from: filters.move_from ?? undefined,
+    move_to: filters.move_to ?? undefined,
+    view,
+  };
 
   return (
     <>
@@ -131,20 +150,19 @@ async function PagedView({
       </p>
       {view === 'grid' ? (
         <JobsGrid rows={result.rows} addresses={addresses} isAdmin={isAdmin} />
+      ) : canBulk ? (
+        <JobSelectionProvider>
+          <JobsBulkToolbar reps={reps} canAssign={canAssign} />
+          <JobsTable
+            rows={result.rows}
+            sort={filters.sort}
+            dir={filters.dir}
+            params={tableParams}
+            selectable
+          />
+        </JobSelectionProvider>
       ) : (
-        <JobsTable
-          rows={result.rows}
-          sort={filters.sort}
-          dir={filters.dir}
-          params={{
-            q: filters.q,
-            stage: filters.stage,
-            assigned_to_id: filters.assigned_to_id,
-            move_from: filters.move_from ?? undefined,
-            move_to: filters.move_to ?? undefined,
-            view,
-          }}
-        />
+        <JobsTable rows={result.rows} sort={filters.sort} dir={filters.dir} params={tableParams} />
       )}
       <Pagination
         page={filters.page}

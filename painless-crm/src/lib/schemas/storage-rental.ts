@@ -28,3 +28,19 @@ export type CreateRentalInput = z.infer<typeof CreateRentalSchema>;
 
 export const RentalIdSchema = z.string().uuid('Invalid rental id');
 export const RentalVersionSchema = z.coerce.number().int().min(1);
+
+// Editing an existing rental: adjust the monthly rate (a price review) and notes
+// without re-opening it. Status changes go through the lifecycle transitions.
+export const UpdateRentalSchema = z.object({
+  rental_id: RentalIdSchema,
+  version: RentalVersionSchema,
+  monthly_rate_pence: z.coerce.number().int().min(0).max(2_000_000),
+  notes: z
+    .string()
+    .trim()
+    .max(2000)
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+});
+
+export type UpdateRentalInput = z.infer<typeof UpdateRentalSchema>;

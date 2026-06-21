@@ -50,6 +50,12 @@ export default async function CustomersPage({ searchParams }: Props) {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard/customers/duplicates"
+            className="rounded-md border px-3 py-2 text-sm hover:bg-[var(--color-muted)]"
+          >
+            {t('duplicatesLink')}
+          </Link>
           <a
             href={exportHref}
             className="rounded-md border px-3 py-2 text-sm hover:bg-[var(--color-muted)]"

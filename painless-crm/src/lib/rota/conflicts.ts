@@ -64,3 +64,30 @@ export function findWorkerConflict(
   }
   return null;
 }
+
+// Slot that also carries its row id, so the assignment being moved can be
+// excluded from its own reassignment conflict check.
+export interface IdentifiedSlot extends AssignmentSlot {
+  id: string;
+}
+
+// True when moving assignment `movedId` onto `targetJobId` would double-book its
+// worker. The moved slot is excluded from the check (it still sits on its old
+// job, so it would otherwise look like a clash). Moving to the same job is a
+// no-op and never conflicts.
+export function hasReassignConflict(
+  movedId: string,
+  movedSlot: Pick<AssignmentSlot, 'worker_id' | 'date' | 'scheduled_start' | 'scheduled_end'>,
+  targetJobId: string,
+  allSlots: readonly IdentifiedSlot[],
+): boolean {
+  const candidate: AssignmentSlot = {
+    job_id: targetJobId,
+    worker_id: movedSlot.worker_id,
+    date: movedSlot.date,
+    scheduled_start: movedSlot.scheduled_start,
+    scheduled_end: movedSlot.scheduled_end,
+  };
+  const others = allSlots.filter((s) => s.id !== movedId);
+  return findWorkerConflict(candidate, others) !== null;
+}

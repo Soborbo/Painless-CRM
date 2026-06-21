@@ -72,3 +72,50 @@ export async function listRentalsForContainer(containerId: string): Promise<Rent
     .order('created_at', { ascending: false });
   return ((data ?? []) as Array<Record<string, unknown>>).map(mapRental);
 }
+
+export type CustomerRentalRow = {
+  id: string;
+  status: string | null;
+  monthly_rate_pence: number;
+  start_date: string;
+  end_date: string | null;
+  container_code: string;
+  site_name: string;
+  site_id: string;
+  container_id: string;
+};
+
+// Every storage rental held by one customer, newest first — for the storage
+// section on the customer 360 page. Joins through the container to its site so
+// each row links straight to the container.
+export async function listRentalsForCustomer(customerId: string): Promise<CustomerRentalRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('storage_rentals')
+    .select(
+      'id, status, monthly_rate_pence, start_date, end_date, container:storage_containers (id, container_code, storage_site_id, site:storage_sites (name))',
+    )
+    .eq('customer_id', customerId)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false });
+  return ((data ?? []) as Array<Record<string, unknown>>).map((raw) => {
+    const container = embedOne<{
+      id: string;
+      container_code: string;
+      storage_site_id: string;
+      site: unknown;
+    }>(raw.container);
+    const site = embedOne<{ name: string }>(container?.site);
+    return {
+      id: raw.id as string,
+      status: (raw.status as string | null) ?? null,
+      monthly_rate_pence: raw.monthly_rate_pence as number,
+      start_date: raw.start_date as string,
+      end_date: (raw.end_date as string | null) ?? null,
+      container_code: container?.container_code ?? '—',
+      site_name: site?.name ?? '—',
+      site_id: container?.storage_site_id ?? '',
+      container_id: container?.id ?? '',
+    };
+  });
+}

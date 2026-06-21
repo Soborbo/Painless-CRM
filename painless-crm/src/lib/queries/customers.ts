@@ -1,3 +1,4 @@
+import type { DedupCustomer } from '@/lib/customers/duplicates';
 import {
   CUSTOMER_PAGE_SIZE,
   type CustomerListFilters,
@@ -203,4 +204,23 @@ export async function findDuplicateCandidates(args: {
     p_postcode: null,
   });
   return (data ?? []) as CustomerRow[];
+}
+
+// Upper bound on the dedup scan. Clustering runs in-process, so cap the pull at
+// a sane ceiling; tenants past this size want a server-side approach.
+export const DEDUP_SCAN_MAX = 5_000;
+
+// Lightweight pull of the whole (non-deleted) customer base for the duplicate
+// scanner. Only the fields the clusterer keys/labels on — RLS scopes to tenant.
+export async function listCustomersForDedup(): Promise<DedupCustomer[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('customers')
+    .select(
+      'id, customer_type, first_name, last_name, company_name, primary_email, primary_phone, created_at',
+    )
+    .is('deleted_at', null)
+    .order('created_at', { ascending: true })
+    .limit(DEDUP_SCAN_MAX);
+  return (data ?? []) as DedupCustomer[];
 }

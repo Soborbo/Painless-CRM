@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { DeleteContainerButton } from './delete-button';
 import { DuplicateContainerButton } from './duplicate-button';
-import { ActivateRentalButton, TerminateRentalButton } from './rental-actions';
+import { ActivateRentalButton, EditRentalButton, TerminateRentalButton } from './rental-actions';
 
 type Props = { params: Promise<{ siteId: string; containerId: string }> };
 
@@ -179,7 +179,17 @@ function RentalRowView({
         <div className="flex flex-wrap gap-2">
           {rental.status === 'pending' ? <ActivateRentalButton {...actionProps} /> : null}
           {rental.status === 'pending' || rental.status === 'active' ? (
-            <TerminateRentalButton {...actionProps} />
+            <>
+              <EditRentalButton
+                rentalId={rental.id}
+                rentalVersion={rental.version}
+                containerId={containerId}
+                siteId={siteId}
+                currentRatePence={rental.monthly_rate_pence}
+                currentNotes={rental.notes}
+              />
+              <TerminateRentalButton {...actionProps} />
+            </>
           ) : null}
         </div>
       </td>

@@ -1314,6 +1314,7 @@
     "modeActivate": "Occupy now (customer is moving in)",
     "openRental": "Open rental",
     "activateRental": "Mark occupied",
+    "editRate": "Edit rate",
     "terminateRental": "Terminate",
     "confirmTerminate": "Terminate this rental and free the container?",
     "notAvailableToRent": "This container is not available to rent — it is reserved, occupied or under maintenance.",

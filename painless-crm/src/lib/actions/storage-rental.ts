@@ -8,6 +8,7 @@ import {
   CreateRentalSchema,
   RentalIdSchema,
   RentalVersionSchema,
+  UpdateRentalSchema,
 } from '@/lib/schemas/storage-rental';
 import { fetchContainer, setContainerStatus } from '@/lib/storage/container-sync';
 import type { ContainerStatus } from '@/lib/storage/occupancy';
@@ -166,4 +167,48 @@ export async function terminateRental(
   form: FormData,
 ): Promise<StorageActionState> {
   return transitionRental(form, 'terminated');
+}
+
+// Edit a rental's monthly rate (price review) and notes. Optimistic concurrency
+// on the rental version; the container status is untouched.
+export async function updateRental(
+  _prev: StorageActionState,
+  form: FormData,
+): Promise<StorageActionState> {
+  await requireRole(STORAGE_ROLES);
+
+  const parsed = UpdateRentalSchema.safeParse({
+    rental_id: form.get('rental_id'),
+    version: form.get('version'),
+    monthly_rate_pence: penceFromPounds(form.get('monthly_rate_pounds')),
+    notes: form.get('notes'),
+  });
+  if (!parsed.success) {
+    return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Invalid input' };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('storage_rentals')
+    .update({
+      monthly_rate_pence: parsed.data.monthly_rate_pence,
+      notes: parsed.data.notes ?? null,
+      version: parsed.data.version + 1,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', parsed.data.rental_id)
+    .eq('version', parsed.data.version)
+    .is('deleted_at', null)
+    .select('id')
+    .maybeSingle();
+  if (error || !data) {
+    return { status: 'error', message: 'This rental was changed elsewhere. Reload and retry.' };
+  }
+
+  const path = pathFor(
+    form.get('site_id')?.toString() ?? '',
+    form.get('container_id')?.toString() ?? '',
+  );
+  revalidatePath(path);
+  redirect(path);
 }

@@ -1314,6 +1314,7 @@
     "modeActivate": "",
     "openRental": "",
     "activateRental": "",
+    "editRate": "",
     "terminateRental": "",
     "confirmTerminate": "",
     "notAvailableToRent": "",

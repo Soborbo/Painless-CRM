@@ -4,15 +4,18 @@ import { DEDUP_SCAN_MAX, listCustomersForDedup } from '@/lib/queries/customers';
 import { customerDisplayName, formatDate } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import { MergeClusterForm } from './merge-cluster-form';
 
 const ROLES = ['sales', 'manager', 'admin', 'super_admin'] as const;
+const MERGE_ROLES: readonly string[] = ['manager', 'admin', 'super_admin'];
 
 export const dynamic = 'force-dynamic';
 
 export default async function CustomerDuplicatesPage() {
-  await requireRole(ROLES);
+  const me = await requireRole(ROLES);
   const [customers, t] = await Promise.all([listCustomersForDedup(), getTranslations('customers')]);
   const clusters = findDuplicateClusters(customers);
+  const canMerge = MERGE_ROLES.includes(me.role);
 
   return (
     <main className="mx-auto flex max-w-4xl flex-col gap-6 px-6 py-10">
@@ -79,6 +82,14 @@ export default async function CustomerDuplicatesPage() {
                   </li>
                 ))}
               </ul>
+              {canMerge ? (
+                <MergeClusterForm
+                  members={cluster.customers.map((c) => ({
+                    id: c.id,
+                    name: customerDisplayName(c),
+                  }))}
+                />
+              ) : null}
             </section>
           ))}
         </div>

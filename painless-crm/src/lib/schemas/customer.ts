@@ -114,3 +114,17 @@ export const CustomerListFiltersSchema = z
 export type CustomerListFilters = z.infer<typeof CustomerListFiltersSchema>;
 
 export const CUSTOMER_PAGE_SIZE = 50;
+
+// Merge: fold one or more duplicate "loser" records into the chosen "winner".
+// The winner can't also be a loser; cap the batch so a single click can't fan
+// out into an unbounded run of RPC calls.
+export const MergeCustomersSchema = z
+  .object({
+    winner_id: z.string().uuid('Pick a record to keep'),
+    loser_ids: z.array(z.string().uuid()).min(1, 'Select at least one duplicate').max(20),
+  })
+  .refine((v) => !v.loser_ids.includes(v.winner_id), {
+    message: 'The kept record cannot also be a duplicate',
+    path: ['loser_ids'],
+  });
+export type MergeCustomersInput = z.infer<typeof MergeCustomersSchema>;

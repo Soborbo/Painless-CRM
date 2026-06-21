@@ -15,17 +15,20 @@ import type { JobListRow } from '@/lib/queries/jobs';
 import { customerDisplayName, formatDate, formatPence } from '@/lib/utils/format';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import { JobRowCheckbox, JobSelectAllCheckbox } from './bulk/row-checkbox';
 
 export async function JobsTable({
   rows,
   sort,
   dir,
   params,
+  selectable = false,
 }: {
   rows: JobListRow[];
   sort?: string;
   dir?: 'asc' | 'desc';
   params?: Record<string, string | undefined>;
+  selectable?: boolean;
 }) {
   const t = await getTranslations('jobs');
 
@@ -44,6 +47,11 @@ export async function JobsTable({
       <Table>
         <TableHeader className="bg-[var(--color-muted)]">
           <TableRow>
+            {selectable ? (
+              <TableHead className="w-8">
+                <JobSelectAllCheckbox ids={rows.map((r) => r.id)} />
+              </TableHead>
+            ) : null}
             <TableHead>
               <SortableHeader label={t('columns.number')} column="job_number" {...sortProps} />
             </TableHead>
@@ -74,6 +82,11 @@ export async function JobsTable({
             });
             return (
               <TableRow key={row.id}>
+                {selectable ? (
+                  <TableCell className="w-8">
+                    <JobRowCheckbox id={row.id} />
+                  </TableCell>
+                ) : null}
                 <TableCell className="font-mono">
                   <div className="flex items-center gap-2">
                     <Link href={`/dashboard/jobs/${row.id}`} className="hover:underline">

@@ -1,3 +1,4 @@
+import { BULK_JOB_LIMIT } from '@/lib/jobs/bulk';
 import { JOB_STAGES } from '@/lib/jobs/state-machine';
 import { z } from 'zod';
 import { optionalDateFilter } from './common';
@@ -125,14 +126,29 @@ export const AssignJobSchema = z.object({
   assigned_to_id: z.string().uuid(),
 });
 
+const jobTag = z
+  .string()
+  .trim()
+  .min(1)
+  .max(40)
+  .regex(/^[\w\-+ ]+$/, { message: 'Tag may only contain letters, numbers, spaces, -, +, _' });
+
 export const JobTagSchema = z.object({
   job_id: z.string().uuid(),
-  tag: z
-    .string()
-    .trim()
-    .min(1)
-    .max(40)
-    .regex(/^[\w\-+ ]+$/, { message: 'Tag may only contain letters, numbers, spaces, -, +, _' }),
+  tag: jobTag,
+});
+
+// Bulk list actions. assigned_to_id is nullable so a batch can be unassigned.
+const jobIdBatch = z.array(z.string().uuid()).min(1, 'Select at least one job').max(BULK_JOB_LIMIT);
+
+export const BulkAssignSchema = z.object({
+  job_ids: jobIdBatch,
+  assigned_to_id: z.string().uuid().nullable(),
+});
+
+export const BulkTagSchema = z.object({
+  job_ids: jobIdBatch,
+  tag: jobTag,
 });
 
 export const DuplicateJobSchema = z.object({

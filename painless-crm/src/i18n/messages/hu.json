@@ -490,6 +490,14 @@
     "addTag": "",
     "addTagPlaceholder": "",
     "removeTag": "",
+    "bulk": {
+      "selected": "{count, plural, one {} other {}}",
+      "assignTo": "",
+      "assign": "",
+      "unassign": "",
+      "addTag": "",
+      "clear": ""
+    },
     "activity": "",
     "noActivity": "",
     "transitionTitle": "",

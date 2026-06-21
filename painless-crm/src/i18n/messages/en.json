@@ -490,6 +490,14 @@
     "addTag": "Add",
     "addTagPlaceholder": "VIP, recurring, B2B…",
     "removeTag": "Remove tag",
+    "bulk": {
+      "selected": "{count, plural, one {# job selected} other {# jobs selected}}",
+      "assignTo": "Assign to",
+      "assign": "Assign",
+      "unassign": "Unassigned",
+      "addTag": "Add tag",
+      "clear": "Clear"
+    },
     "activity": "Activity",
     "noActivity": "No activity yet.",
     "transitionTitle": "Move stage",

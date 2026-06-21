@@ -59,3 +59,13 @@ export const AutoAssignSchema = z.object({
 });
 
 export type AutoAssignInput = z.infer<typeof AutoAssignSchema>;
+
+// Drag-to-reassign: move an existing assignment onto another job on the day.
+export const ReassignSchema = z.object({
+  id: z.string().uuid('Invalid assignment id'),
+  version: z.coerce.number().int().min(1),
+  job_id: z.string().uuid('Select a job'),
+  date: isoDate,
+});
+
+export type ReassignInput = z.infer<typeof ReassignSchema>;

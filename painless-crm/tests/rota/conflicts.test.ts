@@ -1,6 +1,8 @@
 import {
   type AssignmentSlot,
+  type IdentifiedSlot,
   findWorkerConflict,
+  hasReassignConflict,
   rangesOverlap,
   timeToMinutes,
 } from '@/lib/rota/conflicts';
@@ -69,5 +71,56 @@ describe('findWorkerConflict', () => {
   it('flags an all-day clash when times are absent', () => {
     const candidate = slot({ job_id: 'jB' });
     expect(findWorkerConflict(candidate, [slot({ job_id: 'jA' })])?.job_id).toBe('jA');
+  });
+});
+
+function idSlot(id: string, o: Partial<IdentifiedSlot>): IdentifiedSlot {
+  return { id, ...slot(o) };
+}
+
+describe('hasReassignConflict', () => {
+  const moved = idSlot('m', { job_id: 'jA', worker_id: 'w1' });
+
+  it('excludes the moved slot itself (its old-job booking is not a clash)', () => {
+    // Only the slot being moved exists for this worker → no conflict.
+    expect(hasReassignConflict('m', moved, 'jB', [moved])).toBe(false);
+  });
+
+  it('flags a clash with another all-day booking on a different job', () => {
+    const other = idSlot('o', { job_id: 'jC', worker_id: 'w1' });
+    expect(hasReassignConflict('m', moved, 'jB', [moved, other])).toBe(true);
+  });
+
+  it('does not clash with the worker already on the target job', () => {
+    const onTarget = idSlot('o', { job_id: 'jB', worker_id: 'w1' });
+    expect(hasReassignConflict('m', moved, 'jB', [moved, onTarget])).toBe(false);
+  });
+
+  it('ignores other workers', () => {
+    const other = idSlot('o', { job_id: 'jC', worker_id: 'w2' });
+    expect(hasReassignConflict('m', moved, 'jB', [moved, other])).toBe(false);
+  });
+
+  it('respects time windows when reassigning', () => {
+    const timed = idSlot('m2', {
+      job_id: 'jA',
+      worker_id: 'w1',
+      scheduled_start: '09:00',
+      scheduled_end: '12:00',
+    });
+    const noClash = idSlot('o', {
+      job_id: 'jC',
+      worker_id: 'w1',
+      scheduled_start: '12:00',
+      scheduled_end: '14:00',
+    });
+    expect(hasReassignConflict('m2', timed, 'jB', [timed, noClash])).toBe(false);
+    const clash = idSlot('o2', {
+      job_id: 'jC',
+      worker_id: 'w1',
+      scheduled_start: '11:00',
+      scheduled_end: '13:00',
+    });
+    expect(hasReassignConflict('m2', timed, 'jB', [timed, clash])).toBe(true);
   });
 });

@@ -1,15 +1,21 @@
 'use server';
 
 import { requireRole } from '@/lib/auth/require-role';
-import { getAssignmentSlotsForDate, getRotaDay, getWorkerLoadsForRange } from '@/lib/queries/rota';
+import {
+  getAssignmentSlotsForDate,
+  getIdentifiedSlotsForDate,
+  getRotaDay,
+  getWorkerLoadsForRange,
+} from '@/lib/queries/rota';
 import { LOAD_WINDOW_DAYS, pickNextWorker } from '@/lib/rota/auto-assign';
-import { findWorkerConflict } from '@/lib/rota/conflicts';
+import { findWorkerConflict, hasReassignConflict } from '@/lib/rota/conflicts';
 import { addDaysYmd } from '@/lib/rota/dates';
 import {
   AssignmentIdSchema,
   AssignmentVersionSchema,
   AutoAssignSchema,
   JobAssignmentSchema,
+  ReassignSchema,
 } from '@/lib/schemas/job-assignment';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -130,6 +136,52 @@ export async function autoAssignWorker(
 
   revalidatePath(dayPath(date));
   redirect(dayPath(date));
+}
+
+export async function reassignWorker(
+  _prev: RotaActionState,
+  form: FormData,
+): Promise<RotaActionState> {
+  await requireRole(ROTA_ROLES);
+
+  const parsed = ReassignSchema.safeParse({
+    id: form.get('id'),
+    version: form.get('version'),
+    job_id: form.get('job_id'),
+    date: form.get('date'),
+  });
+  if (!parsed.success) {
+    return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Invalid input' };
+  }
+  const { id, version, job_id, date } = parsed.data;
+
+  const slots = await getIdentifiedSlotsForDate(date);
+  const moved = slots.find((s) => s.id === id);
+  if (!moved) {
+    return { status: 'error', message: 'That assignment no longer exists — reload the day.' };
+  }
+  // Dropping onto the same job is a no-op; report success without a write.
+  if (moved.job_id === job_id) return { status: 'ok' };
+
+  if (hasReassignConflict(id, moved, job_id, slots)) {
+    return { status: 'error', message: 'That worker is already assigned at this time.' };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('job_assignments')
+    .update({ job_id, version: version + 1, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .eq('version', version)
+    .is('deleted_at', null)
+    .select('id')
+    .maybeSingle();
+  if (error || !data) {
+    return { status: 'error', message: 'Could not move the assignment — reload and retry.' };
+  }
+
+  revalidatePath(dayPath(date));
+  return { status: 'ok' };
 }
 
 export async function removeAssignment(

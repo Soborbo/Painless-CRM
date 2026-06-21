@@ -1,4 +1,4 @@
-import type { AssignmentSlot } from '@/lib/rota/conflicts';
+import type { AssignmentSlot, IdentifiedSlot } from '@/lib/rota/conflicts';
 import { createClient } from '@/lib/supabase/server';
 import { customerDisplayName } from '@/lib/utils/format';
 
@@ -193,6 +193,25 @@ export async function getWorkerLoadsForRange(
     counts.set(row.worker_id, (counts.get(row.worker_id) ?? 0) + 1);
   }
   return counts;
+}
+
+// Every assignment slot on a date, carrying its id — for the drag-to-reassign
+// conflict check, which must exclude the slot being moved.
+export async function getIdentifiedSlotsForDate(date: string): Promise<IdentifiedSlot[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('job_assignments')
+    .select('id, job_id, worker_id, scheduled_start, scheduled_end')
+    .eq('date', date)
+    .is('deleted_at', null);
+  return ((data ?? []) as Array<Record<string, unknown>>).map((r) => ({
+    id: r.id as string,
+    job_id: r.job_id as string,
+    worker_id: r.worker_id as string,
+    date,
+    scheduled_start: (r.scheduled_start as string | null) ?? null,
+    scheduled_end: (r.scheduled_end as string | null) ?? null,
+  }));
 }
 
 export type DayCount = { date: string; jobCount: number };

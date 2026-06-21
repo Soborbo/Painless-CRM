@@ -1381,6 +1381,7 @@
     "nextDay": "Next",
     "print": "Print sheet",
     "crewSheet": "Crew sheet",
+    "dragHint": "Drag a crew member onto another job to reassign them.",
     "noJobs": "No jobs scheduled for this day.",
     "noneAssigned": "No crew assigned yet.",
     "worker": "Worker",

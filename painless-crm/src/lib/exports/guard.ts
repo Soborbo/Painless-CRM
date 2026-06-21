@@ -18,7 +18,8 @@ export type ExportResource =
   | 'profit'
   | 'report_sources'
   | 'report_financial'
-  | 'report_storage';
+  | 'report_storage'
+  | 'report_team';
 
 // Returns a 429 Response when the caller is over their hourly export budget,
 // or null when the export may proceed.

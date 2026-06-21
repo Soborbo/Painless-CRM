@@ -10,11 +10,19 @@ export default async function TeamReportPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-8">
-      <p className="text-sm text-[var(--color-muted-foreground)]">
-        <Link href="/dashboard/reports" className="hover:underline">
-          ← Reports
-        </Link>
-      </p>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-sm text-[var(--color-muted-foreground)]">
+          <Link href="/dashboard/reports" className="hover:underline">
+            ← Reports
+          </Link>
+        </p>
+        <a
+          href="/dashboard/reports/team/export"
+          className="rounded-md border px-3 py-1.5 text-sm hover:bg-[var(--color-muted)]"
+        >
+          Export CSV
+        </a>
+      </div>
       <h1 className="mt-1 text-xl font-semibold">Per-worker performance</h1>
       <p className="mt-1 text-sm text-[var(--color-muted-foreground)]">
         Keyed to the worker who captured each job’s customer sign-off. Internal use only — never

@@ -7,6 +7,11 @@ const ServerEnv = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
+  // Resend inbound webhook (ADR-047 / INTEGRATION_CONTRACTS §8). The Svix signing
+  // secret (whsec_...) from the Resend dashboard. Absent => /api/webhooks/resend
+  // returns 503 (no-op), like RESEND_API_KEY. Suppression is tenant-scoped via
+  // WEBHOOK_COMPANY_ID (reused).
+  WEBHOOK_SECRET_RESEND: z.string().min(1).optional(),
   SENTRY_DSN: z.string().url().optional(),
   SENTRY_AUTH_TOKEN: z.string().min(1).optional(),
   CRM_WEBHOOK_SECRET: z.string().min(32).optional(),

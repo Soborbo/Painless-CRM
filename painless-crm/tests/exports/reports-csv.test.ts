@@ -2,13 +2,16 @@ import {
   FINANCIAL_CSV_HEADER,
   SOURCES_CSV_HEADER,
   STORAGE_CSV_HEADER,
+  TEAM_CSV_HEADER,
   reportExportFilename,
   serializeArAgingToCsv,
   serializeSourcesToCsv,
   serializeStorageToCsv,
+  serializeTeamStatsToCsv,
 } from '@/lib/exports/reports-csv';
 import { buildArAging } from '@/lib/reports/financial';
 import { buildStorageReport } from '@/lib/reports/storage';
+import type { WorkerStat } from '@/lib/reports/team-stats';
 import { describe, expect, it } from 'vitest';
 
 describe('serializeSourcesToCsv', () => {
@@ -110,6 +113,45 @@ describe('serializeStorageToCsv', () => {
       endIso: '2026-07-01T00:00:00Z',
     });
     expect(serializeStorageToCsv(report).trimEnd().split('\r\n')).toContain('churn_rate_pct,');
+  });
+});
+
+describe('serializeTeamStatsToCsv', () => {
+  const stats: WorkerStat[] = [
+    {
+      worker_id: 'w1',
+      worker_name: 'Alice',
+      jobs: 10,
+      reviews: 4,
+      complaints: 1,
+      damages: 0,
+      avg_rating: 4.5,
+    },
+    {
+      worker_id: 'w2',
+      worker_name: 'Bob, Jr',
+      jobs: 3,
+      reviews: 0,
+      complaints: 0,
+      damages: 0,
+      avg_rating: null,
+    },
+  ];
+
+  it('emits the header and one row per worker', () => {
+    const lines = serializeTeamStatsToCsv(stats).trimEnd().split('\r\n');
+    expect(lines[0]).toBe(TEAM_CSV_HEADER.join(','));
+    expect(lines).toHaveLength(3);
+    expect(lines[1]).toBe('Alice,10,4,1,0,4.5');
+  });
+
+  it('blanks a null avg_rating and escapes commas (RFC 4180)', () => {
+    const lines = serializeTeamStatsToCsv(stats).trimEnd().split('\r\n');
+    expect(lines[2]).toBe('"Bob, Jr",3,0,0,0,');
+  });
+
+  it('emits a header-only document for no workers', () => {
+    expect(serializeTeamStatsToCsv([])).toBe(`${TEAM_CSV_HEADER.join(',')}\r\n`);
   });
 });
 

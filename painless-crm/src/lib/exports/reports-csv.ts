@@ -8,6 +8,7 @@ import { csvField } from '@/lib/exports/jobs-csv';
 import type { SourceAttribution } from '@/lib/reports/attribution';
 import type { ArAging } from '@/lib/reports/financial';
 import type { StorageReport } from '@/lib/reports/storage';
+import type { WorkerStat } from '@/lib/reports/team-stats';
 
 function pct1(value: number | null): string {
   return value === null ? '' : value.toFixed(1);
@@ -109,4 +110,29 @@ export function serializeStorageToCsv(report: StorageReport): string {
   ];
   const body = rows.map(([metric, value]) => [csvField(metric), csvField(value ?? '')].join(','));
   return withTrailer(STORAGE_CSV_HEADER.join(','), body);
+}
+
+// --- Team: per-worker performance -------------------------------------------
+
+export const TEAM_CSV_HEADER = [
+  'worker',
+  'jobs',
+  'reviews',
+  'complaints',
+  'damages',
+  'avg_rating',
+] as const;
+
+export function serializeTeamStatsToCsv(stats: readonly WorkerStat[]): string {
+  const rows = stats.map((s) =>
+    [
+      csvField(s.worker_name),
+      csvField(s.jobs),
+      csvField(s.reviews),
+      csvField(s.complaints),
+      csvField(s.damages),
+      csvField(s.avg_rating ?? ''),
+    ].join(','),
+  );
+  return withTrailer(TEAM_CSV_HEADER.join(','), rows);
 }

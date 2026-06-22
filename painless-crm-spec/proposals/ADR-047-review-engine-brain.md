@@ -1,7 +1,7 @@
 # ADR-047 (proposed) — Adopt the Review Engine "brain" natively, single-tenant
 
 **Date:** 2026-06-22
-**Status:** proposed (awaiting human approval before any code lands)
+**Status:** proposed — Phase-1 decisions locked 2026-06-22 (see §7); awaiting go-ahead to write code
 **Author:** integration review of `Soborbo/reviewengine` (`reviewengine-main`, v0.4.0)
 **Next free ADR number:** ADR-047 (current max is ADR-046). Promote into `DECISIONS.md` on approval.
 
@@ -47,7 +47,7 @@ Concretely:
 5. **Drop multi-tenancy**: no `review_campaign` table. Campaign settings become **company-scoped config** (one effective config for Painless); `project_key`/`campaign_id` collapse to `company_id`. Suppression scope `global|project` → company-scoped.
 6. **Audit via the existing trigger** (CRM rule 10) — drop the engine's `review_audit`; let `activity_log` capture changes.
 
-Default cadence stays today's policy (24h / +7d / +14d) expressed through the brain's configurable `scheduleDays`; **no behaviour change at launch**. The wins (crash-safety, suppression, A/B, funnel) are the point, not a new schedule.
+Cadence is set to **`scheduleDays = [1, 4, 7, 14]`** — 4 sends at +24h, +4d, +7d, +14d after `paid` (a deliberate move from today's 3-send policy to one extra nudge). Beyond cadence, the wins are crash-safety, suppression, A/B and funnel.
 
 ## Alternatives considered
 
@@ -131,9 +131,14 @@ No gating (every recipient gets the Google link + complaint link); complaint rou
 - **Phase 2:** A/B variants + funnel views in the CRM dashboard; GDPR erase/retention wired to CRM soft-delete/audit.
 - **Phase 3:** WhatsApp/SMS channel via Twilio; multi-platform (Trustpilot/Facebook).
 
-## 7. Open questions for sign-off
+## 7. Resolved decisions (2026-06-22)
 
-1. **Cadence:** keep 24h/+7d/+14d (3 sends), or adopt the engine default `[1,4,11,21]` (4 nudges)?
-2. **Quota/ramp in Phase 1**, or defer to 1.5? (Painless volume likely doesn't need a hard cap yet.)
-3. **Funnel UI**: new dashboard page under `reports/`, or fold into an existing report?
-4. **Multi-platform**: in scope at all, or Google-only indefinitely?
+1. **Cadence:** `scheduleDays = [1, 4, 7, 14]` — **4 sends** at +24h / +4d / +7d / +14d after `paid`. (Replaces the current 3-send policy.) A click on any link still stops the sequence.
+2. **Quota / warmup ramp:** **deferred.** Phase 1 ships with an effectively unlimited `dailySendCap` and no ramp. Revisit only if volume grows or deliverability dips. (`dailySendCap` = per-day send ceiling; `ramp` = gradual daily-volume increase to warm a new sender's reputation.)
+3. **Funnel UI:** **Phase 2** — a dedicated dashboard page under `reports/`.
+4. **Review platforms:** **Google only.** No Trustpilot/Facebook multi-platform; the engine's `platforms[]` / `/r?p=` machinery is dropped from the port (re-addable later).
+
+## 8. Scope lock (Phase 1)
+
+In: core brain port (`scheduleDays = [1,4,7,14]`), supabase-js `company_id`-scoped repo, `ResendChannel`, `/api/webhooks/resend` → suppression, `List-Unsubscribe`, crash-safe sweep + daily maintenance, migration 63, ported unit tests, Google-only redirect.
+Out (later phases): A/B + funnel UI (P2), GDPR erase/retention UI wiring (P2), quota/ramp (when needed), WhatsApp/SMS + multi-platform (P3).

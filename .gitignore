@@ -1,0 +1,12 @@
+# Dependencies (the app lives in painless-crm/; tooling can also create a root
+# node_modules when run from the workspace root). Never commit installed deps.
+node_modules/
+
+# Build / tooling output
+.next/
+.open-next/
+dist/
+out/
+
+# Logs
+*.log

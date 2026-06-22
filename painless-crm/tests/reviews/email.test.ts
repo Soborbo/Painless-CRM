@@ -1,4 +1,5 @@
-import { type ReviewEmailVariant, buildReviewRequestEmail } from '@/lib/reviews/email';
+import { buildReviewEmail } from '@/lib/reviews/email';
+import type { TemplateId } from '@/lib/reviews/engine/types';
 import { describe, expect, it } from 'vitest';
 
 const input = {
@@ -7,12 +8,12 @@ const input = {
   complaintsUrl: 'https://crm.example/feedback/abc',
 };
 
-const VARIANTS: ReviewEmailVariant[] = ['initial', 'followup1', 'followup2'];
+const TEMPLATES: TemplateId[] = ['nudge_1', 'nudge_2', 'nudge_3', 'nudge_4', 'post_click'];
 
-describe('buildReviewRequestEmail — universal, no gating (ADR-010)', () => {
-  it('always carries BOTH links, in every variant', () => {
-    for (const v of VARIANTS) {
-      const mail = buildReviewRequestEmail(v, input);
+describe('buildReviewEmail — universal, no gating (ADR-010 / ADR-047)', () => {
+  it('always carries BOTH links, in every nudge stage', () => {
+    for (const t of TEMPLATES) {
+      const mail = buildReviewEmail(t, input);
       expect(mail.text).toContain(input.reviewUrl);
       expect(mail.text).toContain(input.complaintsUrl);
       expect(mail.html).toContain(input.reviewUrl);
@@ -21,7 +22,7 @@ describe('buildReviewRequestEmail — universal, no gating (ADR-010)', () => {
   });
 
   it('renders the two links with identical prominence (no button hierarchy)', () => {
-    const { html } = buildReviewRequestEmail('initial', input);
+    const { html } = buildReviewEmail('nudge_1', input);
     // Both CTAs go through the same paragraph + anchor renderer, so the wrapper
     // markup must appear exactly twice — neither link can outrank the other.
     const paragraphs = html.match(/<p style="margin:12px 0;font-size:16px;">/g) ?? [];
@@ -31,6 +32,6 @@ describe('buildReviewRequestEmail — universal, no gating (ADR-010)', () => {
   });
 
   it('greets the customer by name', () => {
-    expect(buildReviewRequestEmail('initial', input).text).toContain('Jane Smith');
+    expect(buildReviewEmail('nudge_1', input).text).toContain('Jane Smith');
   });
 });

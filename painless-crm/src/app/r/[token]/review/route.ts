@@ -26,7 +26,7 @@ export async function GET(_req: Request, { params }: Params): Promise<Response> 
   const supabase = createAdminClient();
   const { data: row } = await supabase
     .from('review_requests')
-    .select('id, company_id, google_review_link_clicked_at, responded_at')
+    .select('id, company_id, clicked_review_at, google_review_link_clicked_at, responded_at')
     .eq('id', token)
     .is('deleted_at', null)
     .maybeSingle();
@@ -35,17 +35,22 @@ export async function GET(_req: Request, { params }: Params): Promise<Response> 
   const req = row as {
     id: string;
     company_id: string;
+    clicked_review_at: string | null;
     google_review_link_clicked_at: string | null;
     responded_at: string | null;
   };
 
+  // Soft signal only (ADR-047): record the click and let the hourly sweep resolve
+  // it (send one post-click nudge, then close as reviewed). Recording it here
+  // rather than closing the request avoids a mail-scanner pre-click ending the
+  // sequence early. Status is left for the sweep to advance.
   const now = new Date().toISOString();
   await supabase
     .from('review_requests')
     .update({
+      clicked_review_at: req.clicked_review_at ?? now,
       google_review_link_clicked_at: req.google_review_link_clicked_at ?? now,
       responded_at: req.responded_at ?? now,
-      status: 'clicked',
     })
     .eq('id', req.id);
 

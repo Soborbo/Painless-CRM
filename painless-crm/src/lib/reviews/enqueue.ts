@@ -1,10 +1,12 @@
+import { REVIEW_CONFIG } from '@/lib/reviews/engine/config';
+import { initialNextSend } from '@/lib/reviews/engine/time';
 import type { createClient } from '@/lib/supabase/server';
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
 // Phase 11 §3 — when a job enters `paid`, queue its universal review request.
-// One request per sign-off (DB unique index), and we insert it `pending` with
-// sent_at = null so the cron sends it 24h after paid (see lib/reviews/followup).
+// One request per sign-off (DB unique index), inserted `pending` with the brain's
+// first next_send_at (+24h after paid); the sweep takes it from there (sweep.ts).
 // Idempotent: a duplicate enqueue (e.g. a paid → unpaid → paid bounce) is a
 // no-op on the unique index. No branch on satisfaction — every paid job queues.
 export async function enqueueReviewRequest(
@@ -22,6 +24,16 @@ export async function enqueueReviewRequest(
   if (!signoff) return 'no_signoff';
 
   const row = signoff as { id: string; customer_id: string };
+  // trigger_at = the paid moment (≈ now); the brain schedules the first send at
+  // scheduleDays[0] (+24h) and the sweep advances from there (ADR-047).
+  const now = new Date().toISOString();
+  const nextSendAt = initialNextSend(
+    now,
+    REVIEW_CONFIG.scheduleDays,
+    REVIEW_CONFIG.timezone,
+    REVIEW_CONFIG.sendHours,
+    REVIEW_CONFIG.sendDays,
+  );
   const { error } = await supabase.from('review_requests').insert({
     company_id: companyId,
     signoff_id: row.id,
@@ -30,6 +42,9 @@ export async function enqueueReviewRequest(
     status: 'pending',
     sent_at: null,
     followup_count: 0,
+    attempts_sent: 0,
+    trigger_at: now,
+    next_send_at: nextSendAt,
   });
   if (error) {
     // 23505 = the one-per-signoff guard already has a row → idempotent no-op.

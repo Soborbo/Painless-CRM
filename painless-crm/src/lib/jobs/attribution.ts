@@ -98,3 +98,58 @@ export async function writeAttributionRow(args: {
     landing_page: args.meta.landing_page ?? null,
   });
 }
+
+/**
+ * The website's intake attribution block (calculator / contact / callback). A
+ * superset of {@link AttributionMeta}: it also carries `heard_about` and
+ * `session_id`, which live in `jobs.intake_details` rather than `attributions`.
+ */
+export interface IntakeAttribution {
+  source?: string | null;
+  heard_about?: string | null;
+  campaign?: string | null;
+  utm_source?: string | null;
+  utm_medium?: string | null;
+  utm_campaign?: string | null;
+  gclid?: string | null;
+  fbclid?: string | null;
+  landing_page?: string | null;
+  session_id?: string | null;
+}
+
+/**
+ * Best-effort attribution write for native lead surfaces (calculator, contact,
+ * callback). Maps the website's intake attribution block onto the canonical
+ * `attributions` row and links it to the freshly-created job + customer so
+ * Phase 16 reporting (which reads exclusively from `attributions`) sees every
+ * lead — paid or organic. Never throws: a reporting-table write must not roll
+ * back an already-captured lead.
+ */
+export async function writeLeadAttribution(args: {
+  companyId: string;
+  jobId: string;
+  customerId: string;
+  source?: string | null;
+  attribution?: IntakeAttribution | null;
+}): Promise<void> {
+  const a = args.attribution ?? {};
+  try {
+    await writeAttributionRow({
+      companyId: args.companyId,
+      jobId: args.jobId,
+      customerId: args.customerId,
+      meta: {
+        source: a.source ?? args.source ?? null,
+        campaign: a.campaign ?? a.utm_campaign ?? null,
+        utm_source: a.utm_source ?? null,
+        utm_medium: a.utm_medium ?? null,
+        utm_campaign: a.utm_campaign ?? null,
+        gclid: a.gclid ?? null,
+        fbclid: a.fbclid ?? null,
+        landing_page: a.landing_page ?? null,
+      },
+    });
+  } catch (err) {
+    console.warn('writeLeadAttribution failed', err instanceof Error ? err.message : err);
+  }
+}

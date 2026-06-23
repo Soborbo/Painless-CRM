@@ -5,6 +5,7 @@ import {
   findOrCreateCustomer,
 } from '@/lib/jobs/intake';
 import { createQuoteForJob } from '@/lib/jobs/quote-writer';
+import { writeLeadAttribution } from '@/lib/jobs/attribution';
 import { z } from 'zod';
 
 // Inbound quote webhook contract from painlessremovals calculator.
@@ -196,6 +197,16 @@ export async function ingestQuote(payload: IncomingQuote): Promise<IngestQuoteRe
       to: payload.addresses.to,
     });
   }
+
+  // Write the canonical attribution row (gclid/utm) linked to this lead so
+  // paid-search conversions are reportable. Best-effort — never blocks the lead.
+  await writeLeadAttribution({
+    companyId: payload.company_id,
+    jobId,
+    customerId,
+    source: effectiveSource,
+    attribution: payload.attribution ?? null,
+  });
 
   if (!payload.quote) {
     return { customer_id: customerId, job_id: jobId, quote_id: null, drift: null };

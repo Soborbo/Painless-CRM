@@ -1,4 +1,5 @@
 import { ContactDetailsSchema, createLeadJob, findOrCreateCustomer } from '@/lib/jobs/intake';
+import { AttributionMetaSchema, writeLeadAttribution } from '@/lib/jobs/attribution';
 import { z } from 'zod';
 
 // Inbound callback request webhook. The same shape backs both the regular
@@ -17,6 +18,8 @@ export const IncomingCallbackSchema = z.object({
   preferred_window: z.string().trim().max(120).optional().nullable(),
   property_postcode: z.string().min(2).max(12).optional().nullable(),
   message: z.string().trim().max(2000).optional().nullable(),
+  // Marketing attribution (gclid/utm) carried from the website.
+  attribution: AttributionMetaSchema.optional().nullable(),
 });
 
 export type IncomingCallback = z.infer<typeof IncomingCallbackSchema>;
@@ -48,6 +51,13 @@ export async function ingestCallback(payload: IncomingCallback): Promise<IngestC
     source: payload.source,
     notes: buildNotes(payload),
     reason: `Webhook intake: ${payload.kind} (${payload.source})`,
+  });
+  await writeLeadAttribution({
+    companyId: payload.company_id,
+    jobId,
+    customerId,
+    source: payload.source,
+    attribution: payload.attribution ?? null,
   });
   return { customer_id: customerId, job_id: jobId };
 }

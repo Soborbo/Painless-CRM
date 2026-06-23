@@ -1,4 +1,5 @@
 import { ContactDetailsSchema, createLeadJob, findOrCreateCustomer } from '@/lib/jobs/intake';
+import { AttributionMetaSchema, writeLeadAttribution } from '@/lib/jobs/attribution';
 import { z } from 'zod';
 
 // Inbound contact-form webhook from painlessremovals.com.
@@ -14,6 +15,9 @@ export const IncomingContactSchema = z.object({
   customer: ContactDetailsSchema,
   message: z.string().trim().max(4000).optional().nullable(),
   preferred_contact: z.enum(['email', 'phone', 'whatsapp']).optional().nullable(),
+  // Marketing attribution (gclid/utm) carried from the website, so contact-form
+  // leads are reportable in `attributions` the same way calculator leads are.
+  attribution: AttributionMetaSchema.optional().nullable(),
 });
 
 export type IncomingContact = z.infer<typeof IncomingContactSchema>;
@@ -48,6 +52,13 @@ export async function ingestContact(
     source: payload.source,
     notes: buildNotes(payload),
     reason: `Webhook intake: contact (${payload.source})`,
+  });
+  await writeLeadAttribution({
+    companyId,
+    jobId,
+    customerId,
+    source: payload.source,
+    attribution: payload.attribution ?? null,
   });
   return { customer_id: customerId, job_id: jobId };
 }

@@ -193,6 +193,35 @@
         "pending": "Pending",
         "avgResponse": "Avg response"
       }
+    },
+    "reviews": {
+      "title": "Review funnel",
+      "link": "Reviews",
+      "requests": "Requests",
+      "sent": "Emailed",
+      "reviews": "Reviews",
+      "reviewRate": "Review rate",
+      "funnelHeading": "Request funnel",
+      "outcomesHeading": "Outcomes",
+      "empty": "No review requests in this period yet.",
+      "steps": {
+        "requests": "Requests",
+        "sent": "Emailed",
+        "clicked": "Clicked review",
+        "reviewed": "Reviewed"
+      },
+      "cols": {
+        "outcome": "Outcome",
+        "count": "Count",
+        "rate": "% of emailed"
+      },
+      "outcomes": {
+        "reviewed": "Reviewed",
+        "complained": "Complained",
+        "unsubscribed": "Unsubscribed",
+        "exhausted": "Exhausted (no response)",
+        "inFlight": "In flight"
+      }
     }
   },
   "notifications": {

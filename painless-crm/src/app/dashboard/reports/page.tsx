@@ -94,6 +94,12 @@ export default async function ReportsPage({ searchParams }: Props) {
             {t('sla.link')}
           </Link>
           <Link
+            href="/dashboard/reports/reviews"
+            className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
+          >
+            {t('reviews.link')}
+          </Link>
+          <Link
             href="/dashboard/reports/team"
             className="rounded-md border px-3 py-1.5 hover:bg-[var(--color-muted)]"
           >

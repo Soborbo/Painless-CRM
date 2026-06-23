@@ -75,6 +75,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         ...link('/dashboard/complaints', t('complaints'), MANAGER),
         ...link('/dashboard/damages', t('damages'), MANAGER),
         ...link('/dashboard/reports', t('reports'), MANAGER),
+        ...link('/dashboard/reports/reviews', t('reviews'), MANAGER),
         ...link('/dashboard/reports/analytics', t('analytics'), MANAGER),
       ],
     },

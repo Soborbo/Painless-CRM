@@ -193,6 +193,35 @@
         "pending": "",
         "avgResponse": ""
       }
+    },
+    "reviews": {
+      "title": "",
+      "link": "",
+      "requests": "",
+      "sent": "",
+      "reviews": "",
+      "reviewRate": "",
+      "funnelHeading": "",
+      "outcomesHeading": "",
+      "empty": "",
+      "steps": {
+        "requests": "",
+        "sent": "",
+        "clicked": "",
+        "reviewed": ""
+      },
+      "cols": {
+        "outcome": "",
+        "count": "",
+        "rate": ""
+      },
+      "outcomes": {
+        "reviewed": "",
+        "complained": "",
+        "unsubscribed": "",
+        "exhausted": "",
+        "inFlight": ""
+      }
     }
   },
   "notifications": {

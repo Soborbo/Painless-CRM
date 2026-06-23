@@ -4,7 +4,7 @@
 // the literal payload string, verified against CRM_WEBHOOK_SECRET.
 
 import { serverEnv } from '@/lib/env';
-import { runReviewRequestSweep } from '@/lib/reviews/review-cron';
+import { runReviewSweep } from '@/lib/reviews/sweep';
 import { isFreshTimestamp, verifyHmac } from '@/lib/webhooks/handler';
 import { NextResponse } from 'next/server';
 
@@ -30,7 +30,7 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   try {
-    const result = await runReviewRequestSweep(new Date());
+    const result = await runReviewSweep(new Date());
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
     return NextResponse.json(

@@ -3,6 +3,7 @@ import type { AnalyticsJobRow } from '@/lib/reports/analytics';
 import type { AttributionJobRow } from '@/lib/reports/attribution';
 import type { FinancialInvoiceRow } from '@/lib/reports/financial';
 import type { ReportJobRow } from '@/lib/reports/funnel';
+import type { ReviewFunnelRow } from '@/lib/reports/review-funnel';
 import type { SlaJobRow } from '@/lib/reports/sla-performance';
 import { createClient } from '@/lib/supabase/server';
 
@@ -137,4 +138,21 @@ export async function listSlaJobs(range: DateRange): Promise<SlaJobRow[]> {
       assigned_to_name: name ?? null,
     };
   });
+}
+
+// Review-request funnel read (ADR-047 Phase 2): the cohort triggered (paid)
+// within the range, with just the lifecycle fields the funnel needs. RLS scopes
+// it to the caller's company; aggregation is pure (lib/reports/review-funnel).
+const REVIEW_FUNNEL_COLUMNS = 'status, attempts_sent, clicked_review_at';
+
+export async function listReviewRequests(range: DateRange): Promise<ReviewFunnelRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('review_requests')
+    .select(REVIEW_FUNNEL_COLUMNS)
+    .is('deleted_at', null)
+    .gte('trigger_at', range.startIso)
+    .lt('trigger_at', range.endIso)
+    .limit(REPORT_ROW_CAP);
+  return (data ?? []) as ReviewFunnelRow[];
 }

@@ -71,14 +71,15 @@ preview_id = "2b140e77774f414f912ed9f3cc1c064c"
 #   GMAIL_SA_CLIENT_EMAIL  GMAIL_SA_PRIVATE_KEY (Gmail service account, ADR-044)
 
 # Cloudflare Cron Triggers. Each expression fires the Worker's scheduled()
-# handler, which signs the matching /api/cron/* payload with CRM_WEBHOOK_SECRET
-# and POSTs it (see worker.ts + src/worker-cron/schedule.ts — keep the crontab
-# expressions in lockstep with CRON_SCHEDULE there).
+# handler (worker.ts), which signs the matching /api/cron/* payload with
+# CRM_WEBHOOK_SECRET and invokes the route in-process via the OpenNext fetch
+# handler (see worker.ts + src/worker-cron/{dispatch,schedule}.ts).
 #
-# ACTIVATION: the scheduled handler lives in worker.ts, which is NOT yet the
-# Worker entry. Until `main` points at a custom worker that re-exports the
-# OpenNext handler and adds scheduled(), these triggers fire on the generated
-# worker (no scheduled handler → no-op). Wiring that entry is the next step.
+# WIRED: `main = "worker.ts"` (top of this file) IS the Worker entry — it
+# re-exports the OpenNext handler and adds scheduled(), so these triggers run.
+# Keep every expression below in lockstep with CRON_SCHEDULE in
+# src/worker-cron/schedule.ts (an expression with no mapping is a silent no-op);
+# tests/cron/lockstep.test.ts fails the build if the two drift apart.
 [triggers]
 crons = [
   "0 1 * * *",     # recompute-availability — nightly

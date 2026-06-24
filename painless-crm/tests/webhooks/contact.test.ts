@@ -46,4 +46,13 @@ describe('IncomingContactSchema', () => {
       }),
     ).toThrow();
   });
+
+  it('captures marketing attribution (gclid/utm) when forwarded', () => {
+    const parsed = IncomingContactSchema.parse({
+      ...valid,
+      attribution: { utm_source: 'google', utm_medium: 'cpc', gclid: 'GCL-123' },
+    });
+    expect(parsed.attribution?.gclid).toBe('GCL-123');
+    expect(parsed.attribution?.utm_source).toBe('google');
+  });
 });

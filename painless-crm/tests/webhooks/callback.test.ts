@@ -44,4 +44,12 @@ describe('IncomingCallbackSchema', () => {
       IncomingCallbackSchema.parse({ ...baseValid, message: 'x'.repeat(2001) }),
     ).toThrow();
   });
+
+  it('captures marketing attribution (gclid/utm) when forwarded', () => {
+    const parsed = IncomingCallbackSchema.parse({
+      ...baseValid,
+      attribution: { utm_source: 'google', gclid: 'GCL-CB-1' },
+    });
+    expect(parsed.attribution?.gclid).toBe('GCL-CB-1');
+  });
 });

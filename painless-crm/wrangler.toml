@@ -72,6 +72,11 @@ crons = [
   "15 * * * *",    # review-requests — hourly (send +24h after paid, follow up +7d/+14d)
   "* * * * *",     # automation-queue — every minute, runs due automation actions
   "*/30 * * * *",  # stale-clock-in — every 30 min
+  # "2-59/5 * * * *" tamar-poll REMOVED 2026-08-12: the June token stored on this
+  # worker was invalidated by later token regenerations, so every poll was an
+  # unauthenticated request that kept re-triggering Tamar's account lockout
+  # (ticket PRK-158-31572). Tamar polling now lives in the new Soborbo CRM.
+  # Re-add this line + `wrangler triggers deploy` only with a valid TAMAR_API_TOKEN.
   "0 7 * * 1",     # weekly-digest — Monday 07:00, weekly performance summary email
   # Notification email sweeps (ADR-040). Keep in lockstep with src/worker-cron/schedule.ts.
   "*/5 * * * *",   # notify-immediate — emails "immediate"-frequency notifications + janitor

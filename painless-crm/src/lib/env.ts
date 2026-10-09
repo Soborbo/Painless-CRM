@@ -17,6 +17,26 @@ const ServerEnv = z.object({
   WEBHOOK_COMPANY_ID: z.string().uuid().optional(),
   QUOTE_LINK_SECRET: z.string().min(32).optional(),
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
+  // Tamar Call Stats (CDR) API — ADR-041. The cron polls Tamar for call records
+  // on our hosted number(s) and ingests them as inbound calls. Tamar uses HTTP
+  // Basic auth: base64(login:token), so it needs BOTH the account code and the
+  // API token. All optional: missing creds => the poll degrades to a no-op (like
+  // RESEND_API_KEY). Non-OAuth API creds live in env per ADR-009 rule 16.
+  TAMAR_API_LOGIN: z.string().min(1).optional(),
+  TAMAR_API_TOKEN: z.string().min(1).optional(),
+  TAMAR_API_BASE: z.string().url().optional(),
+  // Our Tamar-hosted number(s), comma-separated, any format — normalised to
+  // E.164 at read time. Used both to poll (?number=) and to classify a CDR's
+  // direction (a call *to* one of these is inbound).
+  TAMAR_NUMBERS: z.string().min(1).optional(),
+  // Compare My Move lead webhook (ADR-043). CMM signs each lead with
+  // HMAC-SHA256(timestamp + token) under a shared secret we agree with them and
+  // puts the digest in the body's `signature` field (NOT our first-party header
+  // scheme — hence the v3 body-signed handler). In CMM V3 the "unique token"
+  // shown in their Lead Manager IS this shared secret (one value), so verifying
+  // the HMAC with it is the complete auth — no separate token check is needed.
+  // Optional: absent => the route returns 503, like CRM_WEBHOOK_SECRET.
+  CMM_WEBHOOK_SECRET: z.string().min(16).optional(),
 });
 
 const ClientEnv = z.object({

@@ -1,0 +1,24 @@
+-- ============================================================
+-- Security hardening: lock down the rls_auto_enable event-trigger function
+-- ============================================================
+-- Supabase's security advisor (lint 0028/0029) flags `public.rls_auto_enable()`
+-- as a SECURITY DEFINER function executable by `anon` / `authenticated`. It is a
+-- DDL *event trigger* function (RETURNS event_trigger) that auto-enables RLS on
+-- new public tables. Postgres forbids calling an event-trigger function outside
+-- an event-trigger context, and PostgREST cannot expose it as an RPC at all — so
+-- the default `EXECUTE TO PUBLIC` grant is dead weight. The event trigger fires
+-- on the trigger's owner privileges regardless of EXECUTE grants, so revoking
+-- here is a no-op for the auto-RLS behaviour and silences the advisor warning.
+--
+-- NOTE: the other advisor warnings are intentional and must NOT be "fixed" by
+-- revoking EXECUTE:
+--   * current_user_* helpers are referenced inside every RLS policy and are
+--     executed by the `authenticated` role on every tenant-scoped query.
+--   * customer_lifetime_value / find_duplicate_candidates are SECURITY DEFINER
+--     but filter internally on current_user_company_id(), so a direct RPC call
+--     still only ever returns the caller's own tenant rows. The app's server
+--     client (authenticated role) depends on calling them.
+-- Revoking EXECUTE from authenticated on any of the above would break the app.
+-- ============================================================
+
+revoke execute on function public.rls_auto_enable() from public, anon, authenticated;

@@ -31,6 +31,7 @@
     "jobs": "",
     "quotes": "",
     "messages": "",
+    "calls": "",
     "sla": "",
     "callbacks": "",
     "tasks": "",
@@ -1118,6 +1119,28 @@
       "job": "",
       "action": "",
       "outcome": ""
+    }
+  },
+  "callsInbox": {
+    "title": "",
+    "subtitle": "",
+    "empty": "",
+    "unknownCaller": "",
+    "noMatch": "",
+    "openJob": "",
+    "repeat": "",
+    "returnedBy": "",
+    "markReturned": "",
+    "createJob": "",
+    "notePlaceholder": "",
+    "retry": "",
+    "columns": {
+      "when": "",
+      "caller": "",
+      "customer": "",
+      "job": "",
+      "returned": "",
+      "actions": ""
     }
   },
   "smoke": {

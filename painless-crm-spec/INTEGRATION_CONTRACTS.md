@@ -328,11 +328,46 @@ Auth: Liveswitch application key + secret. Stored in env vars (not `integration_
 
 ---
 
+## 12. Compare My Move (inbound removals leads)
+
+**Purpose:** Compare My Move (CMM) refers removals / small-move / clearance leads to matched partners. Each match is delivered to our endpoint and ingested as a `lead` job (`acquisition_source = compare_my_move`). See ADR-043.
+
+**Direction:** CMM → CRM
+**Auth:** signature **in the JSON body** (NOT our header scheme). CMM computes `signature = HMAC-SHA256(timestamp + token)` with a shared secret. We recompute over `` `${timestamp}${token}` `` and constant-time-compare to `body.signature`. Secret in env `CMM_WEBHOOK_SECRET` (set the SAME value in CMM's "shared key/secret" field; non-OAuth, ADR-009). In CMM V3 the **"unique token"** shown in the Lead Manager IS this shared secret (one value), so verifying the HMAC with it is the complete authentication — there is **no separate token-field check** (the token is already inside the signed string, so the HMAC binds it). Handled by the **v3 body-signed shell** (`createBodySignedWebhookHandler`), not the v2 header shell.
+**Format:** JSON (CMM offers JSON or XML; we configure JSON). HTTPS only. CMM egress ports: 443, 444, 80, 8088, 8888.
+**Sandbox:** new webhooks start in CMM **Sandbox** (test leads only; types residential/clearance/international/small-move). Real leads need Partner Support to disable sandbox.
+**Endpoint (CRM side):** `POST /api/webhooks/compare-my-move`
+
+**Body envelope (all top-level fields mandatory):**
+
+```jsonc
+{
+  "timestamp": 1670326629,        // unix seconds — signed
+  "token": "944e…",               // opaque — signed
+  "signature": "1990…",           // hex HMAC-SHA256(timestamp+token, secret)
+  "result": { /* lead — see below */ }
+}
+```
+
+**`result` (lead) — `lead_type` ∈ {`residential`, `small-move`, `clearance`, `international`}; they share one shape; CMM does NOT guarantee field consistency (split-tested), so treat all but the core fields as optional. `international` field list is unconfirmed (no docs yet) — it degrades through the residential `current_*`→`new_*` mapping; send a sandbox test to confirm:**
+- Always present / required by us: `quote_id` (CMM ref, our dedup key), `email`, `phone`, `first_name`, `customer_name`, `lead_type`, `cancelled`, `created_at`.
+- `residential` / `small-move`: `current_*` (address_line_1..4, town, county, postcode, udprn, bedrooms, storage_size, lift, floor_level, type) + `new_*` (address_line_1..4, town, town_only, county, postcode, udprn, bedrooms), `moving_date`, `flexible_moving_date`, `packing_{service,materials,dismantling}_required`, `additional_information`. `small-move` adds `van_type`.
+- `clearance`: single property `address_line_1..4`, `town`, `county`, `postcode`, `udprn`, `size`, `clearance_date`, `additional_information`.
+
+**Mapping:** `lead_type` → `service_type` (`clearance`→`waste_clearance`, else `removal`). `current_*`→`from` / `new_*`→`to` job addresses (clearance = single `from`); flat `lift`/`floor_level`/`type` carried per leg. Everything without a dedicated column is kept losslessly under `jobs.intake_details.compare_my_move`. Tenant = server `WEBHOOK_COMPANY_ID` (never a body value).
+
+**Response contract (CMM semantics):** `200` = accepted (and on a deduped retry, `200 {duplicate:true}`). Non-`200` → CMM retries up to 6× (5,10,20,40,80,160 min) unless we send `406` (give up). We do **not** enforce timestamp freshness (it would reject every retry); idempotency is the `quote_id` dedup. A genuinely unparseable payload returns `400` (CMM retries, then gives up — harmless). Missing secret/tenant ⇒ `503`/handler-fail.
+
+**Failure handling:** ingest failure stamps `webhook_events.result = 'failed'` and returns `500` so CMM retries within its window.
+
+---
+
 ## Summary table
 
 | Provider | Type | Direction | Auth | Credentials location | v0.x |
 |----------|------|-----------|------|----------------------|------|
 | painlessremovals | inbound webhook | → CRM | HMAC | env: `WEBHOOK_SECRET_PAINLESSREMOVALS` | v0.1 |
+| Compare My Move | inbound webhook | → CRM | HMAC (body-signed, v3) | env: `CMM_WEBHOOK_SECRET` | v0.3 (ADR-043) |
 | Cloudflare KV | edge cache | CRM → KV ↔ calculator | Workers binding | (no creds) | v0.1 |
 | Xero | accounting | CRM ⇄ Xero | OAuth 2.0 | `integration_credentials` | v0.2 |
 | GoCardless | direct debit | CRM ⇄ GoCardless | OAuth 2.0 | `integration_credentials` | v0.3 |

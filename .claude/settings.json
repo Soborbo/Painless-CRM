@@ -21,7 +21,17 @@
       "Bash(cat wrangler.toml)",
       "Bash(cat wrangler.jsonc)",
       "Bash(cat wrangler.json)",
-      "mcp__cloudflare__get_kvs"
+      "mcp__cloudflare__get_kvs",
+      "Bash(git -C \"d:\\\\Painless-CRM\" status --short)",
+      "Bash(git -C \"d:\\\\Painless-CRM\" stash list)",
+      "Bash(magick identify *)",
+      "Bash(awk 'NR>=1700 && NR<=1775 && /^      [a-z_]+: \\\\{/' \"d:\\\\Painless-CRM\\\\painless-crm\\\\src\\\\lib\\\\database.types.ts\")",
+      "Bash(awk -F: '$1<1810')",
+      "Bash(git -C \"d:\\\\Painless-CRM\" diff --stat -- painless-crm/src/i18n/messages)",
+      "Bash(test -f /d/Painless-CRM/painless-crm/src/app/dashboard/storage/\\\\[siteId\\\\]/\\\\[containerId\\\\]/edit/page.tsx)",
+      "Bash(test -f /d/Painless-CRM/painless-crm/src/app/dashboard/storage/\\\\[siteId\\\\]/\\\\[containerId\\\\]/rent/page.tsx)",
+      "Bash(test -f /d/Painless-CRM/painless-crm/src/app/dashboard/storage/\\\\[siteId\\\\]/page.tsx)",
+      "mcp__claude_ai_Supabase__get_logs"
     ]
   }
 }
